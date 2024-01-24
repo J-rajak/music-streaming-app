@@ -1,16 +1,13 @@
 // import React, { useEffect } from "react";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import { useFormik } from "formik";
 import { resetPasswordValidation } from "../helper/validate";
-import { resetPassword } from "../helper/helper";
-import { useAuthStore } from "../store/store";
-import { useNavigate, Navigate } from "react-router-dom";
+
 
 import styles from "../styles/Username.module.css";
 
-export default function Reset() {
-  const { username } = useAuthStore((state) => state.auth);
-  const navigate = useNavigate();
+const Reset = ()  => {
+  // const navigate = useNavigate();
   const formik = useFormik({
     initialValues: {
       password: "admin@123",
@@ -20,7 +17,7 @@ export default function Reset() {
     validateOnBlur: false,
     validateOnChange: false,
     onSubmit: async (values) => {
-        
+
     },
   });
 
@@ -60,4 +57,6 @@ export default function Reset() {
       </div>
     </div>
   );
-}
+};
+
+export default Reset;

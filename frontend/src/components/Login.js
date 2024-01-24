@@ -1,64 +1,69 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import avatar from "../assets/profile.png";
+import { Toaster } from "react-hot-toast";
+import { useFormik } from "formik";
+import { usernameValidate } from "../helper/validate";
+import styles from "../styles/Username.module.css";
 
-function Login() {
+const Login = () => {
+  const navigate = useNavigate();
+
+  const formik = useFormik({
+    initialValues: {
+      username: "example123",
+    },
+    validate: usernameValidate,
+    validateOnBlur: false,
+    validateOnChange: false,
+    onSubmit: async (values) => {
+      console.log(values);
+      navigate("/password");
+    },
+  });
+
   return (
-    <>
-      <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-        <div className="sm:mx-auto sm:w-full sm:max-w-md">
-          <h2 className="text-center text-3xl font-extrabold text-gray-900">
-            Log in to your account
-          </h2>
-        </div>
-        <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-          <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-            <form className="space-y-6">
-              <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Email address
-                </label>
-                <div className="mt-1">
-                  <input className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
-                </div>
-              </div>
-              <div>
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Password
-                </label>
-                <div className="mt-1">
-                  <input className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
-                </div>
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="text-sm">
-                  <Link
-                    to="/password-reset"
-                    className="font-medium text-indigo-600 hover:text-indigo-500"
-                  >
-                    Forgot your password?
-                  </Link>
-                </div>
-              </div>
-              <div>
-                <button
-                  type="submit"
-                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                >
-                  Log in
-                </button>
-              </div>
-            </form>
+    <div className="container mx-auto">
+      <Toaster position="top-center" reverseOrder={false}></Toaster>
+
+      <div className="flex justify-center items-center h-screen">
+        <div className={styles.glass}>
+          <div className="title flex flex-col items-center">
+            <h4 className="text-5xl font-bold">Hello Again!</h4>
+            <span className="py-4 text-xl w-2/3 text-center text-gray-500">
+              Explore More by connecting with us.
+            </span>
           </div>
+
+          <form className="py-1" onSubmit={formik.handleSubmit}>
+            <div className="profile flex justify-center py-4">
+              <img src={avatar} className={styles.profile_img} alt="avatar" />
+            </div>
+
+            <div className="textbox flex flex-col items-center gap-6">
+              <input
+                {...formik.getFieldProps("username")}
+                className={styles.textbox}
+                type="text"
+                placeholder="Username"
+              />
+              <button className={styles.btn} type="submit">
+                Let's Go
+              </button>
+            </div>
+
+            <div className="text-center py-4">
+              <span className="text-gray-500">
+                Not a Member{" "}
+                <Link className="text-red-500" to="/register">
+                  Register Now
+                </Link>
+              </span>
+            </div>
+          </form>
         </div>
       </div>
-    </>
+    </div>
   );
-}
+};
 
 export default Login;

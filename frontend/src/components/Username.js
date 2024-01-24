@@ -6,7 +6,7 @@ import { useFormik } from "formik";
 import { usernameValidate } from "../helper/validate";
 import styles from "../styles/Username.module.css";
 
-export default function Username() {
+const Username = ()  => {
   const navigate = useNavigate();
 
   const formik = useFormik({
@@ -65,4 +65,6 @@ export default function Username() {
       </div>
     </div>
   );
-}
+};
+
+export default Username;

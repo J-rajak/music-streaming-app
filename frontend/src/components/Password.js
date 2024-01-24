@@ -1,13 +1,13 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link} from "react-router-dom";
 import avatar from "../assets/profile.png";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import { useFormik } from "formik";
 import { passwordValidate } from "../helper/validate";
 import styles from "../styles/Username.module.css";
 
-export default function Password() {
-  const navigate = useNavigate();
+const Password = () => {
+
   const formik = useFormik({
     initialValues: {
       password: "admin@123",
@@ -55,7 +55,7 @@ export default function Password() {
 
             <div className="text-center py-4">
               <span className="text-gray-500">
-                Forgot Password?{" "}
+                Forgot Password?
                 <Link className="text-red-500" to="/recovery">
                   Recover Now
                 </Link>
@@ -66,4 +66,6 @@ export default function Password() {
       </div>
     </div>
   );
-}
+};
+
+export default Password;

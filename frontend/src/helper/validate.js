@@ -12,6 +12,30 @@ export async function passwordValidate(values) {
   return errors;
 }
 
+export async function resetPasswordValidation(values) {
+  const errors = passwordVerify({}, values);
+
+  if (values.password !== values.confirm_pwd) {
+    errors.exist = toast.error("Password not match...!");
+  }
+
+  return errors;
+}
+
+export async function registerValidation(values) {
+  const errors = usernameVerify({}, values);
+  passwordVerify(errors, values);
+  emailVerify(errors, values);
+
+  return errors;
+}
+
+/** validate profile page */
+export async function profileValidation(values) {
+  const errors = emailVerify({}, values);
+  return errors;
+}
+
 //validate username
 function usernameVerify(error = {}, values) {
   if (!values.username) {
@@ -40,4 +64,17 @@ function passwordVerify(errors = {}, values) {
   }
 
   return errors;
+}
+
+/** validate email */
+function emailVerify(error = {}, values) {
+  if (!values.email) {
+    error.email = toast.error("Email Required...!");
+  } else if (values.email.includes(" ")) {
+    error.email = toast.error("Wrong Email...!");
+  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+    error.email = toast.error("Invalid email address...!");
+  }
+
+  return error;
 }

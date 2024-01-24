@@ -1,52 +1,29 @@
 import React from "react";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 // import all components
-import Username from './components/Username';
-import Password from './components/Password';
-import Profile from './components/Profile';
-import Register from './components/Register';
-import Recovery from './components/Recovery';
-import Reset from './components/Reset';
-import PageNotFound from './components/PageNotFound';
+import Login from "./components/Login";
+import Password from "./components/Password";
+import Profile from "./components/Profile";
+import Register from "./components/Register";
+import Recovery from "./components/Recovery";
+import Reset from "./components/Reset";
+import PageNotFound from "./components/PageNotFound";
 
-
-
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <Username></Username>
-  },
-  {
-    path: '/register',
-    element: <Register></Register>
-  },
-  {
-    path: '/password',
-    element: <Password></Password>
-  },
-  {
-    path: '/profile',
-    element: <Profile></Profile>
-  },
-  {
-    path: '/recovery',
-    element: <Recovery></Recovery>
-  },
-  {
-    path: '/reset',
-    element: <Reset></Reset>
-  },
-  {
-    path: '*',
-    element: <PageNotFound></PageNotFound>
-  },
-])
-
-function App() {
+const App = () => {
   return (
     <>
-      <RouterProvider router={router}></RouterProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/password" element={<Password />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/password" element={<Recovery />} />
+          <Route path="/reset" element={<Reset />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="*" element={<PageNotFound />} />
+        </Routes>
+      </BrowserRouter>
     </>
   );
 }
