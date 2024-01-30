@@ -2,7 +2,8 @@ import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 // import all components
-import Login from "./components/Login";
+// import Login from "./components/Login";
+import Login from "./pages/auth/login";
 import Password from "./components/Password";
 import Profile from "./components/Profile";
 import Register from "./components/Register";
