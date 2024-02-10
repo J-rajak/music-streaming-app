@@ -18,7 +18,8 @@ router.post("/register", async (req, res) => {
   }
   // valid email
   // create a new user
-  const hashedPassword = bcrypt.hash(password, 10);
+  const hashedPassword = await bcrypt.hash(password, 10);
+  console.log(hashedPassword);
   const newUserData = {
     email,
     password: hashedPassword,
@@ -26,10 +27,12 @@ router.post("/register", async (req, res) => {
     lastName,
     username,
   };
+  console.log(newUserData);
   const newUser = await User.create(newUserData);
 
   // create a token to return to the user
   const token = await getToken(email, newUser);
+  console.log(token);
 
   // return result to the user
   const userToReturn = { ...newUser.toJSON(), token };
@@ -54,7 +57,7 @@ router.post("/login", async (req, res) => {
   }
 
   const token = await getToken(user.email, user);
-  const userToReturn = {...user.toJSON(), token};
+  const userToReturn = { ...user.toJSON(), token };
   delete userToReturn.password;
   return res.status(200).json(userToReturn);
 });

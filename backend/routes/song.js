@@ -28,7 +28,7 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
     // get all songs where artist id == currentUser._id
-    const songs = await Song.find({ artist: req.user._id });
+    const songs = await Song.find({ artist: req.user._id }).populate("artist");
     return res.status(200).json({ data: songs });
   }
 );
@@ -59,7 +59,7 @@ router.get(
 
     // name: songName 
     // pattern matching instead of direct text matching
-    const songs = await Song.find({ name: songName });
+    const songs = await Song.find({ name: songName }).populate("artist");
     return res.status(200).json({ data: songs });
   }
 );
