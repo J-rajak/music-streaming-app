@@ -35,11 +35,16 @@ router.get(
   async (req, res) => {
     const playlistId = req.params.playlistId;
     // find a playlist matching the playlist id
-    const playlist = await Playlist.findOne({ _id: playlistId });
+    const playlist = await Playlist.findOne({ _id: playlistId }).populate({
+      path: "songs",
+      populate: {
+        path: "artist",
+      },
+    });
     if (!playlist) {
       return res.status(301).json({ err: "Invalid ID" });
     }
-    return res.status(200).json({data: playlist });
+    return res.status(200).json({ data: playlist });
   }
 );
 
@@ -56,6 +61,19 @@ router.get(
     }
 
     const playlists = await Playlist.find({ owner: artistId });
+    return res.status(200).json({ data: playlists });
+  }
+);
+
+// Get all playlists made by me
+router.get(
+  "/get/me",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    const artistId = req.user._id;
+    const playlists = await Playlist.find({ owner: artistId }).populate(
+      "owner"
+    );
     return res.status(200).json({ data: playlists });
   }
 );

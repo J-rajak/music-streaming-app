@@ -4,13 +4,13 @@ import { Icon } from "@iconify/react";
 import IconText from "../components/shared/IconText";
 import TextWithHover from "../components/shared/TextWithHover";
 import songContext from "../contexts/songContext";
-// import CreatePlaylistModal from "../modals/CreatePlaylistModal";
-// import AddToPlaylistModal from "../modals/AddToPlaylistModal";
+import CreatePlaylistModal from "../modals/CreatePlaylistModal";
+import AddToPlaylistModal from "../modals/AddToPlaylistModal";
 import { makeAuthenticatedPOSTRequest } from "../utils/serverHelpers";
 
 const LoggedInContainer = ({ children, curActiveScreen }) => {
-  // const [createPlaylistModalOpen, setCreatePlaylistModalOpen] = useState(false);
-  // const [addToPlaylistModalOpen, setAddToPlaylistModalOpen] = useState(false);
+  const [createPlaylistModalOpen, setCreatePlaylistModalOpen] = useState(false);
+  const [addToPlaylistModalOpen, setAddToPlaylistModalOpen] = useState(false);
 
   const {
     currentSong,
@@ -37,18 +37,19 @@ const LoggedInContainer = ({ children, curActiveScreen }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentSong && currentSong.track]);
 
-  // const addSongToPlaylist = async (playlistId) => {
-  //   const songId = currentSong._id;
+  const addSongToPlaylist = async (playlistId) => {
+    const songId = currentSong._id;
 
-  //   const payload = { playlistId, songId };
-  //   const response = await makeAuthenticatedPOSTRequest(
-  //     "/playlist/add/song",
-  //     payload
-  //   );
-  //   if (response._id) {
-  //     setAddToPlaylistModalOpen(false);
-  //   }
-  // };
+    const payload = { playlistId, songId };
+    console.log(payload);
+    const response = await makeAuthenticatedPOSTRequest(
+      "/playlist/add/song",
+      payload
+    );
+    if (response._id) {
+      setAddToPlaylistModalOpen(false);
+    }
+  };
 
   const playSound = () => {
     if (!soundPlayed) {
@@ -86,7 +87,7 @@ const LoggedInContainer = ({ children, curActiveScreen }) => {
 
   return (
     <div className="h-full w-full bg-app-black">
-      {/* {createPlaylistModalOpen && (
+      {createPlaylistModalOpen && (
         <CreatePlaylistModal
           closeModal={() => {
             setCreatePlaylistModalOpen(false);
@@ -100,7 +101,7 @@ const LoggedInContainer = ({ children, curActiveScreen }) => {
           }}
           addSongToPlaylist={addSongToPlaylist}
         />
-      )} */}
+      )}
       <div className={`${currentSong ? "h-9/10" : "h-full"} w-full flex`}>
         {/* This first div will be the left panel */}
         <div className="h-full w-1/5 bg-black flex flex-col justify-between pb-10">
@@ -140,7 +141,7 @@ const LoggedInContainer = ({ children, curActiveScreen }) => {
                 iconName={"material-symbols:add-box"}
                 displayText={"Create Playlist"}
                 onClick={() => {
-                  // setCreatePlaylistModalOpen(true);
+                  setCreatePlaylistModalOpen(true);
                 }}
               />
               <IconText
@@ -239,7 +240,7 @@ const LoggedInContainer = ({ children, curActiveScreen }) => {
               fontSize={30}
               className="cursor-pointer text-gray-500 hover:text-white"
               onClick={() => {
-                // setAddToPlaylistModalOpen(true);
+                setAddToPlaylistModalOpen(true);
               }}
             />
             <Icon

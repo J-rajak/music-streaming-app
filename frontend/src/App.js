@@ -12,12 +12,14 @@ import Home from "./pages/LoggedInHome";
 import UploadSong from "./pages/UploadSong";
 import SearchPage from "./pages/SearchPage";
 import MyMusic from "./pages/MyMusic";
+import SinglePlaylistView from "./pages/SinglePlaylistView";
+import Library from "./pages/Library";
 import "./index.css";
 
 const App = () => {
   const [currentSong, setCurrentSong] = useState(null);
   const [soundPlayed, setSoundPlayed] = useState(null);
-  const [ isPaused, setIsPaused ] = useState(true);
+  const [isPaused, setIsPaused] = useState(true);
   const [cookie, setCookie] = useCookies(["token"]);
   console.log(cookie);
   return (
@@ -35,7 +37,6 @@ const App = () => {
               isPaused,
               setIsPaused,
             }}
-
           >
             <Routes>
               <Route path="/home" element={<Home />} />
@@ -43,6 +44,11 @@ const App = () => {
               <Route path="/uploadSong" element={<UploadSong />} />
               <Route path="/myMusic" element={<MyMusic />} />
               <Route path="/search" element={<SearchPage />} />
+              <Route path="/library" element={<Library />} />
+              <Route
+                path="/playlist/:playlistId"
+                element={<SinglePlaylistView />}
+              />
             </Routes>
           </songContext.Provider>
         ) : (
