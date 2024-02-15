@@ -7,14 +7,15 @@ const TextInput = ({
   labelClassName,
 }) => {
   return (
-    <div className={`textInputDiv flex flex-col space-y-2 w-full ${className}`}>
-      <label for={label} className={`font-semibold ${labelClassName}`}>
+    <div>
+    {/* // <div className={`textInputDiv flex flex-col space-y-2 w-full ${className}`}> */}
+      {/* <label for={label} className={`font-semibold ${labelClassName}`}>
         {label}
-      </label>
+      </label> */}
       <input
         type="text"
         placeholder={placeholder}
-        className="p-3 border border-gray-600 border-solid rounded placeholder-gray-400"
+        className="block w-full p-4 text-lg rounded-sm bg-black"
         id={label}
         value={value}
         onChange={(e) => {
