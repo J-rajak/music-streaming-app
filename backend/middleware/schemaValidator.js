@@ -1,5 +1,5 @@
 const Joi = require("joi");
-const schemas = require("../util/schema");
+const schemas = require("../utils/schema");
 
 const supportedMethods = ["post", "put", "patch", "delete"];
 

@@ -88,7 +88,7 @@ const addSongToPlaylist = asyncHandler(async (req, res) => {
 });
 
 // Like a playlist
-// GET api/playlists/:playlistId/like
+// POST api/playlists/:playlistId/like
 const likePlaylist = asyncHandler(async (req, res) => {
   const playlistId = req.params.playlistId;
   const userId = req.user.id;

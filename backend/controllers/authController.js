@@ -48,7 +48,7 @@ const registerUser = asyncHandler(async (req, res) => {
       httpOnly: true,
       secure: true,
       sameSite: "none",
-      maxAge: 15 * 60 * 1000,
+      maxAge: 30 * 24 * 60 * 60 * 1000,
     });
 
     res.cookie("refreshToken", refreshToken, {
@@ -65,7 +65,7 @@ const registerUser = asyncHandler(async (req, res) => {
 //login user
 //POST auth/login
 const loginUser = asyncHandler(async (req, res) => {
-  const { username, password, recaptchaToken } = req.body;
+  const { username, password } = req.body;
   //verify all fields were filled
   if (!username || !password) {
     return res.status(400).json({ message: "Please enter all fields" });
@@ -77,15 +77,15 @@ const loginUser = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: "User does not exists" });
   }
 
-  const response = await fetch(
-    `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${recaptchaToken}`,
-    {
-      method: "POST",
-    }
-  );
+  // const response = await fetch(
+  //   `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${recaptchaToken}`,
+  //   {
+  //     method: "POST",
+  //   }
+  // );
 
-  const data = await response.json();
-  if (data.success) {
+  // const data = await response.json();
+  if (user) {
     //compare password
     const comparePassword = await user.comparePassword(password);
     if (!comparePassword) {
@@ -107,7 +107,7 @@ const loginUser = asyncHandler(async (req, res) => {
       httpOnly: true,
       secure: true,
       sameSite: "none",
-      maxAge: 15 * 60 * 1000, // 15 minutes (match accessToken expiration)
+      maxAge: 30 * 24 * 60 * 60 * 1000, // 15 days
     });
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
@@ -119,7 +119,7 @@ const loginUser = asyncHandler(async (req, res) => {
     res.status(200).json({ username: user.username });
   } else {
     res.status(400).json({
-      message: "ReCAPTCHA verification failed. Please try again",
+      message: "verification failed. Please try again",
     });
   }
 });
@@ -248,7 +248,7 @@ const refresh = asyncHandler(async (req, res) => {
     httpOnly: true,
     secure: true,
     sameSite: "none",
-    maxAge: 15 * 60 * 1000, // 15 minutes (match accessToken expiration)
+    maxAge: 15 * 24 * 60 * 60 * 1000, // 15 minutes (match accessToken expiration)
   });
 
   res.status(200).json({ message: "Token refreshed" });

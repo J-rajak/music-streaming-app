@@ -38,6 +38,11 @@ const UserSchema = new mongoose.Schema(
       },
     ],
     isAdmin: { type: Boolean, required: false, default: false },
+    isPremium: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
   },
   {
     timestamps: true,
@@ -66,4 +71,5 @@ UserSchema.methods.comparePassword = async function (candidatePassword) {
   }
 };
 
-module.exports = mongoose.model("user", UserSchema);
+module.exports = mongoose.model("User", UserSchema);
+

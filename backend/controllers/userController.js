@@ -1,4 +1,4 @@
-const User = require("../models.User");
+const User = require("../models/User");
 const asyncHandler = require("express-async-handler");
 const cloudinary = require("../config/cloudinary");
 
@@ -15,6 +15,7 @@ const getUserDetails = asyncHandler(async (req, res) => {
     })
     .lean()
     .exec();
+  console.log(user);
   if (!user) {
     return res.status(404).json({ message: "User not found" });
   }
@@ -22,7 +23,7 @@ const getUserDetails = asyncHandler(async (req, res) => {
 });
 
 //Get current user
-// Get api/users/myProfile
+// Get api/users/currentUser
 
 const getCurrentUser = asyncHandler(async (req, res) => {
   const userId = req.user.id;
@@ -60,7 +61,7 @@ const getCurrentUser = asyncHandler(async (req, res) => {
 const editUserDetails = asyncHandler(async (req, res) => {
   const userId = req.user.id;
   const { bio, country, image } = req.body;
-  const updatedUser = await User.findByAndUpdate(
+  const updatedUser = await User.findByIdAndUpdate(
     userId,
     { bio, country, image },
     { new: true }

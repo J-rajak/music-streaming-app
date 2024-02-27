@@ -36,7 +36,7 @@ const getArtisteDetails = asyncHandler(async (req, res) => {
 });
 
 // Like an artiste
-// GET api/artiste/:artisteId/like
+// POST api/artiste/:artisteId/like
 const likeArtiste = asyncHandler(async (req, res) => {
   const artisteId = req.params.artisteId;
   const userId = req.user.id;
@@ -47,7 +47,7 @@ const likeArtiste = asyncHandler(async (req, res) => {
   }
 
   //check if user already liked an artiste
-  const toogled = await artiste.toogledLike(userId);
+  const toogled = await artiste.toogleLike(userId);
   //update user favorite artistes if like was toogled
   if (toogled) {
     user.favoriteArtistes.push(artisteId);

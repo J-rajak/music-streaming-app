@@ -4,10 +4,11 @@ const User = require("../models/User");
 
 const verifyToken = asyncHandler((req, res, next) => {
   const { accessToken } = req.cookies;
+  console.log(req.cookies);
   if (!accessToken) {
     return res.status(401).send("Not Authorized, no token");
   }
-  jwt.verify(accessToken, process.env.jwt_SECRET, async (err, decodedUser) => {
+  jwt.verify(accessToken, process.env.JWT_SECRET, async (err, decodedUser) => {
     if (err) {
       return res.status(401).send("Not Authorized, invalid token");
     }
@@ -21,8 +22,8 @@ const verifyToken = asyncHandler((req, res, next) => {
 });
 
 const generateAccessToken = ({ id, username }) => {
-  const accessToken = jwt.sign({ id, username }, process.env.jwt_SECRET, {
-    expiresIn: "15",
+  const accessToken = jwt.sign({ id, username }, process.env.JWT_SECRET, {
+    expiresIn: "30d",
   });
   return {
     accessToken,
@@ -30,7 +31,7 @@ const generateAccessToken = ({ id, username }) => {
 };
 
 const generateRefreshToken = ({ id, username }) => {
-  const refreshToken = jwt.sign({ id, username }, process.env.jwt_SECRET, {
+  const refreshToken = jwt.sign({ id, username }, process.env.JWT_SECRET, {
     expiresIn: "30d",
   });
   return {
@@ -38,4 +39,4 @@ const generateRefreshToken = ({ id, username }) => {
   };
 };
 
-module.exports = {generateAccessToken, generateRefreshToken, verifyToken}
+module.exports = { generateAccessToken, generateRefreshToken, verifyToken };
