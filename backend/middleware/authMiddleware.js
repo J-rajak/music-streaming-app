@@ -4,7 +4,7 @@ const User = require("../models/User");
 
 const verifyToken = asyncHandler((req, res, next) => {
   const { accessToken } = req.cookies;
-  console.log(req.cookies);
+
   if (!accessToken) {
     return res.status(401).send("Not Authorized, no token");
   }
@@ -39,4 +39,19 @@ const generateRefreshToken = ({ id, username }) => {
   };
 };
 
-module.exports = { generateAccessToken, generateRefreshToken, verifyToken };
+const verifyIsAdmin = asyncHandler(async (req, res, next) => {
+  console.log(req.user);
+  if (req.user && req.user.isAdmin) {
+    res.status(200).json({ message: "Admin found" });
+    next();
+  } else {
+    return res.status(401).send("Unauthorized.. admin required");
+  }
+});
+
+module.exports = {
+  generateAccessToken,
+  generateRefreshToken,
+  verifyToken,
+  verifyIsAdmin,
+};

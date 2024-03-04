@@ -57,7 +57,7 @@ const HomeFeature = () => {
                   >
                     {song?.artiste.name}
                   </Link>{" "}
-                  <span className="text-gray-300">in</span>{" "}
+                  <span className="text-white">in</span>{" "}
                   <Link
                     to={`/albums/${song?.album._id}`}
                     className={`hover:underline hover:decoration-2 hover:underline-offset-4 hover:decoration-white`}

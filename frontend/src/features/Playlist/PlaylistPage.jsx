@@ -36,7 +36,7 @@ const PlaylistPage = () => {
             className={`bg-${selectedTheme} text-gray-100 hover:bg-${selectedTheme}-50 active:bg-opacity-90 py-2 px-4 rounded-md text-lg font-semibold transition duration-300`}
             onClick={() => navigate("/explore")}
           >
-            Find songs on Jollify
+            Find songs on echosync
           </button>
         ) : (
           <SongList songs={playlist.songs} listType={"playlist"} />

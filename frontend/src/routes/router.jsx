@@ -26,6 +26,9 @@ const LoginPage = lazy(() => import("../features/Auth/LoginPage"));
 const SignupPage = lazy(() => import("../features/Auth/SignupPage"));
 const MyProfilePage = lazy(() => import("../features/Users/MyProfilePage"));
 
+// admin pages
+const AdminDashboard = lazy(() => import("../features/admin/Dashboard"));
+
 
 const Router = () => {
   const { isAuthenticated } = useSelector((state) => state.auth);
@@ -37,6 +40,7 @@ const Router = () => {
       children: [
         { index: true, element: <HomePage /> },
         { path: "explore", element: <SongsPage /> },
+        { path: "songs", element: <SongsPage /> },
         { path: "songs/:id", element: <SongPage /> },
         { path: "playlists", element: <PlaylistsPage /> },
         { path: "playlists/:id", element: <PlaylistPage /> },
@@ -75,6 +79,10 @@ const Router = () => {
           ) : (
             <Navigate to="/" replace />
           ),
+        },
+        {
+          path: "admin",
+          element: <AdminDashboard />
         },
       ],
     },

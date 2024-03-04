@@ -27,7 +27,7 @@ const HomeBanner = () => {
             Discover Great Music
           </h1>
           <p className="md:text-lg mb-10 text-gray-300">
-            Explore the latest songs, albums, and playlists on Jollify
+            Explore the latest songs, albums, and playlists on echosync
           </p>
           <button
             className={`bg-${selectedTheme} text-white hover:bg-${selectedTheme}-50 active:bg-opacity-90 py-2 px-6 rounded-full md:text-lg font-semibold transition duration-300`}

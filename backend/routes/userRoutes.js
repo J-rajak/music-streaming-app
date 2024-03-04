@@ -6,13 +6,19 @@ const {
   editUserDetails,
   uploadImage,
   getCurrentUser,
+  getUsers,
+  deleteUser,
 } = require("../controllers/userController");
-const { verifyToken } = require("../middleware/authMiddleware");
+const { verifyToken, verifyIsAdmin } = require("../middleware/authMiddleware");
 const upload = require("../middleware/multer");
 
+//user routes
 router.patch("/edit", verifyToken, editUserDetails);
 router.get("/currentUser", verifyToken, getCurrentUser);
 router.post("/upload", verifyToken, upload.single("image"), uploadImage);
 router.get("/:userId", getUserDetails);
 
+//admin routes
+router.get("/admin/getUsers", verifyIsAdmin, getUsers);
+router.delete("/admin/deleteUser", verifyIsAdmin, deleteUser);
 module.exports = router;

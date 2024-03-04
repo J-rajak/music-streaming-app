@@ -136,7 +136,7 @@ const LoginPage = () => {
         >
           <div className="absolute bg-black opacity-60 inset-0 z-0"></div>
         </div>
-        <div className="w-full py-6 z-20">
+        <div className=" sm:w-2/3 w-full py-6 z-20">
           <div className="logo p-3 mb-4 border-b border-solid border-white w-full flex justify-center">
             <Icon icon="ri:netease-cloud-music-line" width="50" height="50" />
           </div>
@@ -158,13 +158,14 @@ const LoginPage = () => {
               <span>Log in with Facebook</span>
             </button>
           </div>
-            <div className="flex items-center sm:flex-col h-full pt-2">
-              <span className=" p-1 rounded-lg">
-                OR
-              </span>
+          <div className="flex items-center sm:flex-col h-full pt-2">
+            <span className=" p-1 rounded-lg">OR</span>
           </div>
 
-          <form className="w-full px-4 lg:px-0 mx-auto" onSubmit={handleSubmit}>
+          <form
+            className=" w-full px-4 lg:px-0 mx-auto"
+            onSubmit={handleSubmit}
+          >
             <div className="pb-1 pt-2">
               <input
                 className="block w-full p-4 text-lg rounded-lg bg-black"

@@ -7,7 +7,7 @@ const cloudinary = require("../config/cloudinary");
 const getUserDetails = asyncHandler(async (req, res) => {
   const userId = req.params.userId;
   const user = await User.findById(userId)
-    .select("username bio country image playlist")
+    .select("username bio country image playlist isAdmin isPremium")
     .populate({
       path: "playlist",
       select: "title coverImage",
@@ -15,7 +15,7 @@ const getUserDetails = asyncHandler(async (req, res) => {
     })
     .lean()
     .exec();
-  console.log(user);
+
   if (!user) {
     return res.status(404).json({ message: "User not found" });
   }
@@ -24,11 +24,12 @@ const getUserDetails = asyncHandler(async (req, res) => {
 
 //Get current user
 // Get api/users/currentUser
-
 const getCurrentUser = asyncHandler(async (req, res) => {
   const userId = req.user.id;
   const user = await User.findById(userId)
-    .select("username bio country image playlist, favoriteArtistes")
+    .select(
+      "username bio country image isAdmin isPremium playlist, favoriteArtistes"
+    )
     .populate({
       path: "playlist",
       select: "title coverImage",
@@ -101,9 +102,29 @@ const uploadImage = asyncHandler(async (req, res) => {
   res.status(200).json({ message: "Profile image successfully uploaded" });
 });
 
+// admin functionality
+
+//get users
+const getUsers = asyncHandler(async (req, res) => {
+  const users = await User.find({}).select("-password");
+  return res.json(users);
+});
+
+// Delete user
+const deleteUser = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user.id);
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+  await user.remove();
+  res.status(200).json({ message: "user removed" });
+});
+
 module.exports = {
   getUserDetails,
   getCurrentUser,
   editUserDetails,
   uploadImage,
+  getUsers,
+  deleteUser,
 };
