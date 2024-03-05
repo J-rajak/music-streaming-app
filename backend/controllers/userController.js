@@ -107,17 +107,28 @@ const uploadImage = asyncHandler(async (req, res) => {
 //get users
 const getUsers = asyncHandler(async (req, res) => {
   const users = await User.find({}).select("-password");
-  return res.json(users);
+  res.status(200).json(users);
+});
+
+const getUser = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.params.id).select(
+    "username email isAdmin"
+  );
+  if (!user) {
+    return res.status(400).json({ message: "user not found" });
+  }
+  res.status(200).send(user);
+  next();
 });
 
 // Delete user
 const deleteUser = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user.id);
-  if (!user) {
+  const userId = req.params.id;
+  const deleteUser = await User.findByIdAndDelete(userId);
+  if (!deleteUser) {
     return res.status(404).json({ message: "User not found" });
   }
-  await user.remove();
-  res.status(200).json({ message: "user removed" });
+  res.status(200).json({ message: "user deleted successfully" });
 });
 
 module.exports = {

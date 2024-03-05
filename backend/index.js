@@ -12,6 +12,7 @@ const songRoutes = require("./routes/songRoutes");
 const artisteRoutes = require("./routes/artisteRoutes");
 const albumRoutes = require("./routes/albumRoutes");
 const playlistRoutes = require("./routes/playlistRoutes");
+const { verifyToken, verifyIsAdmin } = require("./middleware/authMiddleware");
 const { errorHandler } = require("./middleware/errorHandler");
 
 connectDB();

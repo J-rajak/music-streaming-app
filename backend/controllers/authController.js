@@ -38,17 +38,23 @@ const registerUser = asyncHandler(async (req, res) => {
     const { accessToken } = generateAccessToken({
       id: newUser._id,
       username: newUser.username,
+      email: newUser.email,
+      isAdmin: newUser.isAdmin,
+      isPremium: newUser.isPremium,
     });
     const { refreshToken } = generateRefreshToken({
       id: newUser._id,
       username: newUser.username,
+      email: newUser.email,
+      isAdmin: newUser.isAdmin,
+      isPremium: newUser.isPremium,
     });
 
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
       secure: true,
       sameSite: "none",
-      maxAge: 30 * 24 * 60 * 60 * 1000,
+      maxAge: 15 * 24 * 60 * 60 * 1000,
     });
 
     res.cookie("refreshToken", refreshToken, {
@@ -97,17 +103,23 @@ const loginUser = asyncHandler(async (req, res) => {
     const { accessToken } = generateAccessToken({
       id: user._id,
       username: user.username,
+      email: user.email,
+      isAdmin: user.isAdmin,
+      isPremium: user.isPremium,
     });
     const { refreshToken } = generateRefreshToken({
       id: user._id,
       username: user.username,
+      email: user.email,
+      isAdmin: user.isAdmin,
+      isPremium: user.isPremium,
     });
 
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
       secure: true,
       sameSite: "none",
-      maxAge: 30 * 24 * 60 * 60 * 1000, // 15 days
+      maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days
     });
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
@@ -242,6 +254,9 @@ const refresh = asyncHandler(async (req, res) => {
   const { accessToken } = generateAccessToken({
     id: decoded.id,
     username: decoded.username,
+    email: decoded.email,
+    isAdmin: decoded.isAdmin,
+    isPremium: decoded.isPremium,
   });
 
   res.cookie("accessToken", accessToken, {

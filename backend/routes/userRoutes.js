@@ -19,6 +19,7 @@ router.post("/upload", verifyToken, upload.single("image"), uploadImage);
 router.get("/:userId", getUserDetails);
 
 //admin routes
+router.use(verifyToken);
 router.get("/admin/getUsers", verifyIsAdmin, getUsers);
-router.delete("/admin/deleteUser", verifyIsAdmin, deleteUser);
+router.delete("/admin/:id", verifyIsAdmin, deleteUser);
 module.exports = router;
