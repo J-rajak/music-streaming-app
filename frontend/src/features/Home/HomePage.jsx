@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import HomeBanner from "./HomeBanner";
 import Recommend from "../../components/Recommend";
 import HomeFeature from "./HomeFeature";
-import Search from "../../components/Search";
+import Search from "../SearchSongs/Search";
 import HomeFront from "./HomeFront";
 import { useLoginSuccessQuery } from "../Auth/authApiSlice";
 import { useDispatch, useSelector } from "react-redux";
