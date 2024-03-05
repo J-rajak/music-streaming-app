@@ -11,6 +11,8 @@ const Search = () => {
   const handleSearchChange = (e) => {
     const newQuery = e.target.value;
     setQuery(newQuery);
+    console.log(newQuery);
+    
     // setQuery(newQuery);
     // dispatch(searchSongs(newQuery));
   };
