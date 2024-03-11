@@ -1,20 +1,20 @@
 import { useEffect, useState } from "react";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { useGetCurrentUserQuery } from "../features/Users/userApiSlice";
+import { useGetCurrentUserQuery } from "../../features/Users/userApiSlice";
 import {
   FaHome,
   FaCompactDisc,
   FaHeadphones,
   FaFolderOpen,
-  FaUserAstronaut,
-  FaRegHeart,
+  // FaUserAstronaut,
+  // FaRegHeart,
   FaMusic,
   FaUser,
 } from "react-icons/fa";
 import { BiMenuAltLeft } from "react-icons/bi";
 import { AiOutlineClose } from "react-icons/ai";
-import { MdQueue } from "react-icons/md";
+// import { MdQueue } from "react-icons/md";
 
 const NavContent = () => {
   const selectedTheme = useSelector((state) => state.theme);
@@ -87,7 +87,7 @@ const NavContent = () => {
       <ul className="flex flex-col flex-1 gap-8">
         <li>
           <NavLink
-            to="/"
+            to="/admin"
             className={({ isActive }) =>
               `flex items-center justify-center w-full  hover:text-${selectedTheme} ${
                 isActive
@@ -102,7 +102,7 @@ const NavContent = () => {
         </li>
         <li>
           <NavLink
-            to="/explore"
+            to="/admin/songs"
             className={({ isActive }) =>
               `flex items-center justify-center w-full hover:text-${selectedTheme} ${
                 isActive
@@ -112,7 +112,7 @@ const NavContent = () => {
             }
           >
             <FaCompactDisc className="text-base" />
-            <span className="ml-4">Explore</span>
+            <span className="ml-4">Songs</span>
           </NavLink>
         </li>
         <li>
@@ -127,7 +127,7 @@ const NavContent = () => {
             }
           >
             <FaHeadphones className="text-base" />
-            <span className="ml-4">Playlists</span>
+            <span className="ml-4">Albums</span>
           </NavLink>
         </li>
         <li>
@@ -142,11 +142,11 @@ const NavContent = () => {
             }
           >
             <FaFolderOpen className="text-base" />
-            <span className="ml-4">Albums</span>
+            <span className="ml-4">Artistes</span>
           </NavLink>
         </li>
-        <li>
-          <NavLink
+        {/* <li> */}
+          {/* <NavLink
             to="/artistes"
             className={({ isActive }) =>
               `flex items-center justify-center w-full hover:text-${selectedTheme} ${
@@ -159,9 +159,9 @@ const NavContent = () => {
             <FaUserAstronaut className="text-base" />
             <span className="ml-4">Artistes</span>
           </NavLink>
-        </li>
+        </li> */}
       </ul>
-      {isAuthenticated && (
+      {/* {isAuthenticated && (
         <div className="mt-8">
           <div className="mx-4 mb-4 flex items-center">
             <span className="mx-2 flex-grow h-[1px] bg-gray-500"></span>
@@ -199,7 +199,7 @@ const NavContent = () => {
             </li>
           </ul>
         </div>
-      )}
+      )} */}
     </>
   );
 };

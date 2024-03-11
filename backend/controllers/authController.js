@@ -64,7 +64,11 @@ const registerUser = asyncHandler(async (req, res) => {
       maxAge: 30 * 24 * 60 * 60 * 1000,
     });
 
-    res.status(201).json({ username: newUser.username });
+    res.status(201).json({
+      username: newUser.username,
+      isAdmin: newUser.isAdmin,
+      isPremium: newUser.isPremium,
+    });
   }
 });
 
@@ -128,7 +132,11 @@ const loginUser = asyncHandler(async (req, res) => {
       maxAge: 30 * 24 * 60 * 60 * 1000, //30 days (match refreshToken expiration)
     });
 
-    res.status(200).json({ username: user.username });
+    res.status(200).json({
+      username: user.username,
+      isAdmin: user.isAdmin,
+      isPremium: user.isPremium,
+    });
   } else {
     res.status(400).json({
       message: "verification failed. Please try again",
@@ -228,7 +236,13 @@ const twitterLogin = asyncHandler(async (req, res) => {
 // @access Private
 const loginSuccess = asyncHandler(async (req, res) => {
   if (req.user) {
-    res.status(200).json({ username: req.user.username });
+    res
+      .status(200)
+      .json({
+        username: req.user.username,
+        isAdmin: req.user.isAdmin,
+        isPremium: req.user.isPremium,
+      });
   }
 });
 

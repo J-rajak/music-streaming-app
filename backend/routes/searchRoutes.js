@@ -5,6 +5,6 @@ const {
 } = require("../controllers/searchController");
 const { verifyToken } = require("../middleware/authMiddleware");
 
-router.get("/:searchString", FindSearchedDataInAllEntries);
+router.get("/", FindSearchedDataInAllEntries);
 
 module.exports = router;

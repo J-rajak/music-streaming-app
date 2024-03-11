@@ -12,8 +12,17 @@ const songRoutes = require("./routes/songRoutes");
 const artisteRoutes = require("./routes/artisteRoutes");
 const albumRoutes = require("./routes/albumRoutes");
 const playlistRoutes = require("./routes/playlistRoutes");
-const { verifyToken, verifyIsAdmin } = require("./middleware/authMiddleware");
+const searchRoutes = require("./routes/searchRoutes");
 const { errorHandler } = require("./middleware/errorHandler");
+
+// Configure CORS to allow requests only from 'http://localhost:5173'
+const corsOptions = {
+  origin: ["http://localhost:5173", "http://localhost:4000"]
+};
+app.use(cors(corsOptions));
+
+// Your other routes and middleware
+
 
 connectDB();
 
@@ -28,6 +37,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/auth", authRoutes);
+app.use("/api/search", searchRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/songs", songRoutes);
 app.use("/api/artistes", artisteRoutes);

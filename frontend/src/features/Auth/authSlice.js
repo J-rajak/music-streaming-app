@@ -5,6 +5,8 @@ const authSlice = createSlice({
   initialState: {
     username: null,
     isAuthenticated: false,
+    isAdmin: false,
+    isPremium: false,
     provider: null,
   },
   reducers: {
@@ -14,6 +16,12 @@ const authSlice = createSlice({
     },
     setProvider: (state, action) => {
       state.provider = action.payload;
+    },
+    setIsAdmin: (state, action) => {
+      state.isAdmin = action.payload;
+    },
+    setIsPremium: (state, action) => {
+      state.isPremium = action.payload;
     },
     logoutUser: (state) => {
       state.username = null;

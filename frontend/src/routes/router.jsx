@@ -1,6 +1,7 @@
 import { Suspense, lazy } from "react";
 import { Navigate, createBrowserRouter } from "react-router-dom";
 import Layout from "../components/Layout";
+import AdminLayout from "../components/admin/AdminLayout"
 import HomePage from "../features/Home/HomePage";
 import PrivateRoute from "./PrivateRoute";
 import { RouterProvider } from "react-router-dom";
@@ -28,14 +29,14 @@ const MyProfilePage = lazy(() => import("../features/Users/MyProfilePage"));
 
 // admin pages
 const AdminDashboard = lazy(() => import("../features/admin/Dashboard"));
-
+const AdminSongPage = lazy(() => import("../features/admin/AdminSongPage"));
 
 const Router = () => {
-  const { isAuthenticated } = useSelector((state) => state.auth);
+  const { isAuthenticated, isAdmin } = useSelector((state) => state.auth);
   const selectedTheme = useSelector((state) => state.theme);
   const router = createBrowserRouter([
     {
-      element: <Layout />,
+      element: isAdmin ? (<AdminLayout />) : (<Layout />) ,
       errorElement: <ErrorPage />,
       children: [
         { index: true, element: <HomePage /> },
@@ -82,7 +83,19 @@ const Router = () => {
         },
         {
           path: "admin",
-          element: <AdminDashboard />
+          element: isAdmin ? (
+            <AdminDashboard />
+          ) : (
+            <Navigate to="/" replace />
+          ),
+        },
+        {
+          path: "admin/songs",
+          element: isAdmin ? (
+            <AdminSongPage />
+          ) : (
+            <Navigate to="/" replace />
+          ),
         },
       ],
     },

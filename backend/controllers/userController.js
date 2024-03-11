@@ -110,9 +110,10 @@ const getUsers = asyncHandler(async (req, res) => {
   res.status(200).json(users);
 });
 
+//get a single user
 const getUser = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.params.id).select(
-    "username email isAdmin"
+    "username email isAdmin isPremium"
   );
   if (!user) {
     return res.status(400).json({ message: "user not found" });
@@ -120,6 +121,21 @@ const getUser = asyncHandler(async (req, res, next) => {
   res.status(200).send(user);
   next();
 });
+
+//update user
+const updateUser = asyncHandler(async(req, res) => {
+  const user = await User.findById(req.params.id);
+
+  if(!user) {
+    return res.status(400).json({message: "user not found"})
+
+  }
+  user.username = req.body.username || user.username;
+  user.email = req.body.email || user.email;
+  user.isAdmin = req.body.isAdmin;
+  user.isPremium = req.body.isPremium;
+
+})
 
 // Delete user
 const deleteUser = asyncHandler(async (req, res) => {

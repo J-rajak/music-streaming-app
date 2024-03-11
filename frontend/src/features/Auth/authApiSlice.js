@@ -1,6 +1,6 @@
 import { apiSlice } from "../../app/apiSlice";
 import { updateTheme } from "../../app/themeSlice";
-import { setUser, logoutUser } from "./authSlice";
+import { setUser, setIsAdmin, setIsPremium, logoutUser } from "./authSlice";
 
 export const authApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -13,8 +13,11 @@ export const authApiSlice = apiSlice.injectEndpoints({
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
+          console.log(data);
           dispatch(updateTheme("rock"));
           dispatch(setUser(data.username));
+          dispatch(setIsAdmin(data.isAdmin));
+          dispatch(setIsPremium(data.isPremium));
         } catch (err) {
           console.error(err);
         }
@@ -29,8 +32,11 @@ export const authApiSlice = apiSlice.injectEndpoints({
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
+          console.log(data);
           dispatch(updateTheme("rock"));
           dispatch(setUser(data.username));
+          dispatch(setIsAdmin(data.isAdmin));
+          dispatch(setIsPremium(data.isPremium));
         } catch (err) {
           console.error(err);
         }
@@ -41,8 +47,11 @@ export const authApiSlice = apiSlice.injectEndpoints({
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
+          console.log(data)
           dispatch(updateTheme("rock"));
           dispatch(setUser(data.username));
+          dispatch(setIsAdmin(data.isAdmin));
+          dispatch(setIsPremium(data.isPremium));
         } catch (err) {
           console.error(err);
         }
