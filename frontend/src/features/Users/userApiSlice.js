@@ -5,6 +5,10 @@ export const userApiSlice = apiSlice.injectEndpoints({
     getUserDetails: builder.query({
       query: (userId) => `/api/users/${userId}`,
     }),
+    getAllUsers: builder.query({
+      query: () => `api/users/admin/getUsers`,
+      providesTags: ["Users"],
+    }),
     getCurrentUser: builder.query({
       query: () => `/api/users/currentUser`,
       providesTags: ["User"],
@@ -30,6 +34,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
 
 export const {
   useGetUserDetailsQuery,
+  useGetAllUsersQuery,
   useGetCurrentUserQuery,
   useEditUserDetailsMutation,
   useUploadImageMutation,

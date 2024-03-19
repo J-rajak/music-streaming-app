@@ -7,14 +7,11 @@ import {
   FaCompactDisc,
   FaHeadphones,
   FaFolderOpen,
-  // FaUserAstronaut,
-  // FaRegHeart,
   FaMusic,
   FaUser,
 } from "react-icons/fa";
 import { BiMenuAltLeft } from "react-icons/bi";
 import { AiOutlineClose } from "react-icons/ai";
-// import { MdQueue } from "react-icons/md";
 
 const NavContent = () => {
   const selectedTheme = useSelector((state) => state.theme);
@@ -117,7 +114,7 @@ const NavContent = () => {
         </li>
         <li>
           <NavLink
-            to="/playlists"
+            to="/admin/albums"
             className={({ isActive }) =>
               `flex items-center justify-center w-full hover:text-${selectedTheme} ${
                 isActive
@@ -132,7 +129,7 @@ const NavContent = () => {
         </li>
         <li>
           <NavLink
-            to="/albums"
+            to="/admin/artistes"
             className={({ isActive }) =>
               `flex items-center justify-center w-full hover:text-${selectedTheme} ${
                 isActive
@@ -145,61 +142,7 @@ const NavContent = () => {
             <span className="ml-4">Artistes</span>
           </NavLink>
         </li>
-        {/* <li> */}
-          {/* <NavLink
-            to="/artistes"
-            className={({ isActive }) =>
-              `flex items-center justify-center w-full hover:text-${selectedTheme} ${
-                isActive
-                  ? `text-${selectedTheme} border-r-4 border-${selectedTheme}`
-                  : ""
-              }`
-            }
-          >
-            <FaUserAstronaut className="text-base" />
-            <span className="ml-4">Artistes</span>
-          </NavLink>
-        </li> */}
       </ul>
-      {/* {isAuthenticated && (
-        <div className="mt-8">
-          <div className="mx-4 mb-4 flex items-center">
-            <span className="mx-2 flex-grow h-[1px] bg-gray-500"></span>
-          </div>
-          <ul className="flex flex-col flex-1 gap-8">
-            <li>
-              <NavLink
-                to="/favorites"
-                className={({ isActive }) =>
-                  `flex items-center justify-center w-full  hover:text-${selectedTheme} ${
-                    isActive
-                      ? `text-${selectedTheme} border-r-4 border-${selectedTheme}`
-                      : ""
-                  }`
-                }
-              >
-                <FaRegHeart className="text-base" />
-                <span className="ml-4">Favorites</span>
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/myPlaylist"
-                className={({ isActive }) =>
-                  `flex items-center justify-center w-full  hover:text-${selectedTheme} ${
-                    isActive
-                      ? `text-${selectedTheme} border-r-4 border-${selectedTheme}`
-                      : ""
-                  }`
-                }
-              >
-                <MdQueue className="text-base" />
-                <span className="ml-4">My Playlists</span>
-              </NavLink>
-            </li>
-          </ul>
-        </div>
-      )} */}
     </>
   );
 };
@@ -269,7 +212,7 @@ const MobileNav = () => {
             <span className=" filter-none">
               <FaMusic className={`text-${selectedTheme} `} />
             </span>
-            <Link to={`/`} className="saturate-200">
+            <Link to={`/admin`} className="saturate-200">
               echosync
             </Link>
           </h1>
@@ -325,7 +268,7 @@ const DesktopNav = () => {
         <span className=" filter-none">
           <FaMusic className={`text-${selectedTheme} `} />
         </span>
-        <Link to={`/`} className="saturate-200">
+        <Link to={`/admin`} className="saturate-200">
           echosync
         </Link>
       </h1>

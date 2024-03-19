@@ -10,7 +10,7 @@ const cloudinary = require("../config/cloudinary");
 const getUserDetails = asyncHandler(async (req, res) => {
   const userId = req.params.userId;
   const user = await User.findById(userId)
-    .select("username bio country image playlist isAdmin isPremium")
+    .select("username email bio country image playlist isAdmin isPremium")
     .populate({
       path: "playlist",
       select: "title coverImage",
@@ -61,6 +61,7 @@ const getCurrentUser = asyncHandler(async (req, res) => {
   res.status(200).json(user);
 });
 
+//user
 // Update user details PATCH api/users/edit
 const editUserDetails = asyncHandler(async (req, res) => {
   const userId = req.user.id;
@@ -113,18 +114,6 @@ const getUsers = asyncHandler(async (req, res) => {
   res.status(200).json(users);
 });
 
-//get a single user
-const getUser = asyncHandler(async (req, res, next) => {
-  const user = await User.findById(req.params.id).select(
-    "username email isAdmin isPremium"
-  );
-  if (!user) {
-    return res.status(400).json({ message: "user not found" });
-  }
-  res.status(200).send(user);
-  next();
-});
-
 //update user
 const updateUser = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id);
@@ -132,10 +121,14 @@ const updateUser = asyncHandler(async (req, res) => {
   if (!user) {
     return res.status(400).json({ message: "user not found" });
   }
+
   user.username = req.body.username || user.username;
   user.email = req.body.email || user.email;
   user.isAdmin = req.body.isAdmin;
   user.isPremium = req.body.isPremium;
+
+  await user.save();
+  res.status(200).json(user);
 });
 
 // Delete user
@@ -185,7 +178,7 @@ const uploadSong = asyncHandler(async (req, res) => {
     res.status(500).json({ message: "Failed to upload song" });
   }
 
-  res.status(201).json(newSong);
+  res.status(200).json(newSong);
 });
 
 // post artiste
@@ -253,5 +246,9 @@ module.exports = {
   editUserDetails,
   uploadImage,
   getUsers,
+  updateUser,
   deleteUser,
+  uploadSong,
+  postArtiste,
+  postAlbum,
 };

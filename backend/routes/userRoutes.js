@@ -7,6 +7,7 @@ const {
   uploadImage,
   getCurrentUser,
   getUsers,
+  updateUser,
   deleteUser,
 } = require("../controllers/userController");
 const { verifyToken, verifyIsAdmin } = require("../middleware/authMiddleware");
@@ -21,5 +22,6 @@ router.get("/:userId", getUserDetails);
 //admin routes
 router.use(verifyToken);
 router.get("/admin/getUsers", verifyIsAdmin, getUsers);
+router.put("/admin/:id", verifyIsAdmin, updateUser)
 router.delete("/admin/:id", verifyIsAdmin, deleteUser);
 module.exports = router;

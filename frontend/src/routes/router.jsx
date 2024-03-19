@@ -1,9 +1,10 @@
 import { Suspense, lazy } from "react";
 import { Navigate, createBrowserRouter } from "react-router-dom";
 import Layout from "../components/Layout";
-import AdminLayout from "../components/admin/AdminLayout"
+import AdminLayout from "../components/admin/AdminLayout";
 import HomePage from "../features/Home/HomePage";
 import PrivateRoute from "./PrivateRoute";
+import AdminRoute from "./AdminRoute";
 import { RouterProvider } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
@@ -28,15 +29,22 @@ const SignupPage = lazy(() => import("../features/Auth/SignupPage"));
 const MyProfilePage = lazy(() => import("../features/Users/MyProfilePage"));
 
 // admin pages
-const AdminDashboard = lazy(() => import("../features/admin/Dashboard"));
+const AdminDashboard = lazy(() => import("../features/admin/AdminDashboard"));
 const AdminSongPage = lazy(() => import("../features/admin/AdminSongPage"));
+const AdminAlbumPage = lazy(() => import("../features/admin/AdminAlbumPage"));
+const AdminArtistePage = lazy(() =>
+  import("../features/admin/AdminArtistePage")
+);
+const AdminEditUserPage = lazy(() =>
+  import("../features/admin/AdminEditUserPage")
+);
 
 const Router = () => {
   const { isAuthenticated, isAdmin } = useSelector((state) => state.auth);
   const selectedTheme = useSelector((state) => state.theme);
   const router = createBrowserRouter([
     {
-      element: isAdmin ? (<AdminLayout />) : (<Layout />) ,
+      element: isAdmin ? <AdminLayout /> : <Layout />,
       errorElement: <ErrorPage />,
       children: [
         { index: true, element: <HomePage /> },
@@ -83,19 +91,23 @@ const Router = () => {
         },
         {
           path: "admin",
-          element: isAdmin ? (
-            <AdminDashboard />
-          ) : (
-            <Navigate to="/" replace />
-          ),
+          element: <AdminRoute component={AdminDashboard} />,
+        },
+        {
+          path: "admin/editUser/:id",
+          element: <AdminRoute component={AdminEditUserPage} />,
         },
         {
           path: "admin/songs",
-          element: isAdmin ? (
-            <AdminSongPage />
-          ) : (
-            <Navigate to="/" replace />
-          ),
+          element: <AdminRoute component={AdminSongPage} />,
+        },
+        {
+          path: "admin/albums",
+          element: <AdminRoute component={AdminAlbumPage} />,
+        },
+        {
+          path: "admin/artistes",
+          element: <AdminRoute component={AdminArtistePage} />,
         },
       ],
     },
