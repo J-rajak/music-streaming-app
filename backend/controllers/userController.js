@@ -138,7 +138,7 @@ const deleteUser = asyncHandler(async (req, res) => {
   if (!deleteUser) {
     return res.status(404).json({ message: "User not found" });
   }
-  res.status(200).json({ message: "user deleted successfully" });
+  res.status(200).send("user removed");
 });
 
 //upload song

@@ -6,9 +6,8 @@ const { shuffleArray } = require("../utils/index");
 // GET all albums
 // GET api/albums
 const getAllAlbums = asyncHandler(async (req, res) => {
-  const limit = parseInt(req.query.limit);
+  // const limit = parseInt(req.query.limit);
   const albums = await Album.find({})
-    .limit()
     .lean()
     .populate("artiste", "name");
 

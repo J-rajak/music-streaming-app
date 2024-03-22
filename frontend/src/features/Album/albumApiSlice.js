@@ -3,7 +3,7 @@ import { apiSlice } from "../../app/apiSlice";
 const albumApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getAllAlbums: builder.query({
-      query: (limit) => `/api/albums?limit=${limit}`,
+      query: () => `/api/albums`,
     }),
     getAlbumDetails: builder.query({
       query: (albumId) => `/api/albums/${albumId}`,

@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 const EditUserPageComponent = ({ updateUserApiRequest, fetchUser }) => {
   const selectedTheme = useSelector((state) => state.theme);
   // const [validated, setValidated] = useState(false);
-  const [user, setUser] = useState([]);
+  const [user, setUser] = useState({});
   const [isAdminState, setIsAdminState] = useState(false);
   const [isPremiumState, setIsPremiumState] = useState(false);
   const [updateUserResponseState, setUpdateUserResponseState] = useState({
@@ -95,7 +95,7 @@ const EditUserPageComponent = ({ updateUserApiRequest, fetchUser }) => {
               className="block w-full p-4 text-lg rounded-sm bg-black text-white"
               type="text"
               placeholder="Country"
-              value={user.country}
+              value={user.country || ''}
               required
               disabled
             />

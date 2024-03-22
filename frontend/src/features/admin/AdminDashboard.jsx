@@ -1,7 +1,6 @@
-// import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { FaUser } from "react-icons/fa";
-// import EditUserModal from "./EditUserModal";
 import Loading from "../../components/Loading";
 import ErrorMsg from "../../components/ErrorMsg";
 import { useGetAllUsersQuery } from "../Users/userApiSlice";
@@ -9,8 +8,17 @@ import { Link } from "react-router-dom";
 
 const Dashboard = () => {
   const selectedTheme = useSelector((state) => state.theme);
-  const { data: users, isLoading, isError, error } = useGetAllUsersQuery();
+  const [users, setUsers] = useState([]);
+  const { data: usersData, isLoading, isError, error } = useGetAllUsersQuery();
   // const [isModalOpen, setIsModalOpen] = useState(false);
+
+  console.log(users);
+
+  useEffect(() => {
+    if (usersData) {
+      setUsers(usersData);
+    }
+  }, [usersData]);
 
   if (isLoading) {
     return <Loading />;
@@ -20,13 +28,42 @@ const Dashboard = () => {
     return <ErrorMsg error={error} />;
   }
 
-  // const openModal = () => {
-  //   setIsModalOpen(true);
-  // };
+  const deleteHandler = async (id) => {
+    if (window.confirm("Are you sure you want to delete this item?")) {
+      try {
+        const response = await fetch(`/api/users/admin/${id}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
 
-  // const closeModal = () => {
-  //   setIsModalOpen(false);
-  // };
+        if (!response.ok) {
+          throw new Error("Error deleting the item");
+        }
+
+        setUsers((prevData) => prevData.filter((user) => user.id !== id));
+        fetchData();
+
+        // Handle the successful deletion here, like updating the UI or state
+        console.log("Item deleted successfully");
+      } catch (error) {
+        // Handle any errors that occurred during the deletion
+        console.error("Failed to delete the item", error);
+      }
+    }
+  };
+
+  // fetchData function to get the updated list from the server
+  const fetchData = async () => {
+    try {
+      const response = await fetch("/api/users/admin/getUsers");
+      const newData = await response.json();
+      setUsers(newData);
+    } catch (err) {
+      console.log("Failed to fetch users");
+    }
+  };
 
   return (
     <div className="flex flex-col">
@@ -63,7 +100,7 @@ const Dashboard = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {users.map((user) => (
+                {usersData.map((user) => (
                   <tr key={user._id}>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
@@ -113,18 +150,14 @@ const Dashboard = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <div className="flex flex-col items-end sm:flex-row sm:justify-end gap-4 mt-4 text-sm">
-                        {/* <EditUserModal
-                          closeModal={closeModal}
-                          isModalOpen={isModalOpen}
-                          user={user}
-                        >
+                        <div className="flex flex-col items-end sm:flex-row sm:justify-end gap-4 mt-4 text-sm">
                           <button
-                            onClick={openModal}
-                            className={`bg-${selectedTheme} hover:bg-${selectedTheme}-50 active:bg-opacity-80 font-bold py-1  px-2 sm:py-2 sm:px-4 rounded`}
+                            className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+                            onClick={() => deleteHandler(user._id)}
                           >
                             Delete
                           </button>
-                        </EditUserModal> */}
+                        </div>
                       </div>
                     </td>
                   </tr>

@@ -28,7 +28,7 @@ const ErrorPage = () => {
               Go back home
             </Link>
             <Link
-              to="mailTo:ojighoroemmanuel&#64;gmail&#46;com?subject=Support Request&body=Please describe your issue here."
+              to=""
               className="text-sm font-semibold "
             >
               Contact support <span aria-hidden="true">&rarr;</span>
