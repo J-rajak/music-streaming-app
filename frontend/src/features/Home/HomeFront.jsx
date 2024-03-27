@@ -17,26 +17,12 @@ const HomeFront = () => {
     error,
   } = useGetTopSongsQuery(5, { refetchOnReconnect: true });
   const selectedTheme = useSelector((state) => state.theme);
+  const {isAuthenticated} = useSelector((state) => state.auth);
   const songRefs = useRef([]);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
   const { currentSong, isPlaying } = useSelector((state) => state.player);
   const dispatch = useDispatch();
 
-  // const generateKey = async () => {
-  //   const encryptionKey = await crypto.subtle.generateKey(
-  //     {
-  //       name: "AES-GCM",
-  //       length: 256,
-  //     },
-  //     true,
-  //     ["encrypt", "decrypt"]
-  //   );
-  //   return encryptionKey;
-  // };
-
-  // const key = generateKey();
-
-  // console.log(key);
 
   const handleScroll = () => {
     const scrollPosition = window.scrollY;
@@ -110,7 +96,7 @@ const HomeFront = () => {
           songs?.map((song, index) => (
             <article
               ref={(el) => (songRefs.current[index] = el)}
-              onClick={() => handlePlay(index)}
+              onClick={isAuthenticated ? () => handlePlay(index) : null}
               className={`grid grid-cols-6 md:grid-cols-12 gap-4 items-center p-1 rounded-md cursor-pointer ${
                 currentSong && currentSong?._id === song._id
                   ? `bg-${selectedTheme} bg-opacity-50`

@@ -44,7 +44,7 @@ const SignupPage = () => {
       if (error) {
         console.error(error);
       } else {
-        navigate("/");
+        navigate("/signup");
       }
     } catch (err) {
       console.error(err);

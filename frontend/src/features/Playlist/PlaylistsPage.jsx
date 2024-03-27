@@ -19,6 +19,7 @@ const PlaylistsPage = () => {
     isError,
     error,
   } = useGetAllPlaylistsQuery();
+  
   const { isAuthenticated } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
@@ -37,6 +38,8 @@ const PlaylistsPage = () => {
   if (isError) {
     return <ErrorMsg error={error} />;
   }
+
+  console.log(playlists);
 
   return (
     <section className="text-gray-100">

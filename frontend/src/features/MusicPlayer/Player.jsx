@@ -30,6 +30,8 @@ import AddToPlaylistButton from "../../components/AddToPlaylistButton";
 
 const Player = () => {
   const selectedTheme = useSelector((state) => state.theme);
+  const { isAuthenticated } = useSelector((state) => state.auth);
+
   const {
     isPlaying,
     currentSong,
@@ -150,6 +152,7 @@ const Player = () => {
             <button
               onClick={handleTogglePlay}
               className={`p-4 rounded-full bg-${selectedTheme}`}
+              disabled={!isAuthenticated}
             >
               {isLoading ? (
                 <AiOutlineLoading3Quarters className="animate-spin" />

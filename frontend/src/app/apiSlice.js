@@ -37,6 +37,8 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
       await mutex.waitForUnlock();
       result = await baseQuery(args, api, extraOptions);
     }
+  } else if (result.error && result.error.status === 400) {
+    console.error("Bad request", result.error.message);
   }
   return result;
 };

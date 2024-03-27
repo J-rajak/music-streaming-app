@@ -22,17 +22,24 @@ const LoginPage = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const { error } = loginSchema.validate(formData, {
+    const { error: validationErrors } = loginSchema.validate(formData, {
       abortEarly: false,
       allowUnknown: false,
-      stripUnknown: false,
+      stripUnknown: true,
     });
 
-    if (error) {
-      const errors = {};
-      error.details.forEach(
-        (detail) => (errors[detail.path[0]] = detail.message)
-      );
+    if (validationErrors) {
+      // const errors = {};
+      // error.details.forEach(
+      //   (detail) => (errors[detail.path[0]] = detail.message)
+      // );
+      // setValidationErrors(errors);
+      // return;
+
+      const errors = validationErrors.details.reduce((acc, detail) => {
+        acc[detail.path[0]] = detail.message;
+        return acc;
+      }, {});
       setValidationErrors(errors);
       return;
     }
@@ -40,10 +47,10 @@ const LoginPage = () => {
     try {
       const { err } = await login({ ...formData });
       if (err) {
-        console.error(error);
+        console.error(err);
       } else {
         if (location?.state?.from === "/signup") {
-          navigate("/");
+          navigate("/login");
         } else {
           navigate(-1);
         }

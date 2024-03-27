@@ -17,7 +17,7 @@ const { errorHandler } = require("./middleware/errorHandler");
 
 // Configure CORS to allow requests only from 'http://localhost:5173'
 const corsOptions = {
-  origin: ["http://localhost:5173", "http://localhost:4000"]
+  origin: ["http://localhost:5173"]
 };
 app.use(cors(corsOptions));
 

@@ -39,14 +39,12 @@ const registerUser = asyncHandler(async (req, res) => {
       id: newUser._id,
       username: newUser.username,
       email: newUser.email,
-      isAdmin: newUser.isAdmin,
       isPremium: newUser.isPremium,
     });
     const { refreshToken } = generateRefreshToken({
       id: newUser._id,
       username: newUser.username,
       email: newUser.email,
-      isAdmin: newUser.isAdmin,
       isPremium: newUser.isPremium,
     });
 
@@ -54,7 +52,7 @@ const registerUser = asyncHandler(async (req, res) => {
       httpOnly: true,
       secure: true,
       sameSite: "none",
-      maxAge: 15 * 24 * 60 * 60 * 1000,
+      maxAge: 15 * 60 * 1000, // expires in 15 minutes
     });
 
     res.cookie("refreshToken", refreshToken, {
@@ -66,7 +64,6 @@ const registerUser = asyncHandler(async (req, res) => {
 
     res.status(201).json({
       username: newUser.username,
-      isAdmin: newUser.isAdmin,
       isPremium: newUser.isPremium,
     });
   }
@@ -87,20 +84,12 @@ const loginUser = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: "User does not exists" });
   }
 
-  // const response = await fetch(
-  //   `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${recaptchaToken}`,
-  //   {
-  //     method: "POST",
-  //   }
-  // );
-
-  // const data = await response.json();
   if (user) {
     //compare password
     const comparePassword = await user.comparePassword(password);
     if (!comparePassword) {
       return res
-        .status(400)
+        .status(401)
         .json({ message: "Incorrect username or password" });
     }
 
@@ -108,14 +97,12 @@ const loginUser = asyncHandler(async (req, res) => {
       id: user._id,
       username: user.username,
       email: user.email,
-      isAdmin: user.isAdmin,
       isPremium: user.isPremium,
     });
     const { refreshToken } = generateRefreshToken({
       id: user._id,
       username: user.username,
       email: user.email,
-      isAdmin: user.isAdmin,
       isPremium: user.isPremium,
     });
 
@@ -123,7 +110,7 @@ const loginUser = asyncHandler(async (req, res) => {
       httpOnly: true,
       secure: true,
       sameSite: "none",
-      maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days
+      maxAge: 15 *  60 * 1000, // 15 minutes
     });
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
@@ -133,13 +120,9 @@ const loginUser = asyncHandler(async (req, res) => {
     });
 
     res.status(200).json({
+      _id: user._id,
       username: user.username,
-      isAdmin: user.isAdmin,
       isPremium: user.isPremium,
-    });
-  } else {
-    res.status(400).json({
-      message: "verification failed. Please try again",
     });
   }
 });
@@ -240,7 +223,6 @@ const loginSuccess = asyncHandler(async (req, res) => {
       .status(200)
       .json({
         username: req.user.username,
-        isAdmin: req.user.isAdmin,
         isPremium: req.user.isPremium,
       });
   }
@@ -269,7 +251,6 @@ const refresh = asyncHandler(async (req, res) => {
     id: decoded.id,
     username: decoded.username,
     email: decoded.email,
-    isAdmin: decoded.isAdmin,
     isPremium: decoded.isPremium,
   });
 
@@ -277,7 +258,7 @@ const refresh = asyncHandler(async (req, res) => {
     httpOnly: true,
     secure: true,
     sameSite: "none",
-    maxAge: 15 * 24 * 60 * 60 * 1000, // 15 minutes (match accessToken expiration)
+    maxAge: 15 * 60 * 1000, // 15 minutes (match accessToken expiration)
   });
 
   res.status(200).json({ message: "Token refreshed" });

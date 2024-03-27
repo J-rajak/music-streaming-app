@@ -11,6 +11,7 @@ import CreatePlaylistModal from "../features/Studio/MyPlaylists/CreatePlaylistMo
 
 const Layout = () => {
   const { currentSong } = useSelector((state) => state.player);
+  const { isAuthenticated } = useSelector((state) => state.auth);
 
   const location = useLocation();
 
@@ -43,13 +44,16 @@ const Layout = () => {
           />
         </main>
       </div>
-      <div
-        className={`fixed z-40 bottom-0 left-0 right-0 transition-all ease-in-out ${
-          !currentSong && "hidden"
-        }`}
-      >
-        <Player />
-      </div>
+      {isAuthenticated && (
+        <div
+          className={`fixed z-40 bottom-0 left-0 right-0 transition-all ease-in-out ${
+            !currentSong && "hidden"
+          }`}
+        >
+          <Player />
+        </div>
+      )}
+
       <AddToPlaylistModal />
       <LoginModal />
       <CreatePlaylistModal />

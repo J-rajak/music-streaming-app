@@ -6,11 +6,11 @@ const { shuffleArray } = require("../utils/index");
 // GET all albums
 // GET api/albums
 const getAllAlbums = asyncHandler(async (req, res) => {
-  // const limit = parseInt(req.query.limit);
+  const limit = parseInt(req.query.limit);
   const albums = await Album.find({})
+    .limit(limit)
     .lean()
     .populate("artiste", "name");
-
   if (!albums.length) {
     return res.status(404).json({ message: "No albums found" });
   }
@@ -18,7 +18,7 @@ const getAllAlbums = asyncHandler(async (req, res) => {
   res.status(200).json(shuffledAlbums);
 });
 
-// Get all albums
+// Get specific albums
 // GET api/albums/:albumId
 const getAlbumDetails = asyncHandler(async (req, res) => {
   const { albumId } = req.params;

@@ -37,7 +37,6 @@ const UserSchema = new mongoose.Schema(
         ref: "Playlist",
       },
     ],
-    isAdmin: { type: Boolean, required: false, default: false },
     isPremium: {
       type: Boolean,
       required: false,

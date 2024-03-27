@@ -10,7 +10,7 @@ const {
   updateUser,
   deleteUser,
 } = require("../controllers/userController");
-const { verifyToken, verifyIsAdmin } = require("../middleware/authMiddleware");
+const { verifyToken } = require("../middleware/authMiddleware");
 const upload = require("../middleware/multer");
 
 //user routes
@@ -20,8 +20,8 @@ router.post("/upload", verifyToken, upload.single("image"), uploadImage);
 router.get("/:userId", getUserDetails);
 
 //admin routes
-router.use(verifyToken);
-router.get("/admin/getUsers", verifyIsAdmin, getUsers);
-router.put("/admin/:id", verifyIsAdmin, updateUser)
-router.delete("/admin/:id", verifyIsAdmin, deleteUser);
+// router.use(verifyToken);
+// router.get("/admin/getUsers", verifyIsAdmin, getUsers);
+// router.put("/admin/:id", verifyIsAdmin, updateUser)
+// router.delete("/admin/:id", verifyIsAdmin, deleteUser);
 module.exports = router;

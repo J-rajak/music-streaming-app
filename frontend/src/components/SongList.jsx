@@ -9,6 +9,8 @@ import { setPlaying, setQueue } from "../features/MusicPlayer/playerSlice";
 
 const SongList = ({ songs, listType }) => {
   const selectedTheme = useSelector((state) => state.theme);
+  const {isAuthenticated} = useSelector((state) => state.auth);
+
   const songsPerPage = 5;
   const [visibleSongs, setVisibleSongs] = useState(songsPerPage);
   const isPlaylist = listType === "playlist";
@@ -38,7 +40,7 @@ const SongList = ({ songs, listType }) => {
           }`}
         >
           <div className="col-span-1">
-            <button onClick={() => handlePlay(index)}>
+            <button onClick={isAuthenticated ? () => handlePlay(index): null}>
               {isPlaying && currentSong && currentSong._id === song._id ? (
                 <BsSoundwave className={`animate-pulse`} />
               ) : (

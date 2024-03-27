@@ -3,15 +3,14 @@ import { apiSlice } from "../../app/apiSlice";
 const playlistApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getAllPlaylists: builder.query({
-      query: () => `/api/playlists`,
-      //   providesTags: (result) =>
-      //     result
-      //       ? [
-      //           ...result.map(({ _id }) => ({ type: "Playlist", id: _id })),
-      //           { type: "Playlist", id: "LIST" },
-      //         ]
-      //       : [{ type: "Playlist", id: "LIST" }],
-      //
+      query: (limit) => `/api/playlists?limit=${limit}`,
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ _id }) => ({ type: "Playlist", id: _id })),
+              { type: "Playlist", id: "LIST" },
+            ]
+          : [{ type: "Playlist", id: "LIST" }],
     }),
     getPlaylistDetails: builder.query({
       query: (playlistId) => `/api/playlists/${playlistId}`,
