@@ -10,7 +10,6 @@ const FindSearchedDataInAllEntries = asyncHandler(async (req, res) => {
   const limit = parseInt(req.query.limit);
   debugger;
 
-  console.log('a',req.query.searchString);
   const searchQuery = req.query.searchString;
 
   // Fetch all entries from the database (artists, genres, and songs)

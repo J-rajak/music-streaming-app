@@ -3,11 +3,11 @@ import { Link, useNavigate } from "react-router-dom";
 
 const Card = ({ resource, type }) => {
   const selectedTheme = useSelector((state) => state.theme);
-  const { _id, coverImage, title, artiste } = resource;
+  const { _id, coverImage, title, artiste, createdBy } = resource;
   const creator = {
-    id: artiste._id,
+    id: artiste?._id || createdBy._id,
     name: artiste?.name,
-    type: type === "albums",
+    type: type === "albums" ? "artistes" : "users",
   };
   const navigate = useNavigate();
 

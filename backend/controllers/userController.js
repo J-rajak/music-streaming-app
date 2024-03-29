@@ -106,40 +106,7 @@ const uploadImage = asyncHandler(async (req, res) => {
   res.status(200).json({ message: "Profile image successfully uploaded" });
 });
 
-// admin functionality
-
-//get users
-const getUsers = asyncHandler(async (req, res) => {
-  const users = await User.find({}).select("-password");
-  res.status(200).json(users);
-});
-
-//update user
-const updateUser = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.params.id);
-
-  if (!user) {
-    return res.status(400).json({ message: "user not found" });
-  }
-
-  user.username = req.body.username || user.username;
-  user.email = req.body.email || user.email;
-  user.isAdmin = req.body.isAdmin;
-  user.isPremium = req.body.isPremium;
-
-  await user.save();
-  res.status(200).json(user);
-});
-
-// Delete user
-const deleteUser = asyncHandler(async (req, res) => {
-  const userId = req.params.id;
-  const deleteUser = await User.findByIdAndDelete(userId);
-  if (!deleteUser) {
-    return res.status(404).json({ message: "User not found" });
-  }
-  res.status(200).send("user removed");
-});
+// premium user functionality
 
 //upload song
 const uploadSong = asyncHandler(async (req, res) => {
@@ -181,74 +148,10 @@ const uploadSong = asyncHandler(async (req, res) => {
   res.status(200).json(newSong);
 });
 
-// post artiste
-const postArtiste = asyncHandler(async (req, res) => {
-  const { name, bio } = req.body;
-
-  const uploadImage = await cloudinary.uploader.upload(req.file.path, {
-    transformation: [{ quality: "auto", width: 200, height: 200 }],
-    folder: "echosync/artiste",
-  });
-
-  const newArtiste = new Artiste({
-    name,
-    bio,
-    image: uploadImage.secure_url,
-  });
-
-  await newArtiste.save();
-  if (!newArtiste) {
-    res.status(500).json({ message: "Failed to create artiste" });
-  }
-  res.status(201).json(newArtiste);
-});
-
-// upload album
-const postAlbum = asyncHandler(async (req, res) => {
-  const { title, artiste, releaseDate, genre, songs } = req.body;
-
-  const foundArtiste = await Artiste.findOne({ name: artiste });
-
-  if (!foundArtiste) {
-    res.status(404).json({ message: "User not found" });
-  }
-
-  const foundSongs = await Song.findOne({ title: songs });
-
-  if (!foundSongs) {
-    res.status(404).json({ message: "song not found" });
-  }
-
-  const uploadImage = await cloudinary.uploader.upload(req.file.path, {
-    transformation: [{ quality: "auto", height: 200, width: 200 }],
-    folder: "echosync/albums",
-  });
-
-  const newAlbum = new Album({
-    title,
-    releaseDate,
-    genre,
-    coverImage: uploadImage.secure_url,
-    artiste: foundArtiste._id,
-    songs: foundSongs._id,
-  });
-
-  await newAlbum.save();
-  if (!newAlbum) {
-    res.status(404).json({ message: "album not appended" });
-  }
-  res.status(201).json(newAlbum);
-});
-
 module.exports = {
   getUserDetails,
   getCurrentUser,
   editUserDetails,
   uploadImage,
-  getUsers,
-  updateUser,
-  deleteUser,
   uploadSong,
-  postArtiste,
-  postAlbum,
 };
