@@ -1,6 +1,7 @@
 import { useState } from "react";
-// import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { BsSearch } from "react-icons/bs";
+import { Link } from "react-router-dom";
 // import Loading from "../../components/Loading";
 // import ErrorMsg from "../../components/ErrorMsg";
 // import { apiSlice } from "../../app/apiSlice";
@@ -12,6 +13,8 @@ function isNotEmptyOrWhitespace(str) {
 const Search = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [showResults, setShowResults] = useState(false);
+  const selectedTheme = useSelector((state) => state.theme);
+  const { isAuthenticated } = useSelector((state) => state.auth);
 
   const handleSearchChange = async (e) => {
     const newQuery = e.target.value;
@@ -55,9 +58,15 @@ const Search = () => {
         </div>
       </div>
 
-      <button className="ml-auto bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-full shadow-md">
-        Explore Premium
-      </button>
+      {isAuthenticated && (
+        <Link to="/premium">
+          <button
+            className={`ml-auto bg-${selectedTheme} hover:bg-${selectedTheme}-50 text-white font-semibold py-2 px-4 rounded-full shadow-md`}
+          >
+            Explore Premium
+          </button>
+        </Link>
+      )}
 
       {/* {showResults && (
         <div className="mt-1 flex justify-center">

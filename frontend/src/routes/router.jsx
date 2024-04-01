@@ -15,6 +15,7 @@ const AlbumsPage = lazy(() => import("../features/Album/AlbumsPage"));
 const AlbumPage = lazy(() => import("../features/Album/AlbumPage"));
 const ArtistesPage = lazy(() => import("../features/Artiste/ArtistesPage"));
 const ArtistePage = lazy(() => import("../features/Artiste/ArtistePage"));
+const UpgradeToPremiumPage = lazy(() => import("../features/Premium/UpgradeToPremiumPage"));
 const FavoritesPage = lazy(() =>
   import("../features/Studio/Favorites/FavoritesPage")
 );
@@ -44,6 +45,7 @@ const Router = () => {
         { path: "albums/:id", element: <AlbumPage /> },
         { path: "artistes", element: <ArtistesPage /> },
         { path: "artistes/:id", element: <ArtistePage /> },
+        { path: "premium", element: <UpgradeToPremiumPage /> },
         {
           path: "myProfile",
           element: <PrivateRoute component={MyProfilePage} />,
