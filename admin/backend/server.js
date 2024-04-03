@@ -32,10 +32,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.get("/", (req, res) => {
-  res.send("Welcome to echosync. Enjoy our rich collection of music");
+  res.send("Welcome to echosync admin server");
 });
 
-app.use("/auth", authRoutes);
+app.use("/admin/auth", authRoutes);
 app.use("/admin/users", userRoutes);
 app.use("/admin/songs", songRoutes);
 app.use("/admin/artistes", artisteRoutes);

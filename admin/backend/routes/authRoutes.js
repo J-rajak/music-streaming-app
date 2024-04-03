@@ -7,7 +7,7 @@ const {
   logOutUser,
   refresh,
   loginSuccess,
-} = require("../controllers/authController");
+} = require("../../backend/controllers/authController");
 const { verifyToken } = require("../middleware/authMiddleware");
 const schemaValidator = require("../middleware/schemaValidator");
 
