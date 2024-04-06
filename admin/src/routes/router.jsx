@@ -3,14 +3,12 @@ import { Navigate, createBrowserRouter } from "react-router-dom";
 import Layout from "../components/Layout";
 import HomePage from "../features/Home/HomePage";
 import PrivateRoute from "./PrivateRoute";
-import PremiumRoute from "./PremiumRoute";
 import { RouterProvider } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 const ErrorPage = lazy(() => import("../components/ErrorPage"));
 const SongsPage = lazy(() => import("../features/Song/SongsPage"));
 const SongPage = lazy(() => import("../features/Song/SongPage"));
-const UploadSongPage = lazy(() => import("../features/Premium/UploadSongPage"));
 const PlaylistsPage = lazy(() => import("../features/Playlist/PlaylistsPage"));
 const PlaylistPage = lazy(() => import("../features/Playlist/PlaylistPage"));
 const AlbumsPage = lazy(() => import("../features/Album/AlbumsPage"));
@@ -47,8 +45,6 @@ const Router = () => {
         { path: "albums/:id", element: <AlbumPage /> },
         { path: "artistes", element: <ArtistesPage /> },
         { path: "artistes/:id", element: <ArtistePage /> },
-        { path: "artistes/:id", element: <ArtistePage /> },
-        { path: "premium/upload", element: <PremiumRoute component={UploadSongPage} /> },
         { path: "premium", element: <UpgradeToPremiumPage /> },
         {
           path: "myProfile",

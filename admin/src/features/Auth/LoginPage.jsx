@@ -1,49 +1,52 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { Icon } from "@iconify/react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { useRegisterUserMutation } from "./authApiSlice";
+import { Icon } from "@iconify/react";
+import { useLoginUserMutation } from "./authApiSlice";
+import { FaGoogle, FaFacebook, FaTwitter } from "react-icons/fa";
 import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import { signUpSchema } from "../../utils/schema";
+import { loginSchema } from "../../utils/schema";
+// import { setProvider } from "./authSlice";
 
-const SignupPage = () => {
+const LoginPage = () => {
+  const [formData, setFormData] = useState({ username: "", password: "" });
   const selectedTheme = useSelector((state) => state.theme);
-  const navigate = useNavigate();
-  const location = useLocation();
-  const [signUp, { isLoading, isError, error }] = useRegisterUserMutation();
-  const [formData, setFormData] = useState({
-    username: "",
-    email: "",
-    password: "",
-  });
   const [validationErrors, setValidationErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
+  const [login, { isLoading, isError, error }] = useLoginUserMutation();
+  const navigate = useNavigate();
+  const location = useLocation();
+  // const dispatch = useDispatch();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const { error } = signUpSchema.validate(formData, {
+    const { error: validationErrors } = loginSchema.validate(formData, {
       abortEarly: false,
       allowUnknown: false,
-      stripUnknown: false,
+      stripUnknown: true,
     });
 
-    if (error) {
-      const errors = {};
-      error.details.forEach(
-        (detail) => (errors[detail.path[0]] = detail.message)
-      );
+    if (validationErrors) {
+      const errors = validationErrors.details.reduce((acc, detail) => {
+        acc[detail.path[0]] = detail.message;
+        return acc;
+      }, {});
       setValidationErrors(errors);
       return;
     }
 
     try {
-      const { error } = await signUp({ ...formData });
-      if (error) {
-        console.error(error);
+      const { err } = await login({ ...formData });
+      if (err) {
+        console.error(err);
       } else {
-        navigate("/signup");
+        if (location?.state?.from === "/signup") {
+          navigate("/login");
+        } else {
+          navigate(-1);
+        }
       }
     } catch (err) {
       console.error(err);
@@ -129,34 +132,41 @@ const SignupPage = () => {
         >
           <div className="absolute bg-black opacity-60 inset-0 z-0"></div>
         </div>
-        <div className="sm:w-2/3 w-full py-6 z-20">
+        <div className=" sm:w-2/3 w-full py-6 z-20">
           <div className="logo p-3 mb-4 border-b border-solid border-white w-full flex justify-center">
-            <Icon icon="ri:netease-cloud-music-line" width="50" height="50" />
+            {/* <Icon icon="ri:netease-cloud-music-line" width="50" height="50" />
+             */}
+            {/* <img src={logoImg} alt="Logo" width="100" height="100" /> */}
           </div>
+          {/* <div className="">
+            <a
+              href=""
+              // onClick={() => handleClick("google")}
+              className="provider flex items-center gap-4 rounded-md mb-2 p-2 bg-black hover:bg-opacity-50 active:translate-y-[1px] transition-transform ease-in w-full"
+            >
+              <FaGoogle />
+              <span>Log in with Google</span>
+            </a>
+            <button className="provider flex items-center gap-4 rounded-md mb-2 p-2 bg-black hover:bg-opacity-50 active:translate-y-[1px] transition-transform ease-in w-full">
+              <FaTwitter />
+              <span>Log in with Twitter</span>
+            </button>
+            <button className="provider flex items-center gap-4 rounded-md mb-2 p-2 bg-black hover:bg-opacity-50 active:translate-y-[1px] transition-transform ease-in w-full">
+              <FaFacebook />
+              <span>Log in with Facebook</span>
+            </button>
+          </div> */}
+          {/* <div className="flex items-center sm:flex-col h-full pt-2">
+            <span className=" p-1 rounded-lg">OR</span>
+          </div> */}
 
-          <form className="w-full px-4 lg:px-0 mx-auto" onSubmit={handleSubmit}>
-            <div className="pb-2 pt-4">
-              <div>
-                <input
-                  className="block w-full p-4 text-lg rounded-sm bg-black"
-                  type="email"
-                  name="email"
-                  placeholder="Email*"
-                  onChange={(e) =>
-                    setFormData({ ...formData, email: e.target.value })
-                  }
-                  required
-                />
-                {validationErrors.email && (
-                  <span className="block text-sm mt-2 saturate-100 text-red-500">
-                    {validationErrors.email}
-                  </span>
-                )}
-              </div>
-            </div>
-            <div className="pb-2 pt-4">
+          <form
+            className=" w-full px-4 lg:px-0 mx-auto"
+            onSubmit={handleSubmit}
+          >
+            <div className="pb-1 pt-2">
               <input
-                className="block w-full p-4 text-lg rounded-sm bg-black"
+                className="block w-full p-4 text-lg rounded-lg bg-black"
                 type="text"
                 name="username"
                 placeholder="Username*"
@@ -171,10 +181,10 @@ const SignupPage = () => {
                 </span>
               )}
             </div>
-            <div className="pb-2 pt-4 ">
-              <div className="flex items-center bg-black">
+            <div className="pb-2 pt-1 ">
+              <div className="flex items-center bg-black rounded-lg">
                 <input
-                  className="block w-full p-4 text-lg rounded-sm bg-black"
+                  className="block w-full p-4 text-lg bg-black rounded-lg"
                   type={showPassword ? "text" : "password"}
                   placeholder="Password*"
                   onChange={(e) =>
@@ -200,10 +210,10 @@ const SignupPage = () => {
                 </span>
               )}
             </div>
-            <div className="text-right text-gray-400 hover:underline hover:text-gray-100">
+            <div className="text-right text-gray-400 hover:underline hover:text-white">
               <Link to="/">Forgot your password?</Link>
             </div>
-            <div className="text-right text-gray-400 hover:underline hover:text-gray-100"></div>
+            <div className="text-right text-gray-400 hover:underline hover:text-white"></div>
             <div className="px-4 pb-2 pt-4">
               <button
                 type="submit"
@@ -211,13 +221,13 @@ const SignupPage = () => {
                   !isLoading
                     ? `hover:bg-${selectedTheme}-50 active:translate-y-[1px]`
                     : `bg-opacity-50 cursor-not-allowed`
-                } w-full text-white font-bold py-2 px-4 rounded`}
+                } w-full text-white text-center font-bold py-2 px-4 rounded`}
                 disabled={isLoading}
               >
                 {isLoading ? (
                   <AiOutlineLoading3Quarters className="animate-spin m-auto text-2xl text-gray-400" />
                 ) : (
-                  `Sign up`
+                  `Log in`
                 )}
               </button>
               {isError && (
@@ -227,16 +237,16 @@ const SignupPage = () => {
                 </span>
               )}
             </div>
-            <p className="text-gray-100 mt-4">Already have an account??</p>
+            <p className="text-gray-400 mt-4">Not registered??</p>
             <div className="px-4 pb-2 pt-4">
               <Link
                 to={{
-                  pathname: `/login`,
+                  pathname: `/signup`,
                   state: { from: location.pathname },
                 }}
                 className={`text-${selectedTheme}-50`}
               >
-                Log in
+                Sign up now!
               </Link>
             </div>
           </form>
@@ -246,4 +256,4 @@ const SignupPage = () => {
   );
 };
 
-export default SignupPage;
+export default LoginPage;

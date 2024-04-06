@@ -39,13 +39,13 @@ const registerUser = asyncHandler(async (req, res) => {
       id: newUser._id,
       username: newUser.username,
       email: newUser.email,
-      isPremium: newUser.isPremium,
+      isAdmin: newUser.isAdmin,
     });
     const { refreshToken } = generateRefreshToken({
       id: newUser._id,
       username: newUser.username,
       email: newUser.email,
-      isPremium: newUser.isPremium,
+      isAdmin: newUser.isAdmin,
     });
 
     res.cookie("accessToken", accessToken, {
@@ -64,7 +64,8 @@ const registerUser = asyncHandler(async (req, res) => {
 
     res.status(201).json({
       username: newUser.username,
-      isPremium: newUser.isPremium,
+      email: newUser.email,
+      isAdmin: newUser.isAdmin,
     });
   }
 });
@@ -97,13 +98,13 @@ const loginUser = asyncHandler(async (req, res) => {
       id: user._id,
       username: user.username,
       email: user.email,
-      isPremium: user.isPremium,
+      isAdmin: user.isAdmin,
     });
     const { refreshToken } = generateRefreshToken({
       id: user._id,
       username: user.username,
       email: user.email,
-      isPremium: user.isPremium,
+      isAdmin: user.isAdmin,
     });
 
     res.cookie("accessToken", accessToken, {
@@ -122,106 +123,8 @@ const loginUser = asyncHandler(async (req, res) => {
     res.status(200).json({
       _id: user._id,
       username: user.username,
-      isPremium: user.isPremium,
-    });
-  }
-});
-
-// @desc  Google login
-// @route GET /auth/google/callback
-// @access Public
-const googleLogin = asyncHandler(async (req, res) => {
-  const { accessToken } = generateAccessToken({
-    id: req.user._id,
-    username: req.user.username,
-  });
-  const { refreshToken } = generateRefreshToken({
-    id: req.user._id,
-    username: req.user.username,
-  });
-
-  res.cookie("accessToken", accessToken, {
-    httpOnly: true,
-    secure: true,
-    sameSite: "none",
-    maxAge: 15 * 60 * 1000, // 15 minutes (match accessToken expiration)
-  });
-  res.cookie("refreshToken", refreshToken, {
-    httpOnly: true,
-    secure: true,
-    sameSite: "none",
-    maxAge: 30 * 24 * 60 * 60 * 1000, //30 days (match refreshToken expiration)
-  });
-
-  res.status(200).redirect();
-});
-
-// @desc  Facebook login
-// @route GET /auth/facebook/callback
-// @access Public
-const facebookLogin = asyncHandler(async (req, res) => {
-  const { accessToken } = generateAccessToken({
-    id: req.user._id,
-    username: req.user.username,
-  });
-  const { refreshToken } = generateRefreshToken({
-    id: req.user._id,
-    username: req.user.username,
-  });
-
-  res.cookie("accessToken", accessToken, {
-    httpOnly: true,
-    secure: true,
-    sameSite: "none",
-    maxAge: 15 * 60 * 1000, // 15 minutes (match accessToken expiration)
-  });
-  res.cookie("refreshToken", refreshToken, {
-    httpOnly: true,
-    secure: true,
-    sameSite: "none",
-    maxAge: 30 * 24 * 60 * 60 * 1000, //30 days (match refreshToken expiration)
-  });
-
-  res.status(200).redirect();
-});
-
-// @desc  Twitter login
-// @route GET /auth/twitter/callback
-// @access Public
-const twitterLogin = asyncHandler(async (req, res) => {
-  const { accessToken } = generateAccessToken({
-    id: req.user._id,
-    username: req.user.username,
-  });
-  const { refreshToken } = generateRefreshToken({
-    id: req.user._id,
-    username: req.user.username,
-  });
-
-  res.cookie("accessToken", accessToken, {
-    httpOnly: true,
-    secure: true,
-    sameSite: "none",
-    maxAge: 15 * 60 * 1000, // 15 minutes (match accessToken expiration)
-  });
-  res.cookie("refreshToken", refreshToken, {
-    httpOnly: true,
-    secure: true,
-    sameSite: "none",
-    maxAge: 30 * 24 * 60 * 60 * 1000, //30 days (match refreshToken expiration)
-  });
-
-  res.status(200).redirect();
-});
-
-// @desc Get Login state for third party OAuth
-// @route GET /auth/loginSuccess
-// @access Private
-const loginSuccess = asyncHandler(async (req, res) => {
-  if (req.user) {
-    res.status(200).json({
-      username: req.user.username,
-      isPremium: req.user.isPremium,
+      email: user.email,
+      isAdmin: user.isAdmin,
     });
   }
 });
@@ -275,10 +178,6 @@ const logOutUser = asyncHandler(async (req, res) => {
 module.exports = {
   registerUser,
   loginUser,
-  googleLogin,
-  facebookLogin,
-  twitterLogin,
-  loginSuccess,
   logOutUser,
   refresh,
 };
