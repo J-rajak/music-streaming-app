@@ -25,8 +25,6 @@ import {
 } from "./playerSlice";
 import { convertSecondsToTime } from "../../utils";
 import AudioPlayer from "./AudioPlayer";
-import LikeButton from "../../components/LikeButton";
-import AddToPlaylistButton from "../../components/AddToPlaylistButton";
 
 const Player = () => {
   const selectedTheme = useSelector((state) => state.theme);
@@ -168,7 +166,6 @@ const Player = () => {
           {/* Additional Controls */}
           <div className="hidden sm:flex flex-col gap-2">
             <div className="flex justify-center items-center gap-4">
-              <LikeButton songId={currentSong?._id ?? null} type={"song"} />
               <button onClick={handleToggleRepeat} title="repeat">
                 {repeat === "off" ? (
                   <TbRepeatOff />
@@ -178,7 +175,6 @@ const Player = () => {
                   <TbRepeat />
                 )}
               </button>
-              <AddToPlaylistButton songId={currentSong?._id ?? null} />
             </div>
             {/* Volume Controls */}
             <div className="flex items-center gap-2">

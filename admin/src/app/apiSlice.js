@@ -21,7 +21,7 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
       const release = await mutex.acquire();
       try {
         const refreshResult = await baseQuery(
-          "/auth/refresh",
+          "admin/auth/refresh",
           api,
           extraOptions
         );

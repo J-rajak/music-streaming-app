@@ -161,45 +161,6 @@ const NavContent = () => {
           </NavLink>
         </li>
       </ul>
-      {isAuthenticated && (
-        <div className="mt-8">
-          <div className="mx-4 mb-4 flex items-center">
-            <span className="mx-2 flex-grow h-[1px] bg-gray-500"></span>
-          </div>
-          <ul className="flex flex-col flex-1 gap-8">
-            <li>
-              <NavLink
-                to="/favorites"
-                className={({ isActive }) =>
-                  `flex items-center justify-center w-full  hover:text-${selectedTheme} ${
-                    isActive
-                      ? `text-${selectedTheme} border-r-4 border-${selectedTheme}`
-                      : ""
-                  }`
-                }
-              >
-                <FaRegHeart className="text-base" />
-                <span className="ml-4">Favorites</span>
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/myPlaylist"
-                className={({ isActive }) =>
-                  `flex items-center justify-center w-full  hover:text-${selectedTheme} ${
-                    isActive
-                      ? `text-${selectedTheme} border-r-4 border-${selectedTheme}`
-                      : ""
-                  }`
-                }
-              >
-                <MdQueue className="text-base" />
-                <span className="ml-4">My Playlists</span>
-              </NavLink>
-            </li>
-          </ul>
-        </div>
-      )}
     </>
   );
 };

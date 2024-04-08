@@ -5,9 +5,7 @@ import NavBar from "./NavBar";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Player from "../features/MusicPlayer/Player";
-import AddToPlaylistModal from "../features/Playlist/AddToPlaylistModal";
 import LoginModal from "./LoginModal";
-import CreatePlaylistModal from "../features/Studio/MyPlaylists/CreatePlaylistModal";
 
 const Layout = () => {
   const { currentSong } = useSelector((state) => state.player);
@@ -53,10 +51,7 @@ const Layout = () => {
           <Player />
         </div>
       )}
-
-      <AddToPlaylistModal />
       <LoginModal />
-      <CreatePlaylistModal />
     </div>
   );
 };

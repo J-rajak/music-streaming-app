@@ -3,6 +3,7 @@ const app = express();
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const passport = require("passport");
+const axios = require("axios");
 require("dotenv").config({ path: "./config/.env" });
 const PORT = process.env.PORT;
 const connectDB = require("./config/database");
@@ -17,12 +18,11 @@ const { errorHandler } = require("./middleware/errorHandler");
 
 // Configure CORS to allow requests only from 'http://localhost:5173'
 const corsOptions = {
-  origin: ["http://localhost:5173"]
+  origin: ["http://localhost:5173"],
 };
 app.use(cors(corsOptions));
 
 // Your other routes and middleware
-
 
 connectDB();
 
@@ -44,6 +44,32 @@ app.use("/api/artistes", artisteRoutes);
 app.use("/api/albums", albumRoutes);
 app.use("/api/playlists", playlistRoutes);
 app.use(errorHandler);
+
+app.post("/khalti-checkout", async (req, res) => {
+  const payload = req.body;
+  const khaltiResponse = await axios.post(
+    "https://a.khalti.com/api/v2/epayment/initiate/",
+    payload,
+    {
+      headers: {
+        Authorization: "Key test_secret_key_bfaebf7b0e694088b1eae014fd318df0",
+      },
+    }
+  );
+
+  if (khaltiResponse) {
+    res.json({
+      success: true,
+      data: khaltiResponse?.data,
+    });
+  } else {
+    res.json({
+      success: false,
+      message: "something went wrong",
+    });
+  }
+  console.log(khaltiResponse);
+});
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

@@ -1,8 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { FaCompactDisc } from "react-icons/fa";
-import LikeButton from "../../components/LikeButton";
-import AddToPlaylistButton from "../../components/AddToPlaylistButton";
+import { FaCompactDisc } from "react-icons/fa";;
 import { setPlaying, setQueue } from "../MusicPlayer/playerSlice";
 import { motion } from "framer-motion";
 
@@ -75,15 +73,15 @@ const SongDetail = ({ song }) => {
             >
               <span className="mr-2 text-xl">Play</span>
             </button>
-            <span className=" bg-secondary-200 active:bg-opacity-50 rounded-lg transition duration-300 ease-in-out py-1 px-2 md:px-4 h-full inline-flex items-center">
+            {/* <span className=" bg-secondary-200 active:bg-opacity-50 rounded-lg transition duration-300 ease-in-out py-1 px-2 md:px-4 h-full inline-flex items-center">
               <LikeButton songId={song._id} type={"song"} />
               <span className="ml-2">{likes && likes.length}</span>
-            </span>
-            <span
+            </span> */}
+            {/* <span
               className={`text-white bg-secondary-200 active:bg-opacity-50 rounded-lg transition duration-300 ease-in-ou px-3 py-1 h-full inline-flex items-center`}
             >
               <AddToPlaylistButton songId={song._id} />
-            </span>
+            </span> */}
           </div>
         </article>
       </div>

@@ -30,6 +30,8 @@ const SongsPage = () => {
     return <ErrorMsg error={error} />;
   }
 
+  console.log(songs);
+
   return (
     <section className="text-gray-100">
       <h1 className="text-xl md:text-3xl font-semibold mb-2">Explore</h1>

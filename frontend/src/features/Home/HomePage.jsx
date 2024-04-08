@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import HomeBanner from "./HomeBanner";
-// import Recommend from "../../components/Recommend";
+import Recommend from "../../components/Recommend";
 import HomeFeature from "./HomeFeature";
 import Search from "../SearchSongs/Search";
 import HomeFront from "./HomeFront";
@@ -30,8 +30,8 @@ const HomePage = () => {
       <HomeBanner />
       <HomeFront />
       <HomeFeature />
-      {/* <Recommend type={"albums"} />
-      <Recommend type={"playlists"} /> */}
+      <Recommend type={"albums"} />
+      <Recommend type={"playlists"} />
     </>
   );
 };

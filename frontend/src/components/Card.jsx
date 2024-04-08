@@ -5,7 +5,7 @@ const Card = ({ resource, type }) => {
   const selectedTheme = useSelector((state) => state.theme);
   const { _id, coverImage, title, artiste, createdBy } = resource;
   const creator = {
-    id: artiste?._id || createdBy._id,
+    id: (artiste && artiste._id) || (createdBy && createdBy._id),
     name: artiste?.name,
     type: type === "albums" ? "artistes" : "users",
   };

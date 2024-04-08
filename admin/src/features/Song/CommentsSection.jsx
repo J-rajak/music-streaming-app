@@ -2,13 +2,11 @@ import { useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import DOMPurify from "dompurify";
-import { useAddCommentMutation } from "./songApiSlice";
 import { toggleLoginModal, setMessage } from "../../app/modalSlice";
 import { FaUserCircle } from "react-icons/fa";
 import RelativeTime from "../../components/RelativeTime";
 
 const CommentsSection = ({ comments, songId }) => {
-  const [addComment, { isLoading }] = useAddCommentMutation();
   const [newComment, setNewComment] = useState("");
   const [validationErrors, setValidationErrors] = useState(null);
   const selectedTheme = useSelector((state) => state.theme);

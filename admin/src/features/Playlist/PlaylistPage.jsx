@@ -5,8 +5,8 @@ import ResourceDetail from "../../components/ResourceDetail";
 import SongList from "../../components/SongList";
 import Loading from "../../components/Loading";
 import ErrorMsg from "../../components/ErrorMsg";
-import AddToPlaylistModal from "./AddToPlaylistModal";
-import CreatePlaylistModal from "../Studio/MyPlaylists/CreatePlaylistModal";
+// import AddToPlaylistModal from "./AddToPlaylistModal";
+// import CreatePlaylistModal from "../Studio/MyPlaylists/CreatePlaylistModal";
 
 const PlaylistPage = () => {
   const { id } = useParams();
@@ -41,8 +41,6 @@ const PlaylistPage = () => {
         ) : (
           <SongList songs={playlist.songs} listType={"playlist"} />
         )}
-        <AddToPlaylistModal />
-        <CreatePlaylistModal />
       </section>
     </section>
   );
