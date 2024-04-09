@@ -32,8 +32,6 @@ const Recommend = ({ type }) => {
   const isError = isAlbumError || isPlaylistError;
   const error = albumError || playlistError;
 
-  console.log(data)
-
   return (
     <section className="text-gray-200 mt-8">
       <div className="flex justify-between items-center mb-4">

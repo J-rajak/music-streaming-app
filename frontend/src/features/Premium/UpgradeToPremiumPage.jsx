@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
+
 const UpgradeToPremiumPage = () => {
   const { isAuthenticated } = useSelector((state) => state.auth);
   const selectedTheme = useSelector((state) => state.theme);
@@ -8,6 +9,10 @@ const UpgradeToPremiumPage = () => {
   // Sample prices for yearly subscriptions
   const basicPrice = 50; // Change this to your actual price
   const premiumPrice = 100; // Change this to your actual price
+
+  const handleSubmit = () => {
+
+  };
 
   return (
     <div className="flex justify-center items-center h-screen bg-black rounded-md">
@@ -28,6 +33,7 @@ const UpgradeToPremiumPage = () => {
             <Link to="/premium">
               <button
                 className={`ml-auto bg-${selectedTheme} hover:bg-${selectedTheme}-50 text-white font-semibold py-2 px-4 rounded-full shadow-md`}
+                onClick={handleSubmit}
               >
                 Explore Premium
               </button>

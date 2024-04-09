@@ -19,6 +19,7 @@ const { errorHandler } = require("./middleware/errorHandler");
 // Configure CORS to allow requests only from 'http://localhost:5173'
 const corsOptions = {
   origin: ["http://localhost:5173"],
+  credentials: true,
 };
 app.use(cors(corsOptions));
 
@@ -52,7 +53,7 @@ app.post("/khalti-checkout", async (req, res) => {
     payload,
     {
       headers: {
-        Authorization: "Key test_secret_key_bfaebf7b0e694088b1eae014fd318df0",
+        Authorization: "key live_secret_key_68791341fdd94846a146f0457ff7b455",
       },
     }
   );

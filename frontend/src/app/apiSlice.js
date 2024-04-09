@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { Mutex } from "async-mutex";
 import { logoutUser } from "../features/Auth/authSlice";
-const baseURL = import.meta.env.ECHOSYNC_BACKEND;
+const baseURL = import.meta.env.VITE_ECHOSYNC_BACKEND;
 
 const mutex = new Mutex();
 const baseQuery = fetchBaseQuery({

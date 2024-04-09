@@ -30,9 +30,7 @@ const getUserDetails = asyncHandler(async (req, res) => {
 const getCurrentUser = asyncHandler(async (req, res) => {
   const userId = req.user.id;
   const user = await User.findById(userId)
-    .select(
-      "username bio country image isPremium playlist, favoriteArtistes"
-    )
+    .select("username bio country image isPremium playlist, favoriteArtistes")
     .populate({
       path: "playlist",
       select: "title coverImage",
@@ -110,8 +108,12 @@ const uploadImage = asyncHandler(async (req, res) => {
 
 //upload song
 const uploadSong = asyncHandler(async (req, res) => {
-  const { title, artiste, duration, genre, lyrics } = req.body;
+  const { title, duration, genre, lyrics } = req.body;
   const { coverImage, audioURL } = req.file;
+
+  if (!title || !duration || !coverImage || !audioURL) {
+    return res.status(400).json({ message: "Missing required fields" });
+  }
 
   const songUploadResponse = await cloudinary.uploader.upload(
     audioURL[0].path,
@@ -131,7 +133,7 @@ const uploadSong = asyncHandler(async (req, res) => {
 
   const newSong = new Song({
     title,
-    artiste,
+    artiste: req.user.id,
     duration,
     releaseDate,
     genre,
