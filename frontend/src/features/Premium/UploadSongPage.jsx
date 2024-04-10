@@ -1,30 +1,56 @@
 import { useState } from "react";
+import axios from "axios";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import CloudinaryUpload from "../../components/CloudinaryUpload";
+import CloudinaryUploadImage from "../../components/CloudinaryUploadImage";
+
 // import axios from "axios";
 
 const UploadSongPage = () => {
-  const [playlistUrl, setPlaylistUrl] = useState("");
+  const [audioURL, setAudioURL] = useState("");
+  const [imageURL, setImageURL] = useState("");
   const [uploadedSongFileName, setUploadedSongFileName] = useState();
+  const [uploadedImageFileName, setUploadedImageFileName] = useState();
+  const [songDuration, setSongDuration] = useState();
 
   const initialValues = {
     title: "",
     duration: "",
-    genre: "",
+    genre: "pop",
     lyrics: "",
     coverImage: null,
-    audioFile: null,
+    audioURL: null,
+  };
+  const handleSubmit = async (values) => {
+    const { title, lyrics, genre } = values;
+    const durationInMinutes = convertSecondsToMinutes(songDuration);
+
+    try {
+      const response = await axios.post(
+        "users/upload/song",
+        {
+          title,
+          lyrics,
+          genre,
+          duration: durationInMinutes, // Send the converted duration
+          coverImage: imageURL, // Assuming you have a coverImage field in your form
+          audioURL: audioURL, // Assuming you have an audioFile field in your form
+        }
+      );
+      console.log("Song uploaded successfully:", response.data);
+      // Handle success or redirect to another page
+    } catch (error) {
+      console.error("Error uploading song:", error);
+      // Handle error
+    }
   };
 
-  const handleSubmit = async () => {
-    // const data = {title, thumbnail, track: playlistUrl};
-    // const response = await makeAuthenticatedPOSTRequest(
-    //     "/song/create",
-    //     data
-    // );
+  const convertSecondsToMinutes = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    const formattedSeconds = parseInt(remainingSeconds.toFixed(0)); // Convert to integer after fixing decimals
+    return `${minutes}:${formattedSeconds < 10 ? "0" : ""}${formattedSeconds}`;
   };
-
-  console.log(playlistUrl);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-black rounded-md">
@@ -55,39 +81,28 @@ const UploadSongPage = () => {
 
             <div className="mb-4">
               <label
-                htmlFor="duration"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Duration
-              </label>
-              <Field
-                type="text"
-                id="duration"
-                name="duration"
-                placeholder="Enter song duration"
-                className="mt-1 p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-              />
-              <ErrorMessage
-                name="duration"
-                component="div"
-                className="text-red-500 text-sm"
-              />
-            </div>
-
-            <div className="mb-4">
-              <label
                 htmlFor="genre"
                 className="block text-sm font-medium text-gray-700"
               >
                 Genre
               </label>
               <Field
-                type="text"
+                as="select" // Changed to a select dropdown
                 id="genre"
                 name="genre"
-                placeholder="Enter song genre"
                 className="mt-1 p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-              />
+              >
+                <option value="">Select a genre</option>
+                <option value="pop">Pop</option>
+                <option value="rock">Rock</option>
+                <option value="hip-hop">Hip Hop</option>
+                <option value="hip-hop">Country</option>
+                <option value="hip-hop">Electronic</option>
+                <option value="hip-hop">Jazz</option>
+                <option value="hip-hop">Folk</option>
+                <option value="hip-hop">Funk</option>
+                <option value="hip-hop">Blues</option>
+              </Field>
               <ErrorMessage
                 name="genre"
                 component="div"
@@ -116,49 +131,21 @@ const UploadSongPage = () => {
                 className="text-red-500 text-sm"
               />
             </div>
-
-            {/* File input for Cover Image */}
-            <div className="mb-4">
-              <label
-                htmlFor="coverImage"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Cover Image
-              </label>
-              <input
-                type="file"
-                id="coverImage"
-                name="coverImage"
-                className="mt-1 p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-              />
-              <ErrorMessage
-                name="coverImage"
-                component="div"
-                className="text-red-500 text-sm"
-              />
+            {/**upload image  */}
+            <div className="py-5">
+              {uploadedImageFileName ? (
+                <div className="bg-white rounded-full p-3 w-1/3">
+                  {uploadedImageFileName.substring(0, 35)}...
+                </div>
+              ) : (
+                <CloudinaryUploadImage
+                  setUrl={setImageURL}
+                  setName={setUploadedImageFileName}
+                />
+              )}
             </div>
 
-            {/* File input for Audio File */}
-            {/* <div className="mb-4">
-              <label
-                htmlFor="audioFile"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Audio File
-              </label>
-              <input
-                type="file"
-                id="audioFile"
-                name="audioFile"
-                className="mt-1 p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-              />
-              <ErrorMessage
-                name="audioFile"
-                component="div"
-                className="text-red-500 text-sm"
-              />
-            </div> */}
-
+            {/**upload song file */}
             <div className="py-5">
               {uploadedSongFileName ? (
                 <div className="bg-white rounded-full p-3 w-1/3">
@@ -166,8 +153,9 @@ const UploadSongPage = () => {
                 </div>
               ) : (
                 <CloudinaryUpload
-                  setUrl={setPlaylistUrl}
+                  setUrl={setAudioURL}
                   setName={setUploadedSongFileName}
+                  setDuration={setSongDuration}
                 />
               )}
             </div>

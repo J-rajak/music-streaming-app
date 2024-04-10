@@ -108,38 +108,20 @@ const uploadImage = asyncHandler(async (req, res) => {
 
 //upload song
 const uploadSong = asyncHandler(async (req, res) => {
-  const { title, duration, genre, lyrics } = req.body;
-  const { coverImage, audioURL } = req.file;
+  const { title, duration, genre, lyrics, coverImage, audioURL} = req.body;e;
 
-  if (!title || !duration || !coverImage || !audioURL) {
+  if (!title || !duration || !coverImage || !audioURL || !coverImage || !audioURL) {
     return res.status(400).json({ message: "Missing required fields" });
   }
-
-  const songUploadResponse = await cloudinary.uploader.upload(
-    audioURL[0].path,
-    {
-      folder: "echosync/songs",
-      resource_type: "mp3",
-    }
-  );
-
-  const imageUploadResponse = await cloudinary.uploader.upload(
-    coverImage[0].path,
-    {
-      transformation: [{ quality: "auto", width: 200, height: 200 }],
-      folder: "echosync/songs/coverImage",
-    }
-  );
 
   const newSong = new Song({
     title,
     artiste: req.user.id,
     duration,
-    releaseDate,
     genre,
     lyrics,
-    audioURL: songUploadResponse.secure_url,
-    coverImage: imageUploadResponse.secure_url,
+    audioURL,
+    coverImage,
   });
 
   await newSong.save();

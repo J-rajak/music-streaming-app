@@ -2,7 +2,7 @@ import { openUploadWidget } from "../utils/CloudinaryService";
 const cloudName = import.meta.env.VITE_CLOUD_NAME;
 const uploadPreset = import.meta.env.VITE_UPLOAD_PRESET;
 
-const CloudinaryUpload = ({ setUrl, setName, setDuration }) => {
+const CloudinaryUploadImage = ({ setUrl, setName }) => {
   const uploadImageWidget = () => {
     let myUploadWidget = openUploadWidget(
       {
@@ -15,7 +15,6 @@ const CloudinaryUpload = ({ setUrl, setName, setDuration }) => {
           console.log(result.info);
           setUrl(result.info.secure_url);
           setName(result.info.original_filename);
-          setDuration(result.info.duration);
         } else {
           if (error) {
             console.log(error);
@@ -31,9 +30,9 @@ const CloudinaryUpload = ({ setUrl, setName, setDuration }) => {
       className="bg-black text-white rounded-full p-4 font-semibold w-full hover:bg-gray-500 hover:text-gray-200"
       onClick={uploadImageWidget}
     >
-      Select Track
+      Select image for thumbnail
     </button>
   );
 };
 
-export default CloudinaryUpload;
+export default CloudinaryUploadImage;
