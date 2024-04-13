@@ -5,8 +5,6 @@ import ResourceDetail from "../../components/ResourceDetail";
 import SongList from "../../components/SongList";
 import Loading from "../../components/Loading";
 import ErrorMsg from "../../components/ErrorMsg";
-import AddToPlaylistModal from "../Playlist/AddToPlaylistModal";
-import CreatePlaylistModal from "../Studio/MyPlaylists/CreatePlaylistModal";
 
 const ArtistePage = () => {
   const { id } = useParams();
@@ -32,8 +30,6 @@ const ArtistePage = () => {
         <h2 className="text-2xl font-semibold mb-4">Songs</h2>
         <SongList songs={data.songs} listType={"artiste"} />
       </section>
-      <AddToPlaylistModal />
-      <CreatePlaylistModal />
     </section>
   );
 };

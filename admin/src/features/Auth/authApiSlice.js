@@ -1,12 +1,12 @@
 import { apiSlice } from "../../app/apiSlice";
 import { updateTheme } from "../../app/themeSlice";
-import { setUser, setIsPremium, logoutUser } from "./authSlice";
+import { setUser, setIsAdmin,logoutUser } from "./authSlice";
 
 export const authApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     registerUser: builder.mutation({
       query: (userData) => ({
-        url: "/auth/register",
+        url: "/admin/auth/register",
         method: "POST",
         body: userData,
       }),
@@ -16,7 +16,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
           console.log(data);
           dispatch(updateTheme("rock"));
           dispatch(setUser(data.username));
-          dispatch(setIsPremium(data.isPremium));
+          dispatch(setIsAdmin(data.isAdmin));
         } catch (err) {
           console.error(err);
         }
@@ -24,7 +24,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
     }),
     loginUser: builder.mutation({
       query: (userData) => ({
-        url: "/auth/login",
+        url: "/admin/auth/login",
         method: "POST",
         body: userData,
       }),
@@ -34,29 +34,29 @@ export const authApiSlice = apiSlice.injectEndpoints({
           console.log(data);
           dispatch(updateTheme("rock"));
           dispatch(setUser(data.username));
-          dispatch(setIsPremium(data.isPremium));
+          dispatch(setIsAdmin(data.isAdmin))
         } catch (err) {
           console.error(err);
         }
       },
     }),
-    loginSuccess: builder.query({
-      query: () => "/auth/loginSuccess",
-      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-        try {
-          const { data } = await queryFulfilled;
-          console.log(data);
-          dispatch(updateTheme("rock"));
-          dispatch(setUser(data.username));
-          dispatch(setIsPremium(data.isPremium));
-        } catch (err) {
-          console.error(err);
-        }
-      },
-    }),
+    // loginSuccess: builder.query({
+    //   query: () => "/auth/loginSuccess",
+    //   async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+    //     try {
+    //       const { data } = await queryFulfilled;
+    //       console.log(data);
+    //       dispatch(updateTheme("rock"));
+    //       dispatch(setUser(data.username));
+    //       dispatch(setIsPremium(data.isPremium));
+    //     } catch (err) {
+    //       console.error(err);
+    //     }
+    //   },
+    // }),
     logoutUser: builder.mutation({
       query: () => ({
-        url: "/auth/logout",
+        url: "/admin/auth/logout",
         method: "POST",
       }),
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
@@ -77,5 +77,5 @@ export const {
   useRegisterUserMutation,
   useLoginUserMutation,
   useLogoutUserMutation,
-  useLoginSuccessQuery,
+  // useLoginSuccessQuery,
 } = authApiSlice;

@@ -1,30 +1,43 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { useEditUserDetailsMutation } from "./userApiSlice";
+import { useProfileMutation } from "./userApiSlice";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { toast } from "react-toastify";
 
 const EditUserModal = ({ closeModal, isModalOpen, user, children }) => {
   const selectedTheme = useSelector((state) => state.theme);
-  const [updateUser, { isLoading, isError, error }] =
-    useEditUserDetailsMutation();
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [updateUser, { isLoading, isError, error }] = useProfileMutation();
   const [formData, setFormData] = useState({
     bio: user.bio,
     country: user.country,
+    username: user.username,
+    email: user.email,
+    password: password,
   });
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    try {
-      const { error } = await updateUser(formData);
-      if (error) {
-        console.error(error);
-      } else {
-        // dispatch(setUser(data));
-        closeModal();
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match");
+    } else {
+      try {
+        const { error } = await updateUser(formData);
+        if (error) {
+          console.error(error);
+        } else {
+          // dispatch(setUser(data));
+          toast.success('Profile updated successfully');
+          closeModal();
+        }
+      } catch (err) {
+        console.error(err);
+        toast.error(
+          err?.data?.message || err?.error?.message || "An error occurred"
+        );
       }
-    } catch (err) {
-      console.error(err);
     }
   };
 
@@ -101,6 +114,61 @@ const EditUserModal = ({ closeModal, isModalOpen, user, children }) => {
                       onChange={(e) =>
                         setFormData({ ...formData, country: e.target.value })
                       }
+                      className="w-full border border-gray-400 bg-gray-200 rounded-md focus:outline-none p-2  text-gray-800"
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label className="block text-gray-700  mb-1">
+                      username
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="username"
+                      name="username"
+                      defaultValue={user.username}
+                      onChange={(e) =>
+                        setFormData({ ...formData, username: e.target.value })
+                      }
+                      className="w-full border border-gray-400 bg-gray-200 rounded-md focus:outline-none p-2  text-gray-800"
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label className="block text-gray-700  mb-1">email</label>
+                    <input
+                      type="email"
+                      placeholder="email"
+                      name="email"
+                      defaultValue={user.email}
+                      onChange={(e) =>
+                        setFormData({ ...formData, email: e.target.value })
+                      }
+                      disabled
+                      className="w-full border border-gray-400 bg-gray-200 rounded-md focus:outline-none p-2  text-gray-800"
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label className="block text-gray-700  mb-1">
+                      password
+                    </label>
+                    <input
+                      type="password"
+                      placeholder="enter password"
+                      name="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="w-full border border-gray-400 bg-gray-200 rounded-md focus:outline-none p-2  text-gray-800"
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label className="block text-gray-700  mb-1">
+                      Confirm password
+                    </label>
+                    <input
+                      type="password"
+                      placeholder="confirm password"
+                      name="password"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
                       className="w-full border border-gray-400 bg-gray-200 rounded-md focus:outline-none p-2  text-gray-800"
                     />
                   </div>

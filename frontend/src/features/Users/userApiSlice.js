@@ -30,7 +30,6 @@ export const userApiSlice = apiSlice.injectEndpoints({
 
 export const {
   useGetUserDetailsQuery,
-  useGetAllUsersQuery,
   useGetCurrentUserQuery,
   useEditUserDetailsMutation,
   useUploadImageMutation,

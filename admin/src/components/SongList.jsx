@@ -3,8 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { FaPlay } from "react-icons/fa";
 import { BsSoundwave } from "react-icons/bs";
-import LikeButton from "./LikeButton";
-import AddToPlaylistButton from "./AddToPlaylistButton";
 import { setPlaying, setQueue } from "../features/MusicPlayer/playerSlice";
 
 const SongList = ({ songs, listType }) => {
@@ -75,7 +73,7 @@ const SongList = ({ songs, listType }) => {
           </div>
           <div className="col-span-3 justify-end items-center flex gap-2 sm:gap-4">
             <span className="col-span-1 text-end">{song.duration}</span>
-            <div className="col-span-1 text-end">
+            {/* <div className="col-span-1 text-end">
               <span
                 className={`${
                   index % 2 === 0 ? "bg-secondary-200" : "bg-secondary-100"
@@ -83,8 +81,8 @@ const SongList = ({ songs, listType }) => {
               >
                 <LikeButton songId={song._id} type={"song"} />
               </span>
-            </div>
-            <div className="col-span-1 text-end">
+            </div> */}
+            {/* <div className="col-span-1 text-end">
               <span
                 className={`${
                   index % 2 === 0 ? "bg-secondary-200" : "bg-secondary-100"
@@ -92,7 +90,7 @@ const SongList = ({ songs, listType }) => {
               >
                 <AddToPlaylistButton songId={song._id} />
               </span>
-            </div>
+            </div> */}
           </div>
         </li>
       ))}

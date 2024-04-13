@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { FaUser } from "react-icons/fa";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import { useUploadImageMutation, useGetCurrentUserQuery } from "./userApiSlice";
+import { useUploadImageMutation, useGetUserProfileQuery } from "./userApiSlice";
 import { useLogoutUserMutation } from "../Auth/authApiSlice";
 import EditUserModal from "./EditUserModal";
 import ErrorMsg from "../../components/ErrorMsg";
@@ -18,7 +18,7 @@ const MyProfilePage = () => {
     isLoading: isCurrentUserLoading,
     isError: isCurrentUserError,
     error: currentUserError,
-  } = useGetCurrentUserQuery();
+  } = useGetUserProfileQuery();
   const imageRef = useRef(null);
   const [uploadImage, { isError, error }] = useUploadImageMutation();
   const [logOut, { isLoading }] = useLogoutUserMutation();
@@ -133,6 +133,18 @@ const MyProfilePage = () => {
       </div>
 
       <div className="mt-14 md:mt-36 md:w-3/4">
+      <div className="px-4 py-6 mt-4 rounded-md bg-secondary-100 shadow-sm shadow-gray-700">
+          <h2 className="flex gap-8 font-semibold">
+            <span className="text-gray-300">Username: </span>
+            <span>{user.username}</span>
+          </h2>
+        </div>
+        <div className="px-4 py-6 mb-4 mt-4 rounded-md bg-secondary-100 shadow-sm shadow-gray-700">
+          <h2 className="flex gap-8 font-semibold">
+            <span className="text-gray-300">Email: </span>
+            <span>{user.email}</span>
+          </h2>
+        </div>
         <div className="px-4 py-6 rounded-lg bg-secondary-100 shadow-sm shadow-gray-700">
           <h2 className="flex gap-8 font-semibold">
             <span className="text-gray-300">Bio: </span>
@@ -145,6 +157,7 @@ const MyProfilePage = () => {
             <span>{user.country}</span>
           </h2>
         </div>
+
       </div>
     </section>
   );

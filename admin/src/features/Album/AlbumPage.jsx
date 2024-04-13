@@ -5,10 +5,8 @@ import ResourceDetail from "../../components/ResourceDetail";
 import SongList from "../../components/SongList";
 import Loading from "../../components/Loading";
 import ErrorMsg from "../../components/ErrorMsg";
-import AddToPlaylistModal from "../Playlist/AddToPlaylistModal";
 // import { Helmet } from "react-helmet-async";
 // import { formatDate } from "../../utils";
-import CreatePlaylistModal from "../Studio/MyPlaylists/CreatePlaylistModal";
 
 const AlbumPage = () => {
   const { id } = useParams();
@@ -39,8 +37,6 @@ const AlbumPage = () => {
         <h2 className="text-2xl font-semibold mb-4">Songs</h2>
         <SongList songs={album.songs} listType={"album"} />
       </section>
-      <AddToPlaylistModal />
-      <CreatePlaylistModal />
     </section>
   );
 };

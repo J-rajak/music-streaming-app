@@ -1,7 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { setQueue, setPlaying } from "../features/MusicPlayer/playerSlice";
-import LikeButton from "./LikeButton";
 import { aggregateSongsDuration, formatDate } from "../utils/index";
 import { FaHeadphones, FaFolderOpen, FaUserAstronaut } from "react-icons/fa";
 import { motion } from "framer-motion";
@@ -130,14 +129,6 @@ const ResourceDetail = ({ resource, resourceType }) => {
                 <span className="mr-2 text-xl">Play</span>
               </button>
             )}
-            <span className=" bg-secondary-200 active:bg-opacity-50 rounded-lg transition duration-300 ease-in-out py-1 px-2 md:px-4 h-full inline-flex items-center">
-              <LikeButton
-                albumId={isAlbum ? resource._id : null}
-                artisteId={isArtiste ? resource._id : null}
-                playlistId={isPlaylist ? resource._id : null}
-                type={resourceType}
-              />
-            </span>
           </div>
         </article>
       </div>

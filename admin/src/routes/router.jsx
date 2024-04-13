@@ -19,6 +19,7 @@ const UsersPage = lazy(() => import("../features/Users/UsersPage"));
 const LoginPage = lazy(() => import("../features/Auth/LoginPage"));
 const SignupPage = lazy(() => import("../features/Auth/SignupPage"));
 const MyProfilePage = lazy(() => import("../features/Users/MyProfilePage"));
+const EditUsersPage = lazy(() => import("../features/Home/EditUsersPage"));
 
 const Router = () => {
   const { isAuthenticated } = useSelector((state) => state.auth);
@@ -28,7 +29,7 @@ const Router = () => {
       element: <Layout />,
       errorElement: <ErrorPage />,
       children: [
-        { index: true, element: <AdminUsersPage/> },
+        { index: true, element: <AdminUsersPage /> },
         { path: "explore", element: <SongsPage /> },
         { path: "songs", element: <SongsPage /> },
         { path: "songs/:id", element: <SongPage /> },
@@ -38,6 +39,7 @@ const Router = () => {
         { path: "albums/:id", element: <AlbumPage /> },
         { path: "artistes", element: <ArtistesPage /> },
         { path: "artistes/:id", element: <ArtistePage /> },
+        { path: "users/edit", element: <EditUsersPage /> },
         {
           path: "myProfile",
           element: <PrivateRoute component={MyProfilePage} />,

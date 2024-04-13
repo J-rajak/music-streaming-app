@@ -13,12 +13,6 @@ const modalSlice = createSlice({
     toggleLoginModal: (state) => {
       state.isLoginModal = !state.isLoginModal;
     },
-    toggleCreatePlaylistModal: (state) => {
-      state.isCreatePlaylistModal = !state.isCreatePlaylistModal;
-    },
-    toggleAddToPlaylistModal: (state) => {
-      state.isAddToPlaylistModal = !state.isAddToPlaylistModal;
-    },
     setSongId: (state, action) => {
       state.addSongId = action.payload;
     },
@@ -30,8 +24,6 @@ const modalSlice = createSlice({
 
 export const {
   toggleLoginModal,
-  toggleCreatePlaylistModal,
-  toggleAddToPlaylistModal,
   setSongId,
   setMessage,
 } = modalSlice.actions;

@@ -10,7 +10,7 @@ const cloudinary = require("../config/cloudinary");
 const getUserDetails = asyncHandler(async (req, res) => {
   const userId = req.params.userId;
   const user = await User.findById(userId)
-    .select("username email bio country image playlist isAdmin isPremium")
+    .select("username email bio country image playlist isPremium")
     .populate({
       path: "playlist",
       select: "title coverImage",

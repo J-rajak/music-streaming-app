@@ -3,24 +3,50 @@ import { apiSlice } from "../../app/apiSlice";
 export const userApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getUserDetails: builder.query({
-      query: (userId) => `/api/users/${userId}`,
+      query: (id) => ({
+        url: `/admin/users/${id}`,
+      }),
+      keepUnusedDataFor: 5,
     }),
-    getCurrentUser: builder.query({
-      query: () => `/api/users/currentUser`,
+    getUserProfile: builder.query({
+      query: () => ({
+        url: "/admin/users/profile",
+      }),
       providesTags: ["User"],
+      keepUnusedDataFor: 5,
     }),
-    editUserDetails: builder.mutation({
+    profile: builder.mutation({
       query: (data) => ({
-        url: "/api/users/edit",
-        method: "PATCH",
+        url: "/admin/users/profile",
+        method: "PUT",
+        body: data,
+      }),
+    }),
+    uploadImage: builder.mutation({
+      query: (data) => ({
+        url: "/admin/users/upload",
+        method: "POST",
         body: data,
       }),
       invalidatesTags: ["User"],
     }),
-    uploadImage: builder.mutation({
+    getUsers: builder.query({
+      query: () => ({
+        url: "/admin/users/",
+      }),
+      providesTags: ["User"],
+      keepUnusedDataFor: 5,
+    }),
+    deleteUser: builder.mutation({
+      query: (userId) => ({
+        url: "",
+        method: "DELETE",
+      }),
+    }),
+    updateUser: builder.mutation({
       query: (data) => ({
-        url: "/api/users/upload",
-        method: "POST",
+        url: `${USERS_URL}/${data.userId}`,
+        method: "PUT",
         body: data,
       }),
       invalidatesTags: ["User"],
@@ -30,8 +56,10 @@ export const userApiSlice = apiSlice.injectEndpoints({
 
 export const {
   useGetUserDetailsQuery,
-  useGetAllUsersQuery,
-  useGetCurrentUserQuery,
-  useEditUserDetailsMutation,
+  useGetUserProfileQuery,
+  useProfileMutation,
   useUploadImageMutation,
+  useGetUsersQuery,
+  useDeleteUserMutation,
+  useUpdateUserMutation,
 } = userApiSlice;

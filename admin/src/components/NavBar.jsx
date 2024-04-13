@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { useGetCurrentUserQuery } from "../features/Users/userApiSlice";
+import { useGetUserProfileQuery} from "../features/Users/userApiSlice";
 import {
   FaHome,
   FaCompactDisc,
@@ -14,12 +14,11 @@ import {
 } from "react-icons/fa";
 import { BiMenuAltLeft } from "react-icons/bi";
 import { AiOutlineClose } from "react-icons/ai";
-import { MdQueue } from "react-icons/md";
 
 const NavContent = () => {
   const selectedTheme = useSelector((state) => state.theme);
   const { isAuthenticated } = useSelector((state) => state.auth);
-  const { userImage } = useGetCurrentUserQuery(undefined, {
+  const { userImage } = useGetUserProfileQuery(undefined, {
     skip: !isAuthenticated,
     selectFromResult: ({ data }) => ({
       userImage: data?.image ?? "",
@@ -170,7 +169,7 @@ const MobileNav = () => {
   const selectedTheme = useSelector((state) => state.theme);
   const { isAuthenticated } = useSelector((state) => state.auth);
   const { username } = useSelector((state) => state.auth);
-  const { userImage } = useGetCurrentUserQuery(undefined, {
+  const { userImage } = useGetUserProfileQuery(undefined, {
     skip: !isAuthenticated,
     selectFromResult: ({ data }) => ({
       userImage: data?.image ?? "",

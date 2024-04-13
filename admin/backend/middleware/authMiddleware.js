@@ -1,3 +1,4 @@
+require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const asyncHandler = require("express-async-handler");
 const User = require("../models/User");
@@ -21,9 +22,9 @@ const verifyToken = asyncHandler((req, res, next) => {
   });
 });
 
-const generateAccessToken = ({ id, username, email, isPremium }) => {
+const generateAccessToken = ({ id, username, email, isAdmin}) => {
   const accessToken = jwt.sign(
-    { id, username, email, isPremium },
+    { id, username, email, isAdmin },
     process.env.JWT_SECRET,
     {
       expiresIn: "15m",
@@ -34,9 +35,9 @@ const generateAccessToken = ({ id, username, email, isPremium }) => {
   };
 };
 
-const generateRefreshToken = ({ id, username, email, isPremium }) => {
+const generateRefreshToken = ({ id, username, email, isAdmin  }) => {
   const refreshToken = jwt.sign(
-    { id, username, email, isPremium },
+    { id, username, email, isAdmin},
     process.env.JWT_SECRET,
     {
       expiresIn: "30d",
@@ -47,18 +48,18 @@ const generateRefreshToken = ({ id, username, email, isPremium }) => {
   };
 };
 
-// const verifyIsAdmin = asyncHandler(async (req, res, next) => {
-//   // console.log(req.user);
-//   const admin = req.user.isAdmin;
-//   if (!admin) {
-//     return res.status(401).send("Unauthorized.. admin required");
-//   }
-//   // res.status(200).send({message: "admin found"})
-//   next();
-// });
+const verifyIsAdmin = (req, res, next) => {
+  if (req.user && req.user.isAdmin) {
+    next();
+  } else {
+    res.status(401);
+    throw new Error("Not authorized as an admin");
+  }
+};
 
 module.exports = {
   generateAccessToken,
   generateRefreshToken,
   verifyToken,
+  verifyIsAdmin,
 };

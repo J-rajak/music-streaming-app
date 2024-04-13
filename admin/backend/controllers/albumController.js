@@ -3,6 +3,7 @@ const Artiste = require("../models/Artiste");
 const Album = require("../models/Album");
 const Song = require("../models/Song");
 const asyncHandler = require("express-async-handler");
+const { shuffleArray } = require("../utils");
 const cloudinary = require("../config/cloudinary");
 
 // upload album

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import axios from "axios";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import CloudinaryUpload from "../../components/CloudinaryUpload";
 import CloudinaryUploadImage from "../../components/CloudinaryUploadImage";
@@ -26,18 +25,27 @@ const UploadSongPage = () => {
     const durationInMinutes = convertSecondsToMinutes(songDuration);
 
     try {
-      const response = await axios.post(
-        "users/upload/song",
-        {
+      const response = await fetch("/api/users/upload/song", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
           title,
           lyrics,
           genre,
-          duration: durationInMinutes, // Send the converted duration
-          coverImage: imageURL, // Assuming you have a coverImage field in your form
-          audioURL: audioURL, // Assuming you have an audioFile field in your form
-        }
-      );
-      console.log("Song uploaded successfully:", response.data);
+          duration: durationInMinutes,
+          coverImage: imageURL,
+          audioURL: audioURL,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+      console.log("Song uploaded successfully:", data);
       // Handle success or redirect to another page
     } catch (error) {
       console.error("Error uploading song:", error);

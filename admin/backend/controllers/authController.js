@@ -1,5 +1,7 @@
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
+const nodemailer = require("nodemailer");
 const asyncHandler = require("express-async-handler");
 const {
   generateAccessToken,
@@ -69,6 +71,28 @@ const registerUser = asyncHandler(async (req, res) => {
     });
   }
 });
+
+// const sendOTPVerification = async ({ _id, email }, res) => {
+//   try {
+//     const otp = `${Math.floor(1000 + Math.random() * 9000)}`;
+//     const mailOptions = {
+//       from: "",
+//       to: email,
+//       subject: "Verify your email",
+//       html: `<p>Enter <b>${otp}</b> in the app to verify your email address and complete verification</p>`,
+//     };
+
+//     //hash the otp
+//     const saltRounds = 10;
+//     const hashedOTP = await bcrypt.hash(otp, saltRounds);
+//     new UserOTPVerification = await new UserOTPVerification({
+//       userId: _id,
+//       otp: hashedOTP,
+//       createdAt: Date.now(),
+//       expiresAt: Date.now() + 3600000,
+//     })
+//   } catch (err) {}
+// };
 
 //login user
 //POST auth/login
@@ -152,7 +176,7 @@ const refresh = asyncHandler(async (req, res) => {
     id: decoded.id,
     username: decoded.username,
     email: decoded.email,
-    isPremium: decoded.isPremium,
+    isAdmin: decoded.isAdmin,
   });
 
   res.cookie("accessToken", accessToken, {
