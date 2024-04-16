@@ -290,63 +290,66 @@ const verification = (req, res) => {
 // };
 
 //login user
-//POST auth/login
+//POST admin/auth/login
 const loginUser = asyncHandler(async (req, res) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
   //verify all fields were filled
-  if (!username || !password) {
+  if (!email || !password) {
     return res.status(400).json({ message: "Please enter all fields" });
   }
 
   // check that user exists
-  const user = await User.findOne({ username });
+  const user = await User.findOne({ email });
 
   if (!user) {
     return res.status(400).json({ message: "User does not exists" });
   }
 
-  if (user) {
-    //compare password
-    const comparePassword = await user.comparePassword(password);
-    if (!comparePassword) {
-      return res
-        .status(401)
-        .json({ message: "Incorrect username or password" });
-    }
-
-    const { accessToken } = generateAccessToken({
-      id: user._id,
-      username: user.username,
-      email: user.email,
-      isAdmin: user.isAdmin,
-    });
-    const { refreshToken } = generateRefreshToken({
-      id: user._id,
-      username: user.username,
-      email: user.email,
-      isAdmin: user.isAdmin,
-    });
-
-    res.cookie("accessToken", accessToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "none",
-      maxAge: 15 * 60 * 1000, // 15 minutes
-    });
-    res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "none",
-      maxAge: 30 * 24 * 60 * 60 * 1000, //30 days (match refreshToken expiration)
-    });
-
-    res.status(200).json({
-      _id: user._id,
-      username: user.username,
-      email: user.email,
-      isAdmin: user.isAdmin,
+  if (!user.isAdmin || !user.isVerified) {
+    return res.status(400).json({
+      status: "FAILED",
+      message: "User is not verified or is not an admin",
     });
   }
+
+  //compare password
+  const comparePassword = await user.comparePassword(password);
+  if (!comparePassword) {
+    return res.status(401).json({ message: "Incorrect username or password" });
+  }
+
+  const { accessToken } = generateAccessToken({
+    id: user._id,
+    username: user.username,
+    email: user.email,
+    isAdmin: user.isAdmin,
+  });
+  const { refreshToken } = generateRefreshToken({
+    id: user._id,
+    username: user.username,
+    email: user.email,
+    isAdmin: user.isAdmin,
+  });
+
+  res.cookie("accessToken", accessToken, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+    maxAge: 15 * 60 * 1000, // 15 minutes
+  });
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+    maxAge: 30 * 24 * 60 * 60 * 1000, //30 days (match refreshToken expiration)
+  });
+
+  res.status(200).json({
+    _id: user._id,
+    username: user.username,
+    email: user.email,
+    isAdmin: user.isAdmin,
+  });
 });
 
 // @desc  Refresh token

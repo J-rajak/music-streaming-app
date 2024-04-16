@@ -12,7 +12,7 @@ const authRegister = Joi.object().keys({
 });
 
 const authLogin = Joi.object().keys({
-  username: Joi.string().required(),
+  email: Joi.string().email().required(),
   password: Joi.string().pattern(PASSWORD_REGEX).min(8).required()
   // recaptchaToken: Joi.string().required(),
 });

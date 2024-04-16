@@ -1,7 +1,6 @@
 import { Suspense, lazy } from "react";
 import { Navigate, createBrowserRouter } from "react-router-dom";
 import Layout from "../components/Layout";
-import AdminUsersPage from "../features/Home/AdminUsersPage";
 import PrivateRoute from "./PrivateRoute";
 import { RouterProvider } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -20,6 +19,8 @@ const LoginPage = lazy(() => import("../features/Auth/LoginPage"));
 const SignupPage = lazy(() => import("../features/Auth/SignupPage"));
 const MyProfilePage = lazy(() => import("../features/Users/MyProfilePage"));
 const EditUsersPage = lazy(() => import("../features/Home/EditUsersPage"));
+const AdminUsersPage = lazy(() => import("../features/Home/AdminUsersPage"));
+
 
 const Router = () => {
   const { isAuthenticated } = useSelector((state) => state.auth);
@@ -39,7 +40,7 @@ const Router = () => {
         { path: "albums/:id", element: <AlbumPage /> },
         { path: "artistes", element: <ArtistesPage /> },
         { path: "artistes/:id", element: <ArtistePage /> },
-        { path: "users/edit", element: <EditUsersPage /> },
+        { path: "admin/user/:id", element: <EditUsersPage /> },
         {
           path: "myProfile",
           element: <PrivateRoute component={MyProfilePage} />,

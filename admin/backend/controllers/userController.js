@@ -88,7 +88,7 @@ const uploadImage = asyncHandler(async (req, res) => {
 });
 
 //update user
-//admin/users/:userId
+//admin/users/:id
 const updateUser = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id);
 
@@ -113,6 +113,7 @@ const updateUser = asyncHandler(async (req, res) => {
   }
 });
 
+//admin/users/:id
 const getUserById = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id).select("-password");
 

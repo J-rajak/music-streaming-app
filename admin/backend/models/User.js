@@ -9,39 +9,6 @@ const UserSchema = new mongoose.Schema(
     bio: String,
     country: String,
     image: { type: String },
-    googleId: String,
-    facebookId: String,
-    twitterId: String,
-    playlist: [{ type: mongoose.Schema.Types.ObjectId, ref: "Playlist" }],
-    favoriteSongs: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Song",
-      },
-    ],
-    favoriteAlbums: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Album",
-      },
-    ],
-    favoriteArtistes: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Artiste",
-      },
-    ],
-    favoritePlaylists: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Playlist",
-      },
-    ],
-    isPremium: {
-      type: Boolean,
-      required: false,
-      default: false,
-    },
     isAdmin: {
       type: Boolean,
       required: false,

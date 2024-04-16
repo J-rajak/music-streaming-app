@@ -6,7 +6,10 @@ const PASSWORD_REGEX = new RegExp(
 );
 
 export const loginSchema = Joi.object().keys({
-  username: Joi.string().required(),
+  // username: Joi.string().required(),
+  email: Joi.string()
+  .email({ tlds: { allow: tlds } })
+  .required(),
   password: Joi.string().pattern(PASSWORD_REGEX).min(8).required().messages({
     "string.pattern.base":
       "Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character (!.@#$%^&*())",

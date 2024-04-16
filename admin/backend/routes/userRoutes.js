@@ -20,7 +20,7 @@ router
   .put(verifyToken, updateUserProfile);
 
 router
-  .route(":id")
+  .route("/:id")
   .delete(verifyToken, verifyIsAdmin, deleteUser)
   .get(verifyToken, verifyIsAdmin, getUserById)
   .put(verifyToken, verifyIsAdmin, updateUser);

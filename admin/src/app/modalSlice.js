@@ -4,8 +4,6 @@ const modalSlice = createSlice({
   name: "modal",
   initialState: {
     isLoginModal: false,
-    isCreatePlaylistModal: false,
-    isAddToPlaylistModal: false,
     addSongId: null,
     message: "",
   },
