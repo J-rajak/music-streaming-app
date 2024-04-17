@@ -108,15 +108,33 @@ const uploadImage = asyncHandler(async (req, res) => {
 
 //upload song
 const uploadSong = asyncHandler(async (req, res) => {
-  const { title, duration, genre, lyrics, coverImage, audioURL} = req.body;e;
+  const { title, duration, genre, lyrics, coverImage, audioURL } = req.body;
+  const userId = req.user.id;
 
-  if (!title || !duration || !coverImage || !audioURL || !coverImage || !audioURL) {
+  if (!title || !duration || !coverImage || !audioURL || !genre) {
     return res.status(400).json({ message: "Missing required fields" });
   }
 
+  // let artisteId;
+  // // Check if artiste exists
+  // const existingArtiste = await Artiste.findOne({ user: userId });
+  // if (existingArtiste) {
+  //   artisteId = existingArtiste._id;
+  // } else {
+  //   // Create new artiste
+  //   const newArtiste = new Artiste({
+  //     _id : userId,
+  //     name: req.user.username,
+  //     bio: req.user.bio,
+  //     image: req.user.image,
+  //   });
+  //   const savedArtiste = await newArtiste.save();
+  //   // artisteId = savedArtiste._id;
+  // }
+
   const newSong = new Song({
     title,
-    artiste: req.user.id,
+    artiste: userId,
     duration,
     genre,
     lyrics,

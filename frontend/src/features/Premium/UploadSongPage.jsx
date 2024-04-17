@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import CloudinaryUpload from "../../components/CloudinaryUpload";
 import CloudinaryUploadImage from "../../components/CloudinaryUploadImage";
+import { useUploadSongMutation } from "../Song/songApiSlice";
 
 // import axios from "axios";
 
@@ -11,6 +12,7 @@ const UploadSongPage = () => {
   const [uploadedSongFileName, setUploadedSongFileName] = useState();
   const [uploadedImageFileName, setUploadedImageFileName] = useState();
   const [songDuration, setSongDuration] = useState();
+  const [uploadSong] = useUploadSongMutation();
 
   const initialValues = {
     title: "",
@@ -22,29 +24,18 @@ const UploadSongPage = () => {
   };
   const handleSubmit = async (values) => {
     const { title, lyrics, genre } = values;
+    console.log(values);
     const durationInMinutes = convertSecondsToMinutes(songDuration);
 
     try {
-      const response = await fetch("/api/users/upload/song", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          title,
-          lyrics,
-          genre,
-          duration: durationInMinutes,
-          coverImage: imageURL,
-          audioURL: audioURL,
-        }),
+      const { data } = await uploadSong({
+        title,
+        lyrics,
+        genre,
+        duration: durationInMinutes,
+        coverImage: imageURL,
+        audioURL: audioURL,
       });
-
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-
-      const data = await response.json();
       console.log("Song uploaded successfully:", data);
       // Handle success or redirect to another page
     } catch (error) {
@@ -104,12 +95,12 @@ const UploadSongPage = () => {
                 <option value="pop">Pop</option>
                 <option value="rock">Rock</option>
                 <option value="hip-hop">Hip Hop</option>
-                <option value="hip-hop">Country</option>
-                <option value="hip-hop">Electronic</option>
-                <option value="hip-hop">Jazz</option>
-                <option value="hip-hop">Folk</option>
-                <option value="hip-hop">Funk</option>
-                <option value="hip-hop">Blues</option>
+                <option value="country">Country</option>
+                <option value="electronic">Electronic</option>
+                <option value="jazz">Jazz</option>
+                <option value="folk">Folk</option>
+                <option value="funk">Funk</option>
+                <option value="blues">Blues</option>
               </Field>
               <ErrorMessage
                 name="genre"

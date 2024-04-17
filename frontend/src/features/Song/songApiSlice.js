@@ -15,6 +15,13 @@ export const songApiSlice = apiSlice.injectEndpoints({
     getTopSongs: builder.query({
       query: (limit) => `/api/songs/top?limit=${limit}`,
     }),
+    uploadSong: builder.mutation({
+      query: (body) => ({
+        url: "/api/users/upload/song",
+        method: "POST",
+        body,
+      }),
+    }),
     likeSong: builder.mutation({
       query: ({ songId }) => ({
         url: `/api/songs/${songId}/like`,
@@ -57,6 +64,7 @@ export const {
   useGetSongDetailsQuery,
   useGetAnySongQuery,
   useGetTopSongsQuery,
+  useUploadSongMutation,
   useLikeSongMutation,
   useAddCommentMutation,
 } = songApiSlice;

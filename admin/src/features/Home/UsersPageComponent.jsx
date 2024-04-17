@@ -35,43 +35,42 @@ const UsersPageComponent = () => {
           {error?.data?.message || error.error}
         </Message>
       ) : (
-        <Table
-          striped
-          bordered
-          hover
-          responsive
-          className="table-sm rounded-md w-full bg-neutral-400 "
-        >
-          <thead style={{ textAlign: "left" }}>
+        <Table className="table-auto w-full border-collapse border border-gray-200">
+          <thead className="bg-gray-100">
             <tr>
-              <th>ID</th>
-              <th>NAME</th>
-              <th>EMAIL</th>
-              <th>ADMIN</th>
-              <th></th>
+              <th className="px-4 py-2 text-left">ID</th>
+              <th className="px-4 py-2 text-left">NAME</th>
+              <th className="px-4 py-2 text-left">EMAIL</th>
+              <th className="px-4 py-2 text-left">ADMIN</th>
+              <th className="px-4 py-2"></th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-gray-200 text-white">
             {users.map((user) => (
               <tr key={user._id}>
-                <td>{user._id}</td>
-                <td>{user.username}</td>
-                <td>
-                  <a href={`mailto:${user.email}`}>{user.email}</a>
+                <td className="px-4 py-2">{user._id}</td>
+                <td className="px-4 py-2">{user.username}</td>
+                <td className="px-4 py-2">
+                  <a
+                    href={`mailto:${user.email}`}
+                    className="text-white hover:underline"
+                  >
+                    {user.email}
+                  </a>
                 </td>
-                <td>
+                <td className="px-4 py-2">
                   {user.isAdmin ? (
-                    <FaCheck style={{ color: "green" }} />
+                    <FaCheck className="text-green-500" />
                   ) : (
-                    <FaTimes style={{ color: "red" }} />
+                    <FaTimes className="text-red-500" />
                   )}
                 </td>
-                <td>
+                <td className="px-4 py-2">
                   {!user.isAdmin && (
-                    <>
+                    <div className="flex">
                       <LinkContainer
                         to={`/admin/user/${user._id}`}
-                        style={{ marginRight: "10px" }}
+                        className="mr-2"
                       >
                         <Button variant="light" className="btn-sm">
                           <FaEdit />
@@ -82,9 +81,9 @@ const UsersPageComponent = () => {
                         className="btn-sm"
                         onClick={() => deleteHandler(user._id)}
                       >
-                        <FaTrash style={{ color: "white" }} />
+                        <FaTrash className="text-white" />
                       </Button>
-                    </>
+                    </div>
                   )}
                 </td>
               </tr>

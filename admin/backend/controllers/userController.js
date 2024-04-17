@@ -93,10 +93,10 @@ const updateUser = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id);
 
   if (user) {
-    user.name = req.body.name || user.name;
+    user.username = req.body.username || user.username;
     user.email = req.body.email || user.email;
-    user.isAdmin = Boolean(req.body.isAdmin);
-    user.isPremium = Boolean(req.body.isPremium);
+    // user.isAdmin = Boolean(req.body.isAdmin);
+    // user.isPremium = Boolean(req.body.isPremium);
 
     const updatedUser = await user.save();
 
@@ -104,8 +104,8 @@ const updateUser = asyncHandler(async (req, res) => {
       _id: updatedUser._id,
       name: updatedUser.name,
       email: updatedUser.email,
-      isAdmin: updatedUser.isAdmin,
-      isPremium: updatedUser.isPremium,
+      // isAdmin: updatedUser.isAdmin,
+      // isPremium: updatedUser.isPremium,
     });
   } else {
     res.status(404);

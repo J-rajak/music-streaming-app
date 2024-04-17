@@ -6,23 +6,23 @@ import { toast } from "react-toastify";
 
 const EditUserModal = ({ closeModal, isModalOpen, user, children }) => {
   const selectedTheme = useSelector((state) => state.theme);
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  // const [password, setPassword] = useState("");
+  // const [confirmPassword, setConfirmPassword] = useState("");
   const [updateUser, { isLoading, isError, error }] = useProfileMutation();
   const [formData, setFormData] = useState({
     bio: user.bio,
     country: user.country,
     username: user.username,
     email: user.email,
-    password: password,
+    // password: password,
   });
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (password !== confirmPassword) {
-      toast.error("Passwords do not match");
-    } else {
+    // if (password !== confirmPassword) {
+    //   toast.error("Passwords do not match");
+    // } else {
       try {
         const { error } = await updateUser(formData);
         if (error) {
@@ -38,7 +38,6 @@ const EditUserModal = ({ closeModal, isModalOpen, user, children }) => {
           err?.data?.message || err?.error?.message || "An error occurred"
         );
       }
-    }
   };
 
   return (
@@ -118,21 +117,6 @@ const EditUserModal = ({ closeModal, isModalOpen, user, children }) => {
                     />
                   </div>
                   <div className="mb-4">
-                    <label className="block text-gray-700  mb-1">
-                      username
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="username"
-                      name="username"
-                      defaultValue={user.username}
-                      onChange={(e) =>
-                        setFormData({ ...formData, username: e.target.value })
-                      }
-                      className="w-full border border-gray-400 bg-gray-200 rounded-md focus:outline-none p-2  text-gray-800"
-                    />
-                  </div>
-                  <div className="mb-4">
                     <label className="block text-gray-700  mb-1">email</label>
                     <input
                       type="email"
@@ -146,7 +130,7 @@ const EditUserModal = ({ closeModal, isModalOpen, user, children }) => {
                       className="w-full border border-gray-400 bg-gray-200 rounded-md focus:outline-none p-2  text-gray-800"
                     />
                   </div>
-                  <div className="mb-4">
+                  {/* <div className="mb-4">
                     <label className="block text-gray-700  mb-1">
                       password
                     </label>
@@ -171,7 +155,7 @@ const EditUserModal = ({ closeModal, isModalOpen, user, children }) => {
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       className="w-full border border-gray-400 bg-gray-200 rounded-md focus:outline-none p-2  text-gray-800"
                     />
-                  </div>
+                  </div> */}
                   <div className="flex justify-end">
                     <button
                       type="button"

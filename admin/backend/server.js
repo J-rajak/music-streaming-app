@@ -16,7 +16,7 @@ const playlistRoutes = require("./routes/playlistRoutes");
 
 // Configure CORS to allow requests only from 'http://localhost:5173'
 const corsOptions = {
-  origin: ["http://localhost:5173"],
+  origin: ["http://localhost:3000"],
   credentials: true,
 };
 app.use(cors(corsOptions));

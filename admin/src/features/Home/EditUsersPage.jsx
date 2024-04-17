@@ -13,9 +13,10 @@ import {
 
 const EditUserPage = () => {
   const { id: userId } = useParams();
-  const [name, setName] = useState("");
+  const [username, setUserName] = useState("");
   const [email, setEmail] = useState("");
-  const [isAdmin, setIsAdmin] = useState(false);
+  // const [isAdmin, setIsAdmin] = useState(false);
+  // const [isPremium, setIsPremium] = useState(false);
 
   const {
     data: user,
@@ -31,10 +32,10 @@ const EditUserPage = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
-      await updateUser({ userId, name, email, isAdmin });
+      await updateUser({ userId, username, email });
       toast.success("user updated successfully");
       refetch();
-      navigate("/admin/userlist");
+      navigate("/");
     } catch (err) {
       toast.error(err?.data?.message || err.error);
     }
@@ -42,9 +43,10 @@ const EditUserPage = () => {
 
   useEffect(() => {
     if (user) {
-      setName(user.username);
+      setUserName(user.username);
       setEmail(user.email);
-      setIsAdmin(user.isAdmin);
+      // setIsAdmin(user.isAdmin);
+      // setIsPremium(user.isPremium);
     }
   }, [user]);
 
@@ -72,8 +74,8 @@ const EditUserPage = () => {
               <Form.Control
                 type="name"
                 placeholder="Enter name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                value={username}
+                onChange={(e) => setUserName(e.target.value)}
                 className="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500 text-black"
               />
             </Form.Group>
@@ -91,7 +93,7 @@ const EditUserPage = () => {
               />
             </Form.Group>
 
-            <Form.Group className="my-2" controlId="isadmin">
+            {/* <Form.Group className="my-2" controlId="isadmin">
               <Form.Check
                 type="checkbox"
                 label="Is Admin"
@@ -100,6 +102,16 @@ const EditUserPage = () => {
                 className="mt-2 text-white"
               />
             </Form.Group>
+
+            <Form.Group className="my-2" controlId="ispremium">
+              <Form.Check
+                type="checkbox"
+                label="Is Premium"
+                checked={isPremium}
+                onChange={(e) => setIsPremium(e.target.checked)}
+                className="mt-2 text-white"
+              />
+            </Form.Group> */}
             <Button
               type="submit"
               variant="danger"
