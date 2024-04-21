@@ -8,34 +8,37 @@ const { shuffleArray } = require("../utils/index");
 // GET api/search
 const FindSearchedDataInAllEntries = asyncHandler(async (req, res) => {
   const limit = parseInt(req.query.limit);
-  debugger;
-
   const searchQuery = req.query.searchString;
+  const filter = req.query.filter; // Parse the filter option if needed
 
-  // Fetch all entries from the database (artists, genres, and songs)
-  const artistes = await Artiste.find({}).limit(limit).lean();
-  const genres = await Album.find({}).limit(limit).lean();
-  const songs = await Song.find({}).limit(limit).lean();
+  let entries = [];
 
-  // Combine entries into a single dataset
-  const entries = [
-    ...artistes.map((artist) => ({ type: "artist", name: artist.name })),
-    ...genres.map((genre) => ({ type: "genre", name: genre.genre })),
-    ...songs.map((song) => ({ type: "song", name: song.title })),
-  ];
-
-  // If there is a search query, filter the dataset based on it
-  const filteredEntries = searchQuery
-    ? entries.filter((entry) => {
-        return entry.name?.toLowerCase().includes(searchQuery?.toLowerCase());
-      })
-    : entries;
-
-  // Shuffle the filtered entries
-  const shuffledEntries = shuffleArray(filteredEntries);
-
-  // Return the shuffled and filtered dataset
-  res.status(200).json(shuffledEntries);
+  // Fetch entries based on the filter option, if provided
+  switch (filter) {
+    case "artist":
+      entries = await Artiste.find({ name: { $regex: new RegExp(searchQuery, "i") } }).limit(limit).lean();
+      break;
+    case "genre":
+      entries = await Song.find({ genre: { $regex: new RegExp(searchQuery, "i") } }).limit(limit).lean();
+      break;
+    case "song":
+      entries = await Song.find({ title: { $regex: new RegExp(searchQuery, "i") } }).limit(limit).lean();
+      break;
+    default:
+      const artistes = await Artiste.find({ name: { $regex: new RegExp(searchQuery, "i") } }).limit(limit).lean();
+      const genres = await Album.find({ genre: { $regex: new RegExp(searchQuery, "i") } }).limit(limit).lean();
+      const songs = await Song.find({ title: { $regex: new RegExp(searchQuery, "i") } }).limit(limit).lean();
+      entries = [
+        ...artistes.map((artist) => ({ type: "artist", name: artist.name })),
+        ...genres.map((genre) => ({ type: "genre", name: genre.genre })),
+        ...songs.map((song) => ({ type: "song", name: song.title })),
+      ];
+      break;
+  }
+  console.log(entries);
+  // Return the filtered dataset
+  res.status(200).json(entries);
 });
+
 
 module.exports = { FindSearchedDataInAllEntries };

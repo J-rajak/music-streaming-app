@@ -12,7 +12,7 @@ import { motion } from "framer-motion";
 const SongsPage = () => {
   const [searchParams] = useSearchParams({ page: 1 });
   const selectedTheme = useSelector((state) => state.theme);
-  const { isAuthenticated } = useSelector((state) => state.auth);
+  // const { isAuthenticated } = useSelector((state) => state.auth);
   const { isPremium } = useSelector((state) => state.auth);
   const page = searchParams.get("page");
   const {
@@ -52,7 +52,7 @@ const SongsPage = () => {
         ))}
       </motion.div>
       <div className="absolute top-0 right-0 mt-8 mr-8">
-        {isAuthenticated && (
+        {isPremium && (
           <Link to={isPremium ? "/premium/upload" : "/premium"}>
             <button
               className={`ml-auto bg-${selectedTheme} hover:bg-${selectedTheme}-50 text-white font-semibold py-2 px-4 rounded-full shadow-md`}
