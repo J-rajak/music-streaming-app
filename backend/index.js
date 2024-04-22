@@ -38,7 +38,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/auth", authRoutes);
-app.use("/api/search", searchRoutes);
+app.use("/api/", searchRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/songs", songRoutes);
 app.use("/api/artistes", artisteRoutes);
