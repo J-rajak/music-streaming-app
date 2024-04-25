@@ -3,8 +3,8 @@ const cloudName = import.meta.env.VITE_CLOUD_NAME;
 const uploadPreset = import.meta.env.VITE_UPLOAD_PRESET;
 
 const CloudinaryUploadImage = ({ setUrl, setName }) => {
-  const uploadImageWidget = () => {
-    let myUploadWidget = openUploadWidget(
+  const uploadImageWidget = async () => {
+    let myUploadWidget = await openUploadWidget(
       {
         cloudName: cloudName,
         uploadPreset: uploadPreset,
