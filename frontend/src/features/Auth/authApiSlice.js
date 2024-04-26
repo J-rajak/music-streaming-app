@@ -1,6 +1,6 @@
 import { apiSlice } from "../../app/apiSlice";
 import { updateTheme } from "../../app/themeSlice";
-import { setUser, setIsPremium, logoutUser } from "./authSlice";
+import { setUser, setUserId, setIsPremium, logoutUser } from "./authSlice";
 
 export const authApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -14,7 +14,9 @@ export const authApiSlice = apiSlice.injectEndpoints({
         try {
           const { data } = await queryFulfilled;
           console.log(data);
+
           dispatch(updateTheme("rock"));
+          dispatch(setUserId(data._id));
           dispatch(setUser(data.username));
           dispatch(setIsPremium(data.isPremium));
         } catch (err) {
@@ -32,7 +34,9 @@ export const authApiSlice = apiSlice.injectEndpoints({
         try {
           const { data } = await queryFulfilled;
           console.log(data);
+          console.log(data._id);
           dispatch(updateTheme("rock"));
+          dispatch(setUserId(data._id));
           dispatch(setUser(data.username));
           dispatch(setIsPremium(data.isPremium));
         } catch (err) {
@@ -47,6 +51,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
           const { data } = await queryFulfilled;
           console.log(data);
           dispatch(updateTheme("rock"));
+          dispatch(setUserId(data._id));
           dispatch(setUser(data.username));
           dispatch(setIsPremium(data.isPremium));
         } catch (err) {

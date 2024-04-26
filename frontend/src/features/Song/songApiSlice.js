@@ -21,6 +21,15 @@ export const songApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         body,
       }),
+      invalidatesTags: ["User"],
+    }),
+    uploadAlbum: builder.mutation({
+      query: (body) => ({
+        url: "/api/users/upload/album",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["User"],
     }),
     likeSong: builder.mutation({
       query: ({ songId }) => ({
@@ -65,6 +74,7 @@ export const {
   useGetAnySongQuery,
   useGetTopSongsQuery,
   useUploadSongMutation,
+  useUploadAlbumMutation,
   useLikeSongMutation,
   useAddCommentMutation,
 } = songApiSlice;

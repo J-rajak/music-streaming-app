@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Icon } from "@iconify/react";
@@ -6,7 +6,10 @@ import { useLoginUserMutation } from "./authApiSlice";
 import { FaGoogle, FaFacebook, FaTwitter } from "react-icons/fa";
 import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import ReCAPTCHA from "react-google-recaptcha";
+import { toast } from "react-toastify";
 import { loginSchema } from "../../utils/schema";
+const sitekey = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 // import { setProvider } from "./authSlice";
 
 const LoginPage = () => {
@@ -16,47 +19,43 @@ const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [login, { isLoading, isError, error }] = useLoginUserMutation();
   const navigate = useNavigate();
+  const recaptchaRef = useRef();
   const location = useLocation();
   // const dispatch = useDispatch();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const { error: validationErrors } = loginSchema.validate(formData, {
+    const { error } = loginSchema.validate(formData, {
       abortEarly: false,
       allowUnknown: false,
       stripUnknown: true,
     });
 
-    if (validationErrors) {
-      // const errors = {};
-      // error.details.forEach(
-      //   (detail) => (errors[detail.path[0]] = detail.message)
-      // );
-      // setValidationErrors(errors);
-      // return;
-
-      const errors = validationErrors.details.reduce((acc, detail) => {
-        acc[detail.path[0]] = detail.message;
-        return acc;
-      }, {});
+    if (error) {
+      const errors = {};
+      error.details.forEach(
+        (detail) => (errors[detail.path[0]] = detail.message)
+      );
       setValidationErrors(errors);
       return;
     }
-
     try {
-      const { err } = await login({ ...formData });
-      if (err) {
-        console.error(err);
+      const recaptchaToken = await recaptchaRef.current.executeAsync();
+      recaptchaRef.current.reset();
+      const { error } = await login({ ...formData, recaptchaToken });
+      if (error) {
+        console.error(error);
       } else {
         if (location?.state?.from === "/signup") {
-          navigate("/login");
+          navigate("/");
         } else {
           navigate(-1);
         }
       }
     } catch (err) {
       console.error(err);
+      toast.error("An error occurred. Please try again later.");
     }
   };
 
@@ -169,94 +168,101 @@ const LoginPage = () => {
             <span className=" p-1 rounded-lg">OR</span>
           </div>
 
-          <form
-            className=" w-full px-4 lg:px-0 mx-auto"
-            onSubmit={handleSubmit}
-          >
-            <div className="pb-1 pt-2">
-              <input
-                className="block w-full p-4 text-lg rounded-lg bg-black"
-                type="text"
-                name="username"
-                placeholder="Username*"
-                onChange={(e) =>
-                  setFormData({ ...formData, username: e.target.value })
-                }
-                required
-              />
-              {validationErrors.username && (
-                <span className="block text-sm mt-2 saturate-100 text-red-500">
-                  {validationErrors.username}
-                </span>
-              )}
-            </div>
-            <div className="pb-2 pt-1 ">
-              <div className="flex items-center bg-black rounded-lg">
+          <form onSubmit={handleSubmit}>
+            <div className=" w-full px-4 lg:px-0 mx-auto">
+              <div className="pb-1 pt-2">
                 <input
-                  className="block w-full p-4 text-lg bg-black rounded-lg"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Password*"
+                  className="block w-full p-4 text-lg rounded-lg bg-black"
+                  type="text"
+                  name="username"
+                  placeholder="Username*"
                   onChange={(e) =>
-                    setFormData({ ...formData, password: e.target.value })
+                    setFormData({ ...formData, username: e.target.value })
                   }
                   required
-                  style={{ outline: "none" }}
                 />
-                <div
-                  className="flex items-center justify-center p-2"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? (
-                    <AiOutlineEye className="text-white" />
-                  ) : (
-                    <AiOutlineEyeInvisible className="text-white" />
-                  )}
-                </div>
-              </div>
-              {validationErrors.password && (
-                <span className="block text-sm mt-2 saturate-100 text-red-500">
-                  {validationErrors.password}
-                </span>
-              )}
-            </div>
-            <div className="text-right text-gray-400 hover:underline hover:text-white">
-              <Link to="/">Forgot your password?</Link>
-            </div>
-            <div className="text-right text-gray-400 hover:underline hover:text-white"></div>
-            <div className="px-4 pb-2 pt-4">
-              <button
-                type="submit"
-                className={`bg-${selectedTheme} ${
-                  !isLoading
-                    ? `hover:bg-${selectedTheme}-50 active:translate-y-[1px]`
-                    : `bg-opacity-50 cursor-not-allowed`
-                } w-full text-white text-center font-bold py-2 px-4 rounded`}
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <AiOutlineLoading3Quarters className="animate-spin m-auto text-2xl text-gray-400" />
-                ) : (
-                  `Log in`
+                {validationErrors.username && (
+                  <span className="block text-sm mt-2 saturate-100 text-red-500">
+                    {validationErrors.username}
+                  </span>
                 )}
-              </button>
-              {isError && (
-                <span className="block text-sm mt-2 saturate-100 text-red-500">
-                  {error?.data?.message ||
-                    error?.data?.error?.details[0].message}
-                </span>
-              )}
-            </div>
-            <p className="text-gray-400 mt-4">Not registered??</p>
-            <div className="px-4 pb-2 pt-4">
-              <Link
-                to={{
-                  pathname: `/signup`,
-                  state: { from: location.pathname },
-                }}
-                className={`text-${selectedTheme}-50`}
-              >
-                Sign up now!
-              </Link>
+              </div>
+              <div className="pb-2 pt-1 ">
+                <div className="flex items-center bg-black rounded-lg">
+                  <input
+                    className="block w-full p-4 text-lg bg-black rounded-lg"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Password*"
+                    onChange={(e) =>
+                      setFormData({ ...formData, password: e.target.value })
+                    }
+                    required
+                    style={{ outline: "none" }}
+                  />
+                  <div
+                    className="flex items-center justify-center p-2"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? (
+                      <AiOutlineEye className="text-white" />
+                    ) : (
+                      <AiOutlineEyeInvisible className="text-white" />
+                    )}
+                  </div>
+                </div>
+                {validationErrors.password && (
+                  <span className="block text-sm mt-2 saturate-100 text-red-500">
+                    {validationErrors.password}
+                  </span>
+                )}
+              </div>
+              <div className="text-right text-gray-400 hover:underline hover:text-white">
+                <Link to="/">Forgot your password?</Link>
+              </div>
+              <div className="text-right text-gray-400 hover:underline hover:text-white"></div>
+              <div className="px-4 pb-2 pt-4">
+                <button
+                  type="submit"
+                  className={`bg-${selectedTheme} ${
+                    !isLoading
+                      ? `hover:bg-${selectedTheme}-50 active:translate-y-[1px]`
+                      : `bg-opacity-50 cursor-not-allowed`
+                  } w-full text-white text-center font-bold py-2 px-4 rounded`}
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <AiOutlineLoading3Quarters className="animate-spin m-auto text-2xl text-gray-400" />
+                  ) : (
+                    `Log in`
+                  )}
+                </button>
+                {isError && (
+                  <span className="block text-sm mt-2 saturate-100 text-red-500">
+                    {error?.data?.message ||
+                      error?.data?.error?.details[0].message}
+                  </span>
+                )}
+              </div>
+              <div className="mt-2 text-xs">
+                <ReCAPTCHA
+                  ref={recaptchaRef}
+                  sitekey={sitekey}
+                  size="invisible"
+                  theme="dark"
+                />
+              </div>
+              <p className="text-gray-400 mt-4">Not registered??</p>
+              <div className="px-4 pb-2 pt-4">
+                <Link
+                  to={{
+                    pathname: `/signup`,
+                    state: { from: location.pathname },
+                  }}
+                  className={`text-${selectedTheme}-50`}
+                >
+                  Sign up now!
+                </Link>
+              </div>
             </div>
           </form>
         </div>

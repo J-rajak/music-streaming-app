@@ -115,26 +115,24 @@ const uploadSong = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: "Missing required fields" });
   }
 
-  // let artisteId;
-  // // Check if artiste exists
-  // const existingArtiste = await Artiste.findOne({ user: userId });
-  // if (existingArtiste) {
-  //   artisteId = existingArtiste._id;
-  // } else {
-  //   // Create new artiste
-  //   const newArtiste = new Artiste({
-  //     _id : userId,
-  //     name: req.user.username,
-  //     bio: req.user.bio,
-  //     image: req.user.image,
-  //   });
-  //   const savedArtiste = await newArtiste.save();
-  //   // artisteId = savedArtiste._id;
-  // }
+  let artisteId;
+  // Check if artiste exists
+  const existingArtiste = await Artiste.findOne({ _id: userId });
+  if (!existingArtiste) {
+    // Create new artiste if not exists
+    const newArtiste = new Artiste({
+      _id: userId,
+      name: req.user.username,
+      bio: req.user.bio,
+      image: req.user.image,
+    });
+    await newArtiste.save();
+    existingArtiste = newArtiste; // Assign the newly created artiste
+  }
 
   const newSong = new Song({
     title,
-    artiste: userId,
+    artiste: existingArtiste._id,
     duration,
     genre,
     lyrics,
@@ -152,47 +150,30 @@ const uploadSong = asyncHandler(async (req, res) => {
 
 //upload album
 const uploadAlbum = asyncHandler(async (req, res) => {
-  const { title, duration, genre, lyrics, coverImage, audioURL } = req.body;
+  const { title, genre, songs, coverImage } = req.body;
   const userId = req.user.id;
 
-  if (!title || !duration || !coverImage || !audioURL || !genre) {
+  if (!title ||  !coverImage ||  !genre) {
     return res.status(400).json({ message: "Missing required fields" });
   }
 
-  // let artisteId;
-  // // Check if artiste exists
-  // const existingArtiste = await Artiste.findOne({ user: userId });
-  // if (existingArtiste) {
-  //   artisteId = existingArtiste._id;
-  // } else {
-  //   // Create new artiste
-  //   const newArtiste = new Artiste({
-  //     _id : userId,
-  //     name: req.user.username,
-  //     bio: req.user.bio,
-  //     image: req.user.image,
-  //   });
-  //   const savedArtiste = await newArtiste.save();
-  //   // artisteId = savedArtiste._id;
-  // }
-
-  const newSong = new Song({
+  const newAlbum = new Song({
     title,
     artiste: userId,
-    duration,
+    releaseDate: Date.now(),
+    songs: "",
     genre,
-    lyrics,
-    audioURL,
     coverImage,
   });
 
-  await newSong.save();
-  if (!newSong) {
-    res.status(500).json({ message: "Failed to upload song" });
+  await newAlbum.save();
+  if (!newAlbum) {
+    res.status(500).json({ message: "Failed to upload Album" });
   }
 
-  res.status(200).json(newSong);
+  res.status(200).json(newAlbum);
 });
+
 
 module.exports = {
   getUserDetails,

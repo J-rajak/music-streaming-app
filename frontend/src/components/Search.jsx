@@ -92,7 +92,7 @@ const Search = () => {
       {isAuthenticated && (
         <Link to="/premium">
           <button
-            className={`w-full ml-auto bg-${selectedTheme} hover:bg-${selectedTheme}-50 text-white font-semibold py-2 px-4 rounded-full shadow-md`}
+            className={`bg-${selectedTheme} flex text-white justify-center items-center mb-2 hover:bg-${selectedTheme}-50 active:bg-opacity-90 py-2 px-4 rounded-full`}
           >
             Explore Premium
           </button>

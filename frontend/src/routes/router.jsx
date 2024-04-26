@@ -11,6 +11,7 @@ const ErrorPage = lazy(() => import("../components/ErrorPage"));
 const SongsPage = lazy(() => import("../features/Song/SongsPage"));
 const SongPage = lazy(() => import("../features/Song/SongPage"));
 const UploadSongPage = lazy(() => import("../features/Premium/UploadSongPage"));
+const UploadAlbumPage = lazy(() => import("../features/Premium/UploadAlbumPage"));
 const PlaylistsPage = lazy(() => import("../features/Playlist/PlaylistsPage"));
 const PlaylistPage = lazy(() => import("../features/Playlist/PlaylistPage"));
 const AlbumsPage = lazy(() => import("../features/Album/AlbumsPage"));
@@ -48,7 +49,8 @@ const Router = () => {
         { path: "artistes", element: <ArtistesPage /> },
         { path: "artistes/:id", element: <ArtistePage /> },
         { path: "artistes/:id", element: <ArtistePage /> },
-        { path: "premium/upload", element: <PremiumRoute component={UploadSongPage} /> },
+        { path: "premium/upload/song", element: <PremiumRoute component={UploadSongPage} /> },
+        { path: "premium/upload/album", element: <PremiumRoute component={UploadAlbumPage} /> },
         { path: "premium", element: <UpgradeToPremiumPage /> },
         {
           path: "myProfile",

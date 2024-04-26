@@ -28,10 +28,10 @@ const CloudinaryUpload = ({ setUrl, setName, setDuration }) => {
 
   return (
     <button
-      className="bg-black text-white rounded-full p-4 font-semibold w-full hover:bg-gray-500 hover:text-gray-200"
+      className="bg-black text-white rounded-md p-4 font-semibold w-full hover:bg-gray-500 hover:text-gray-200"
       onClick={uploadImageWidget}
     >
-      Select Track
+      Select Audio File
     </button>
   );
 };

@@ -1,3 +1,4 @@
+require('dotenv').config();
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const asyncHandler = require("express-async-handler");
@@ -63,6 +64,7 @@ const registerUser = asyncHandler(async (req, res) => {
     });
 
     res.status(201).json({
+      _id: newUser._id,
       username: newUser.username,
       isPremium: newUser.isPremium,
     });
@@ -84,12 +86,20 @@ const loginUser = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: "User does not exists" });
   }
 
-  if (user) {
-    //compare password
+  const response = await fetch(
+    `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${recaptchaToken}`,
+    {
+      method: "POST",
+    }
+  );
+
+  const data = await response.json();
+  if (data.success) {
+    // compare password
     const comparePassword = await user.comparePassword(password);
     if (!comparePassword) {
       return res
-        .status(401)
+        .status(400)
         .json({ message: "Incorrect username or password" });
     }
 
@@ -124,6 +134,8 @@ const loginUser = asyncHandler(async (req, res) => {
       username: user.username,
       isPremium: user.isPremium,
     });
+  } else {
+    res.status(400).json({message: "ReCAPTCHA verification failed. Please try again"})
   }
 });
 
