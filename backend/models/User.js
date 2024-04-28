@@ -47,6 +47,19 @@ const UserSchema = new mongoose.Schema(
       required: false,
       default: false,
     },
+    phone: {
+      type: String,
+    },
+    membership: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Plan",
+    },
+    membershipStartDate: {
+      type: Date,
+    },
+    membershipEndDate: {
+      type: Date,
+    },
   },
   {
     timestamps: true,

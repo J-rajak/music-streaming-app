@@ -103,7 +103,7 @@ const registerUser = asyncHandler(async (req, res) => {
 });
 
 const sendVerificationEmail = ({ _id, email }, res) => {
-  const currentUrl = "http://localhost:5173";
+  const currentUrl = "http://localhost:3000";
 
   const uniqueString = uuidv4() + _id;
 
@@ -186,20 +186,20 @@ const verifyEmail = async (req, res) => {
               User.deleteOne({ _id: userId })
                 .then(() => {
                   let message = "Link has expired. Please sign up again";
-                  res.redirect(`/users/verified/error=true&message=${message}`);
+                  res.redirect(`/admin/auth/verified/error=true&message=${message}`);
                 })
                 .catch((err) => {
                   console.log(err);
                   let message =
                     "Clearing user with expired unique string failed";
-                  res.redirect(`/users/verified/error=true&message=${message}`);
+                  res.redirect(`/admin/auth/verified/error=true&message=${message}`);
                 });
             })
             .catch((err) => {
               console.log(err);
               let message =
                 "An error occurred while clearing for expired user verification record";
-              res.redirect(`/users/verified/error=true&message=${message}`);
+              res.redirect(`/admin/auth/verified/error=true&message=${message}`);
             });
         } else {
           // user verification record exists
@@ -221,7 +221,7 @@ const verifyEmail = async (req, res) => {
                         let message =
                           "An error occurred while finalizing successful verification";
                         res.redirect(
-                          `/users/verified/error=true&message=${message}`
+                          `/admin/auth/verified/error=true&message=${message}`
                         );
                       });
                   })
@@ -230,34 +230,34 @@ const verifyEmail = async (req, res) => {
                     let message =
                       "An error occurred while updating user record";
                     res.redirect(
-                      `/users/verified/error=true&message=${message}`
+                      `/admin/auth/verified/error=true&message=${message}`
                     );
                   });
               } else {
                 // existing record but incorrect verification details passed
                 let message =
                   "Invalid verification details passed. Please check you inbox";
-                res.redirect(`/users/verified/error=true&message=${message}`);
+                res.redirect(`/admin/auth/verified/error=true&message=${message}`);
               }
             })
             .catch((err) => {
               let message =
                 "An error occurred while comparing the unique strings";
-              res.redirect(`/users/verified/error=true&message=${message}`);
+              res.redirect(`/admin/auth/verified/error=true&message=${message}`);
             });
         }
       } else {
         // user verification record does'nt exist
         let message =
           "Account record doesn't exist or has been verified already. Please login or signup";
-        res.redirect(`/users/verified/error=true&message=${message}`);
+        res.redirect(`/admin/auth/verified/error=true&message=${message}`);
       }
     })
     .catch((err) => {
       console.log(err);
       let message =
         "An error occurred while checking for existing user verification record";
-      res.redirect(`/users/verified/error=true&message=${message}`);
+      res.redirect(`/admin/auth/verified/error=true&message=${message}`);
     });
 };
 

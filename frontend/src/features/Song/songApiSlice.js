@@ -65,6 +65,13 @@ export const songApiSlice = apiSlice.injectEndpoints({
         { type: "Song", id: arg.songId },
       ],
     }),
+    getSongs: builder.query({
+      query: ({ keyword, pageNumber }) => ({
+        url: "/api",
+        params: { keyword, pageNumber },
+      }),
+      keepUnusedDataFor: 5,
+    }),
   }),
 });
 
@@ -77,4 +84,5 @@ export const {
   useUploadAlbumMutation,
   useLikeSongMutation,
   useAddCommentMutation,
+  useGetSongsQuery,
 } = songApiSlice;

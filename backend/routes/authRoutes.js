@@ -4,6 +4,8 @@ const router = express.Router();
 
 const {
   registerUser,
+  verifyEmail,
+  verification,
   loginUser,
   logOutUser,
   refresh,
@@ -28,6 +30,7 @@ router.get(
 router.get(
   "/google/callback",
   passport.authenticate("google", {
+    // successRedirect: "",
     failureRedirect: "",
     session: false,
   }),
@@ -69,6 +72,8 @@ router.get(
 
 
 router.post("/register", schemaValidator("authRegister"), registerUser);
+router.get("/verify/:userId/:uniqueString", verifyEmail);
+router.get("/verified", verification);
 router.post("/login", schemaValidator("authLogin"), loginUser);
 router.get("/loginSuccess", verifyToken, loginSuccess);
 

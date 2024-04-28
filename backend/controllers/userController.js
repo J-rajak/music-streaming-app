@@ -2,6 +2,7 @@ const User = require("../models/User");
 const Song = require("../models/Song");
 const Artiste = require("../models/Artiste");
 const Album = require("../models/Album");
+const Plan = require("../models/Plan");
 const asyncHandler = require("express-async-handler");
 const cloudinary = require("../config/cloudinary");
 
@@ -153,7 +154,7 @@ const uploadAlbum = asyncHandler(async (req, res) => {
   const { title, genre, songs, coverImage } = req.body;
   const userId = req.user.id;
 
-  if (!title ||  !coverImage ||  !genre) {
+  if (!title || !coverImage || !genre) {
     return res.status(400).json({ message: "Missing required fields" });
   }
 
@@ -172,6 +173,65 @@ const uploadAlbum = asyncHandler(async (req, res) => {
   }
 
   res.status(200).json(newAlbum);
+});
+
+const viewPlans = asyncHandler(async (req, res) => {
+  const plans = Plan.find();
+
+  if (!plans) {
+    res.status(404).json({ message: "No plans found" });
+  }
+
+  res.status(200).json(plans);
+});
+
+const onSubscribePlan = asyncHandler(async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const planId = req.params.id;
+
+    const selectedPlan = await Plan.findById(planId);
+    const foundUser = await User.findById(userId);
+
+    if (!selectedPlan || !foundUser) {
+      return res.status(404).json({ message: "No plans or user found" });
+    }
+
+    foundUser.membership = selectedPlan;
+    foundUser.membershipStartDate = new Date();
+    const expDate = new Date();
+    foundUser.membershipEndDate = expDate.setDate(expDate.getDate() + 30);
+
+    await foundUser.save();
+
+    res.status(200).json({ message: "Subscription successful" });
+  } catch (error) {
+    console.error("Error in onSubscribePlan:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+const onUnsubscribePlan = asyncHandler(async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const foundUser = await User.findById(userId);
+
+    if (!foundUser) {
+      return res.status(404).json({ message: "No user found" });
+    }
+
+    foundUser.membership = null;
+    foundUser.membershipStartDate = null;
+    foundUser.membershipEndDate = null;
+
+    await foundUser.save();
+
+    res.status(200).json({ message: "Unsubscription successful" });
+  } catch (error) {
+    console.error("Error in onUnsubscribePlan:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
 });
 
 

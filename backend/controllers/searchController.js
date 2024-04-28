@@ -66,53 +66,24 @@ const FindSearchedDataInAllEntries = asyncHandler(async (req, res) => {
 
 const getSearchResults = async (req, res, next) => {
   try {
-    let query = {};
-    let queryCondition = false;
+    const pageSize = 5;
+    const page = Number(req.query.pageNumber) || 1;
 
-    let genreQueryCondition = {};
-    const categoryName = req.params.categoryName || "";
-    if (categoryName) {
-      queryCondition = true;
-      let a = categoryName.replaceAll(",", "/");
-      var regEx = new RegExp("^" + a);
-      genreQueryCondition = { category: regEx };
-    }
-    if (req.query.category) {
-      queryCondition = true;
-      let a = req.query.category.split(",").map((item) => {
-        if (item) return new RegExp("^" + item);
-      });
-      genreQueryCondition = {
-        category: { $in: a },
-      };
-    }
+    const keyword = req.query.keyword
+      ? {
+          title: {
+            $regex: req.query.keyword,
+            $options: "i",
+          },
+        }
+      : {};
 
-    //pagination
-    const pageNum = Number(req.query.pageNum) || 1;
+    const count = await Song.countDocuments({ ...keyword });
+    const songs = await Song.find({ ...keyword })
+      .limit(pageSize)
+      .skip(pageSize * (page - 1));
 
-    const searchQuery = req.params.searchQuery || "";
-    let searchQueryCondition = {};
-    let select = {};
-    if (searchQuery) {
-      queryCondition = true;
-      searchQueryCondition = { $text: { $search: searchQuery } };
-      select = {
-        score: { $meta: "textScore" },
-      };
-    }
-
-    if (queryCondition) {
-      query = {
-        $and: [genreQueryCondition, searchQueryCondition],
-      };
-    }
-
-    // const totalSongs = await Song.countDocuments(query);
-    const songs = await Song.find(query).select(select);
-
-    res.json({
-      songs,
-    });
+    res.json({ songs, page, pages: Math.ceil(count / pageSize) });
   } catch (err) {
     next(err);
   }

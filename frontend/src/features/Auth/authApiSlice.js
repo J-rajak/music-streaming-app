@@ -13,8 +13,6 @@ export const authApiSlice = apiSlice.injectEndpoints({
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          console.log(data);
-
           dispatch(updateTheme("rock"));
           dispatch(setUserId(data._id));
           dispatch(setUser(data.username));
@@ -34,7 +32,6 @@ export const authApiSlice = apiSlice.injectEndpoints({
         try {
           const { data } = await queryFulfilled;
           console.log(data);
-          console.log(data._id);
           dispatch(updateTheme("rock"));
           dispatch(setUserId(data._id));
           dispatch(setUser(data.username));

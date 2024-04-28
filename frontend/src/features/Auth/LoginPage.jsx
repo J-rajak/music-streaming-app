@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Icon } from "@iconify/react";
 import { useLoginUserMutation } from "./authApiSlice";
@@ -10,7 +10,7 @@ import ReCAPTCHA from "react-google-recaptcha";
 import { toast } from "react-toastify";
 import { loginSchema } from "../../utils/schema";
 const sitekey = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
-// import { setProvider } from "./authSlice";
+import { setProvider } from "./authSlice";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({ username: "", password: "" });
@@ -18,14 +18,13 @@ const LoginPage = () => {
   const [validationErrors, setValidationErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [login, { isLoading, isError, error }] = useLoginUserMutation();
-  const navigate = useNavigate();
   const recaptchaRef = useRef();
+  const navigate = useNavigate();
   const location = useLocation();
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
     const { error } = loginSchema.validate(formData, {
       abortEarly: false,
       allowUnknown: false,
@@ -41,9 +40,11 @@ const LoginPage = () => {
       return;
     }
     try {
-      const recaptchaToken = await recaptchaRef.current.executeAsync();
-      recaptchaRef.current.reset();
-      const { error } = await login({ ...formData, recaptchaToken });
+      // const recaptchaToken = await recaptchaRef.current.executeAsync();
+      // console.log("reCAPTCHA Token:", recaptchaToken);
+      // recaptchaRef.current.reset();
+
+      const { error } = await login({ ...formData });
       if (error) {
         console.error(error);
       } else {
@@ -59,9 +60,9 @@ const LoginPage = () => {
     }
   };
 
-  // const handleClick = (provider) => {
-  //   dispatch(setProvider(provider));
-  // };
+  const handleClick = (provider) => {
+    dispatch(setProvider(provider));
+  };
 
   return (
     <section className="min-h-screen flex items-stretch text-white ">
@@ -148,8 +149,8 @@ const LoginPage = () => {
           </div>
           <div className="">
             <a
-              href=""
-              // onClick={() => handleClick("google")}
+              href="http://localhost:4000/auth/google"
+              onClick={() => handleClick("google")}
               className="provider flex items-center gap-4 rounded-md mb-2 p-2 bg-black hover:bg-opacity-50 active:translate-y-[1px] transition-transform ease-in w-full"
             >
               <FaGoogle />
@@ -216,6 +217,37 @@ const LoginPage = () => {
                   </span>
                 )}
               </div>
+              <div className="text-xs mt-2">
+                This site is protected by reCAPTCHA and the Google{" "}
+                <a
+                  href="https://policies.google.com/privacy"
+                  className="text-blue-300 hover:decoration-blue-300 hover:underline"
+                >
+                  Privacy Policy
+                </a>{" "}
+                and{" "}
+                <a
+                  href="https://policies.google.com/terms"
+                  className="text-blue-300 hover:decoration-blue-300 hover:underline"
+                >
+                  Terms of Service
+                </a>{" "}
+                apply.
+              </div>
+              {isError && (
+                <span className="block text-sm mt-2 saturate-100 text-red-500">
+                  {error?.data?.message ||
+                    error?.data?.error?.details[0].message}
+                </span>
+              )}
+              <div className="mt-2 text-xs">
+                <ReCAPTCHA
+                  ref={recaptchaRef}
+                  sitekey={sitekey}
+                  size="invisible"
+                  theme="dark"
+                />
+              </div>
               <div className="text-right text-gray-400 hover:underline hover:text-white">
                 <Link to="/">Forgot your password?</Link>
               </div>
@@ -242,14 +274,6 @@ const LoginPage = () => {
                       error?.data?.error?.details[0].message}
                   </span>
                 )}
-              </div>
-              <div className="mt-2 text-xs">
-                <ReCAPTCHA
-                  ref={recaptchaRef}
-                  sitekey={sitekey}
-                  size="invisible"
-                  theme="dark"
-                />
               </div>
               <p className="text-gray-400 mt-4">Not registered??</p>
               <div className="px-4 pb-2 pt-4">

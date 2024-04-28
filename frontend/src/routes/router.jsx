@@ -10,15 +10,25 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 const ErrorPage = lazy(() => import("../components/ErrorPage"));
 const SongsPage = lazy(() => import("../features/Song/SongsPage"));
 const SongPage = lazy(() => import("../features/Song/SongPage"));
+const SearchResultsPage = lazy(() =>
+  import("../features/Song/SearchResultsPage")
+);
 const UploadSongPage = lazy(() => import("../features/Premium/UploadSongPage"));
-const UploadAlbumPage = lazy(() => import("../features/Premium/UploadAlbumPage"));
+const UploadAlbumPage = lazy(() =>
+  import("../features/Premium/UploadAlbumPage")
+);
 const PlaylistsPage = lazy(() => import("../features/Playlist/PlaylistsPage"));
 const PlaylistPage = lazy(() => import("../features/Playlist/PlaylistPage"));
 const AlbumsPage = lazy(() => import("../features/Album/AlbumsPage"));
 const AlbumPage = lazy(() => import("../features/Album/AlbumPage"));
 const ArtistesPage = lazy(() => import("../features/Artiste/ArtistesPage"));
 const ArtistePage = lazy(() => import("../features/Artiste/ArtistePage"));
-const UpgradeToPremiumPage = lazy(() => import("../features/Premium/UpgradeToPremiumPage"));
+const UpgradeToPremiumPage = lazy(() =>
+  import("../features/Premium/UpgradeToPremiumPage")
+);
+const PaymentDetailsPage = lazy(() =>
+  import("../features/Premium/PaymentDetailsPage")
+);
 const FavoritesPage = lazy(() =>
   import("../features/Studio/Favorites/FavoritesPage")
 );
@@ -42,6 +52,7 @@ const Router = () => {
         { path: "explore", element: <SongsPage /> },
         { path: "songs", element: <SongsPage /> },
         { path: "songs/:id", element: <SongPage /> },
+        { path: "search/:keyword", element: <SearchResultsPage /> },
         { path: "playlists", element: <PlaylistsPage /> },
         { path: "playlists/:id", element: <PlaylistPage /> },
         { path: "albums", element: <AlbumsPage /> },
@@ -49,9 +60,16 @@ const Router = () => {
         { path: "artistes", element: <ArtistesPage /> },
         { path: "artistes/:id", element: <ArtistePage /> },
         { path: "artistes/:id", element: <ArtistePage /> },
-        { path: "premium/upload/song", element: <PremiumRoute component={UploadSongPage} /> },
-        { path: "premium/upload/album", element: <PremiumRoute component={UploadAlbumPage} /> },
+        {
+          path: "premium/upload/song",
+          element: <PremiumRoute component={UploadSongPage} />,
+        },
+        {
+          path: "premium/upload/album",
+          element: <PremiumRoute component={UploadAlbumPage} />,
+        },
         { path: "premium", element: <UpgradeToPremiumPage /> },
+        { path: "payment", element: <PaymentDetailsPage /> },
         {
           path: "myProfile",
           element: <PrivateRoute component={MyProfilePage} />,

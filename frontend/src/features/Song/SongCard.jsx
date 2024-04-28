@@ -38,7 +38,7 @@ const SongCard = ({ song }) => {
       <div className="p-2 md:p-4 flex flex-col">
         <Link
           to={`/songs/${song._id}`}
-          className={`text-sm sm:text-base lg:text-lg font-semibold mb-1 hover:underline hover:decoration-2 hover:underline-offset-4 hover:decoration-${selectedTheme} truncate ...`}
+          className={`text-sm text-white sm:text-base lg:text-lg font-semibold mb-1 hover:underline hover:decoration-2 hover:underline-offset-4 hover:decoration-${selectedTheme} truncate ...`}
         >
           {song.title}
         </Link>
