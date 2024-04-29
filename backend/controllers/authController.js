@@ -37,7 +37,6 @@ transporter.verify((error, success) => {
   }
 });
 
-
 const registerUser = asyncHandler(async (req, res) => {
   const { username, email, password } = req.body;
 
@@ -103,7 +102,6 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 });
 
-
 const sendVerificationEmail = ({ _id, email }, res) => {
   const currentUrl = "http://localhost:5173";
 
@@ -167,7 +165,6 @@ const sendVerificationEmail = ({ _id, email }, res) => {
       });
     });
 };
-
 
 // get
 // admin/users/verify/:userId/:uniqueString
@@ -270,7 +267,6 @@ const verification = (req, res) => {
   res.sendFile(path.join(__dirname, "./../views/verified.html"));
 };
 
-
 //login user
 //POST auth/login
 const loginUser = asyncHandler(async (req, res) => {
@@ -286,6 +282,13 @@ const loginUser = asyncHandler(async (req, res) => {
   const user = await User.findOne({ username });
   if (!user) {
     return res.status(400).json({ message: "User does not exists" });
+  }
+
+  if (!user.isVerified) {
+    return res.status(400).json({
+      status: "FAILED",
+      message: "User is not verified!!",
+    });
   }
 
   // Verify Recaptcha token
