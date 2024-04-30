@@ -1,8 +1,30 @@
 const User = require("../models/User");
+const Plan = require("../models/Plan");
 const asyncHandler = require("express-async-handler");
 const cloudinary = require("../config/cloudinary");
 
 // admin functionalities
+
+const newPlan = asyncHandler(async (req, res) => {
+  const { title, planType, description, features, price } = req.body;
+
+  if (!title || !planType || !description || !features || !price) {
+    return res.status(400).json({ message: "Missing required fields" });
+  }
+
+  const plan = new Plan({
+    title: title,
+    planType: planType,
+    description: description,
+    features: features,
+    price: price,
+  });
+
+  await plan.save();
+
+  res.status(201).json({ message: "Plan created successfully", plan });
+});
+
 
 //get users
 // admin/users/
@@ -144,6 +166,7 @@ const deleteUser = asyncHandler(async (req, res) => {
 });
 
 module.exports = {
+  newPlan,
   uploadImage,
   getUsers,
   getUserProfile,

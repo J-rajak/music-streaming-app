@@ -2,7 +2,6 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-const passport = require("passport");
 require("dotenv").config({ path: "./config/.env" });
 const PORT = process.env.PORT;
 const connectDB = require("./config/database");
@@ -24,8 +23,6 @@ app.use(cors(corsOptions));
 // Your other routes and middleware
 
 connectDB();
-
-require("./config/passport")(passport);
 
 app.use(cookieParser());
 app.use(express.json());

@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const {
+  newPlan,
   uploadImage,
   getUsers,
   getUserProfile,
@@ -12,6 +13,7 @@ const {
 const { verifyToken, verifyIsAdmin } = require("../middleware/authMiddleware");
 const upload = require("../middleware/multer");
 
+router.post("/create/plan", verifyToken, newPlan);
 router.post("/upload", verifyToken, upload.single("image"), uploadImage);
 router.route("/").get(verifyToken, verifyIsAdmin, getUsers);
 router

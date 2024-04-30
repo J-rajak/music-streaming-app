@@ -188,16 +188,15 @@ const viewPlans = asyncHandler(async (req, res) => {
 const onSubscribePlan = asyncHandler(async (req, res) => {
   try {
     const userId = req.user.id;
-    const planId = req.params.id;
+    // const planId = req.params.id;
 
-    const selectedPlan = await Plan.findById(planId);
+    // const selectedPlan = await Plan.findById(planId);
     const foundUser = await User.findById(userId);
 
-    if (!selectedPlan || !foundUser) {
-      return res.status(404).json({ message: "No plans or user found" });
+    if (!foundUser) {
+      return res.status(404).json({ message: "No user found" });
     }
 
-    foundUser.membership = selectedPlan;
     foundUser.membershipStartDate = new Date();
     const expDate = new Date();
     foundUser.membershipEndDate = expDate.setDate(expDate.getDate() + 30);
@@ -242,4 +241,7 @@ module.exports = {
   uploadImage,
   uploadSong,
   uploadAlbum,
+  viewPlans,
+  onSubscribePlan,
+  onUnsubscribePlan,
 };

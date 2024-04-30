@@ -51,6 +51,14 @@ export const userApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["User"],
     }),
+    postPlan: builder.mutation({
+      query: (data) => ({
+        url: `/admin/users/create/plan`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["User"],
+    }),
   }),
 });
 
@@ -62,4 +70,5 @@ export const {
   useGetUsersQuery,
   useDeleteUserMutation,
   useUpdateUserMutation,
+  usePostPlanMutation,
 } = userApiSlice;
