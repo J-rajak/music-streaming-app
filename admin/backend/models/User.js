@@ -14,6 +14,11 @@ const UserSchema = new mongoose.Schema(
       required: false,
       default: false,
     },
+    isPremium: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
     isVerified: {
       type: Boolean,
       required: true,

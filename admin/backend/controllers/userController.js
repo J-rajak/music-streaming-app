@@ -25,7 +25,6 @@ const newPlan = asyncHandler(async (req, res) => {
   res.status(201).json({ message: "Plan created successfully", plan });
 });
 
-
 //get users
 // admin/users/
 const getUsers = asyncHandler(async (req, res) => {
@@ -117,8 +116,7 @@ const updateUser = asyncHandler(async (req, res) => {
   if (user) {
     user.username = req.body.username || user.username;
     user.email = req.body.email || user.email;
-    // user.isAdmin = Boolean(req.body.isAdmin);
-    // user.isPremium = Boolean(req.body.isPremium);
+    user.isAdmin = Boolean(req.body.isAdmin);
 
     const updatedUser = await user.save();
 
@@ -126,8 +124,7 @@ const updateUser = asyncHandler(async (req, res) => {
       _id: updatedUser._id,
       name: updatedUser.name,
       email: updatedUser.email,
-      // isAdmin: updatedUser.isAdmin,
-      // isPremium: updatedUser.isPremium,
+      isAdmin: updatedUser.isAdmin,
     });
   } else {
     res.status(404);

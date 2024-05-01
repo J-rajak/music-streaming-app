@@ -15,8 +15,7 @@ const EditUserPage = () => {
   const { id: userId } = useParams();
   const [username, setUserName] = useState("");
   const [email, setEmail] = useState("");
-  // const [isAdmin, setIsAdmin] = useState(false);
-  // const [isPremium, setIsPremium] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const {
     data: user,
@@ -25,6 +24,8 @@ const EditUserPage = () => {
     refetch,
   } = useGetUserDetailsQuery(userId);
 
+  console.log(user);
+
   const [updateUser, { isLoading: loadingUpdate }] = useUpdateUserMutation();
 
   const navigate = useNavigate();
@@ -32,7 +33,7 @@ const EditUserPage = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
-      await updateUser({ userId, username, email });
+      await updateUser({ userId, username, email, isAdmin });
       toast.success("user updated successfully");
       refetch();
       navigate("/");
@@ -45,8 +46,7 @@ const EditUserPage = () => {
     if (user) {
       setUserName(user.username);
       setEmail(user.email);
-      // setIsAdmin(user.isAdmin);
-      // setIsPremium(user.isPremium);
+      setIsAdmin(user.isAdmin);
     }
   }, [user]);
 
@@ -93,7 +93,7 @@ const EditUserPage = () => {
               />
             </Form.Group>
 
-            {/* <Form.Group className="my-2" controlId="isadmin">
+            <Form.Group className="my-2" controlId="isadmin">
               <Form.Check
                 type="checkbox"
                 label="Is Admin"
@@ -103,15 +103,6 @@ const EditUserPage = () => {
               />
             </Form.Group>
 
-            <Form.Group className="my-2" controlId="ispremium">
-              <Form.Check
-                type="checkbox"
-                label="Is Premium"
-                checked={isPremium}
-                onChange={(e) => setIsPremium(e.target.checked)}
-                className="mt-2 text-white"
-              />
-            </Form.Group> */}
             <Button
               type="submit"
               variant="danger"
