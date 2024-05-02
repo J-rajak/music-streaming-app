@@ -25,6 +25,16 @@ const newPlan = asyncHandler(async (req, res) => {
   res.status(201).json({ message: "Plan created successfully", plan });
 });
 
+const getPlans = asyncHandler(async (req, res) => {
+  const plans = await Plan.find();
+
+  if (!plans || plans.length === 0) {
+    res.status(404).json({ message: "No plans found" });
+  } 
+
+  res.status(200).json(plans);
+});
+
 //get users
 // admin/users/
 const getUsers = asyncHandler(async (req, res) => {
@@ -164,6 +174,7 @@ const deleteUser = asyncHandler(async (req, res) => {
 
 module.exports = {
   newPlan,
+  getPlans,
   uploadImage,
   getUsers,
   getUserProfile,

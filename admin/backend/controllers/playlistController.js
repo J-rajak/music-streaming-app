@@ -40,7 +40,21 @@ const getPlaylistDetails = asyncHandler(async (req, res) => {
   res.status(200).json(playlist);
 });
 
+const deletePlaylist = asyncHandler(async (req, res) => {
+  const playlistId = req.params.id;
+  
+  const playlist = await Playlist.findById(playlistId);
+
+  if (playlist) {
+    await playlist.deleteOne({ _id: playlist._id });
+    res.json({ message: "Playlist removed" });
+  } else {
+    res.status(404);
+    throw new Error("Error while deleting playlist");
+  }
+});
 module.exports = {
   getAllPlaylists,
   getPlaylistDetails,
+  deletePlaylist,
 };

@@ -43,7 +43,22 @@ const getSongDetails = asyncHandler(async (req, res) => {
   res.status(200).json(song);
 });
 
+const deleteSong = asyncHandler(async (req, res) => {
+  const songId = req.params.id;
+  
+  const song = await Song.findById(songId);
+
+  if (song) {
+    await song.deleteOne({ _id: song._id });
+    res.json({ message: "Song removed" });
+  } else {
+    res.status(404);
+    throw new Error("Error while deleting song");
+  }
+});
+
 module.exports = {
   getAllSongs,
   getSongDetails,
+  deleteSong,
 };

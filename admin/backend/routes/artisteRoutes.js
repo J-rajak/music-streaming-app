@@ -3,10 +3,12 @@ const router = express.Router();
 const {
   getAllArtistes,
   getArtisteDetails,
+  deleteArtiste,
 } = require("../controllers/artisteController");
-const { verifyToken } = require("../middleware/authMiddleware");
+const { verifyToken, verifyIsAdmin } = require("../middleware/authMiddleware");
 
-router.get("/", getAllArtistes);
-router.get("/:artisteId", getArtisteDetails);
+router.get("/", verifyToken, verifyIsAdmin, getAllArtistes);
+router.get("/:artisteId", verifyToken, verifyIsAdmin, getArtisteDetails);
+router.delete("/:id", verifyToken, verifyIsAdmin, deleteArtiste);
 
 module.exports = router;

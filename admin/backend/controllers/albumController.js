@@ -74,4 +74,18 @@ const getAlbumDetails = asyncHandler(async (req, res) => {
   return res.status(200).json(album);
 });
 
-module.exports = { getAllAlbums, getAlbumDetails, postAlbum};
+const deleteAlbum = asyncHandler(async (req, res) => {
+  const albumId = req.params.id;
+
+  const album = await Album.findById(albumId);
+
+  if (album) {
+    await album.deleteOne({ _id: album._id });
+    res.json({ message: "Album removed" });
+  } else {
+    res.status(404);
+    throw new Error("Error while deleting album");
+  }
+});
+
+module.exports = { getAllAlbums, getAlbumDetails, postAlbum, deleteAlbum };

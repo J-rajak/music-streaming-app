@@ -32,7 +32,22 @@ const getArtisteDetails = asyncHandler(async (req, res) => {
   res.status(200).json({ artiste, songs, albums });
 });
 
+const deleteArtiste = asyncHandler(async (req, res) => {
+  const artisteId = req.params.id;
+
+  const artiste = await Artiste.findById(artisteId);
+
+  if (artiste) {
+    await artiste.deleteOne({ _id: artiste._id });
+    res.json({ message: "Artiste removed" });
+  } else {
+    res.status(404);
+    throw new Error("Error while deleting artiste");
+  }
+});
+
 module.exports = {
   getAllArtistes,
   getArtisteDetails,
+  deleteArtiste,
 };

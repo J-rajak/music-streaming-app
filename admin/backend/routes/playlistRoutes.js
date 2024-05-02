@@ -3,10 +3,12 @@ const router = express.Router();
 const {
   getAllPlaylists,
   getPlaylistDetails,
+  deletePlaylist,
 } = require("../controllers/playlistController");
-const { verifyToken } = require("../middleware/authMiddleware");
+const { verifyToken, verifyIsAdmin } = require("../middleware/authMiddleware");
 
-router.get("/", getAllPlaylists);
-router.get("/:playlistId", getPlaylistDetails);
+router.get("/", verifyToken, verifyIsAdmin, getAllPlaylists);
+router.get("/:playlistId", verifyToken, verifyIsAdmin, getPlaylistDetails);
+router.delete("/:id", verifyToken, verifyIsAdmin, deletePlaylist);
 
 module.exports = router;
