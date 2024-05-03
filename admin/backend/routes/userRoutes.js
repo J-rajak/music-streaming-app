@@ -14,7 +14,7 @@ const {
 const { verifyToken, verifyIsAdmin } = require("../middleware/authMiddleware");
 const upload = require("../middleware/multer");
 
-router.get("plans", verifyToken, getPlans)
+router.get("/plans", getPlans)
 router.post("/create/plan", verifyToken, newPlan);
 router.post("/upload", verifyToken, upload.single("image"), uploadImage);
 router.route("/").get(verifyToken, verifyIsAdmin, getUsers);

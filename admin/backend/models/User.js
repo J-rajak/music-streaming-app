@@ -24,7 +24,7 @@ const UserSchema = new mongoose.Schema(
       required: true,
       default: false,
     },
-        phone: {
+    phone: {
       type: String,
     },
     membership: {
@@ -37,7 +37,6 @@ const UserSchema = new mongoose.Schema(
     membershipEndDate: {
       type: Date,
     },
-
   },
   {
     timestamps: true,

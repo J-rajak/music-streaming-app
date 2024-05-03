@@ -176,7 +176,7 @@ const uploadAlbum = asyncHandler(async (req, res) => {
 });
 
 const viewPlans = asyncHandler(async (req, res) => {
-  const plans = Plan.find();
+  const plans = Plan.find({});
 
   if (!plans) {
     res.status(404).json({ message: "No plans found" });

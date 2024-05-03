@@ -174,6 +174,21 @@ const NavContent = () => {
             <span className="ml-4">Premium</span>
           </NavLink>
         </li>
+        <li>
+          <NavLink
+            to="/users/subscriptions"
+            className={({ isActive }) =>
+              `flex items-center justify-center w-full hover:text-${selectedTheme} ${
+                isActive
+                  ? `text-${selectedTheme} border-r-4 border-${selectedTheme}`
+                  : ""
+              }`
+            }
+          >
+            <FaUserAstronaut className="text-base" />
+            <span className="ml-4">Subscriptions</span>
+          </NavLink>
+        </li>
       </ul>
     </>
   );

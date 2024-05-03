@@ -26,7 +26,7 @@ const newPlan = asyncHandler(async (req, res) => {
 });
 
 const getPlans = asyncHandler(async (req, res) => {
-  const plans = await Plan.find();
+  const plans = await Plan.find({});
 
   if (!plans || plans.length === 0) {
     res.status(404).json({ message: "No plans found" });

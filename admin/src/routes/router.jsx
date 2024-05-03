@@ -18,6 +18,7 @@ const UsersPage = lazy(() => import("../features/Users/UsersPage"));
 const LoginPage = lazy(() => import("../features/Auth/LoginPage"));
 const SignupPage = lazy(() => import("../features/Auth/SignupPage"));
 const PremiumUsers = lazy(() => import("../features/Premium/PremiumUsers"));
+const SubscriptionsPage = lazy(() => import("../features/Premium/SubscriptionsPage"));
 const PremiumPlans = lazy(() => import("../features/Premium/PremiumPlans"));
 const MyProfilePage = lazy(() => import("../features/Users/MyProfilePage"));
 const EditUsersPage = lazy(() => import("../features/Home/EditUsersPage"));
@@ -58,6 +59,10 @@ const Router = () => {
         {
           path: "plans",
           element: <PremiumPlans/>,
+        },
+        {
+          path: "users/subscriptions",
+          element: <SubscriptionsPage/>,
         },
         {
           path: "login",

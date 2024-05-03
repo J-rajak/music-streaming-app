@@ -31,15 +31,6 @@ const PremiumUsers = () => {
       <div className="flex flex-col h-full">
         <div className="flex items-center justify-between mb-10">
           <h1 className="text-white mb-4">Users</h1>
-          <div className="">
-            <Link to="/plans">
-              <button
-                className={`bg-${selectedTheme} flex justify-center items-center mb-2 hover:bg-${selectedTheme}-50 active:bg-opacity-90 py-2 px-4 rounded-lg`}
-              >
-                Premium Plans
-              </button>
-            </Link>
-          </div>
         </div>
         <div className="flex-grow">
           {isLoading ? (
