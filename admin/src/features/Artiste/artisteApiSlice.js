@@ -8,10 +8,17 @@ const artisteApiSlice = apiSlice.injectEndpoints({
     getArtisteDetails: builder.query({
       query: (artisteId) => `/admin/artistes/${artisteId}`,
     }),
+    deleteArtiste: builder.mutation({
+      query: (artisteId) => ({
+        url: `/admin/artistes/${artisteId}`,
+        method: "DELETE",
+      }),
+    }),
   }),
 });
 
 export const {
   useGetAllArtistesQuery,
   useGetArtisteDetailsQuery,
+  useDeleteArtisteMutation,
 } = artisteApiSlice;

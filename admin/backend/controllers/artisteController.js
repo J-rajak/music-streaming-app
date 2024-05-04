@@ -35,15 +35,20 @@ const getArtisteDetails = asyncHandler(async (req, res) => {
 const deleteArtiste = asyncHandler(async (req, res) => {
   const artisteId = req.params.id;
 
-  const artiste = await Artiste.findById(artisteId);
+  const artiste = await Artiste.findByIdAndDelete(artisteId);
+  const albums = await Album.find({ artiste: artisteId });
 
-  if (artiste) {
-    await artiste.deleteOne({ _id: artiste._id });
-    res.json({ message: "Artiste removed" });
-  } else {
+  if (!artiste) {
     res.status(404);
-    throw new Error("Error while deleting artiste");
+    throw new Error("Artiste not found");
   }
+
+  if (albums.length > 0) {
+    // Delete all albums associated with the artiste
+    await Album.deleteMany({ artiste: artisteId });
+  }
+
+  res.json({ message: "Artiste and associated albums removed" });
 });
 
 module.exports = {

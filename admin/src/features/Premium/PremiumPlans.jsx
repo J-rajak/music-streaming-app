@@ -13,21 +13,26 @@ const PremiumPlans = () => {
   const [title, setTitleName] = useState("");
   const [planType, setPlanType] = useState("");
   const [description, setDescription] = useState("");
-  const [features, setFeatures] = useState("");
-  const [price, setPrice] = useState("");
+  const [features, setFeatures] = useState([]);
+  const [price, setPrice] = useState(0);
 
-  const [postPlan, {isLoading, isError, error}] = usePostPlanMutation();
-
+  const [postPlan, { isLoading, isError, error }] = usePostPlanMutation();
 
   const navigate = useNavigate();
 
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
-      await postPlan({ title, planType, description, features, price });
+      await postPlan({
+        title,
+        planType,
+        description,
+        features,
+        price,
+      });
+
       toast.success("Plan created successfully");
-      refetch();
-      navigate("/");
+      navigate("/users/subscriptions");
     } catch (err) {
       toast.error(err?.data?.message || err.error);
     }
@@ -41,7 +46,7 @@ const PremiumPlans = () => {
         Go Back
       </Link>
       <FormContainer>
-        <h1 className="text-2xl mb-4 text-white">Edit User</h1>
+        <h1 className="text-2xl mb-4 text-white">Create Plan</h1>
         {isLoading ? (
           <Loading />
         ) : error ? (
@@ -56,6 +61,7 @@ const PremiumPlans = () => {
                 type="title"
                 placeholder="Enter title"
                 value={title}
+                required
                 onChange={(e) => setTitleName(e.target.value)}
                 className="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500 text-black"
               />
@@ -65,9 +71,10 @@ const PremiumPlans = () => {
                 Plan type
               </Form.Label>
               <Form.Control
-                type="planType"
+                type="text"
                 placeholder="Enter plan type"
                 value={planType}
+                required
                 onChange={(e) => setPlanType(e.target.value)}
                 className="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500 text-black"
               />
@@ -77,10 +84,12 @@ const PremiumPlans = () => {
                 Description
               </Form.Label>
               <Form.Control
-                type="description"
+                as="textarea"
+                rows={3}
                 placeholder="Enter description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
+                required
                 className="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500 text-black"
               />
             </Form.Group>
@@ -89,10 +98,12 @@ const PremiumPlans = () => {
                 Features
               </Form.Label>
               <Form.Control
-                type="features"
+                as="textarea"
+                rows={2}
                 placeholder="Enter features"
-                value={features}
-                onChange={(e) => setFeatures(e.target.value)}
+                value={features.join(",")}
+                required
+                onChange={(e) => setFeatures(e.target.value.split(","))}
                 className="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500 text-black"
               />
             </Form.Group>
@@ -100,10 +111,11 @@ const PremiumPlans = () => {
             <Form.Group className="my-2" controlId="price">
               <Form.Label className="block mb-1 text-white">Price</Form.Label>
               <Form.Control
-                type="price"
+                type="number"
                 placeholder="Enter price"
                 value={price}
-                onChange={(e) => setPrice(e.target.value)}
+                required
+                onChange={(e) => setPrice(Number(e.target.value))}
                 className="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500 text-black"
               />
             </Form.Group>

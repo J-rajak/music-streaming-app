@@ -16,10 +16,17 @@ const playlistApiSlice = apiSlice.injectEndpoints({
       query: (playlistId) => `/admin/playlists/${playlistId}`,
       providesTags: (result, error, id) => [{ type: "Playlist", id }],
     }),
+    deletePlaylist: builder.mutation({
+      query: (playlistId) => ({
+        url: `/admin/playlists/${playlistId}`,
+        method: "DELETE",
+      }),
+    }),
   }),
 });
 
 export const {
   useGetAllPlaylistsQuery,
   useGetPlaylistDetailsQuery,
+  useDeletePlaylistMutation,
 } = playlistApiSlice;

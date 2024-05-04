@@ -1,16 +1,20 @@
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { useGetPlaylistDetailsQuery } from "./playlistApiSlice";
+import {
+  useGetPlaylistDetailsQuery,
+  useDeletePlaylistMutation,
+} from "./playlistApiSlice";
 import ResourceDetail from "../../components/ResourceDetail";
 import SongList from "../../components/SongList";
 import Loading from "../../components/Loading";
 import ErrorMsg from "../../components/ErrorMsg";
-import { Form, Button } from "react-bootstrap";
+import { Button } from "react-bootstrap";
+import { toast } from "react-toastify";
 
 const PlaylistPage = () => {
   const { id } = useParams();
   const selectedTheme = useSelector((state) => state.theme);
-  // const { data: users, refetch, isLoading, error } = useGetUsersQuery();
+  const [deletePlaylist] = useDeletePlaylistMutation();
 
   const {
     data: playlist,
@@ -20,16 +24,18 @@ const PlaylistPage = () => {
   } = useGetPlaylistDetailsQuery(id);
   const navigate = useNavigate();
 
-  // const deleteHandler = async (id) => {
-  //   if (window.confirm("Are you sure")) {
-  //     try {
-  //       await deleteUser(id);
-  //       refetch();
-  //     } catch (err) {
-  //       toast.error(err?.data?.message || err.error);
-  //     }
-  //   }
-  // };
+  const deleteHandler = async (id) => {
+    if (window.confirm("Are you sure")) {
+      try {
+        await deletePlaylist(id);
+        toast.success("Playlist removed successfully");
+        navigate("/");
+        window.location.reload(); // Reload the page
+      } catch (err) {
+        toast.error(err?.data?.message || err.error);
+      }
+    }
+  };
 
   if (isLoading) {
     return <Loading />;
@@ -55,7 +61,7 @@ const PlaylistPage = () => {
         )}
         <div className="flex justify-end mt-4">
           <Button
-            // onClick={deleteHandler}
+            onClick={() => deleteHandler(id)}
             variant="danger"
             className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
           >
