@@ -25,6 +25,9 @@ export const userApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["User"],
     }),
+    getPlans: builder.query({
+      query: () => `/api/users/plans`,
+    }),
   }),
 });
 
@@ -33,4 +36,5 @@ export const {
   useGetCurrentUserQuery,
   useEditUserDetailsMutation,
   useUploadImageMutation,
+  useGetPlansQuery,
 } = userApiSlice;

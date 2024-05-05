@@ -175,16 +175,6 @@ const uploadAlbum = asyncHandler(async (req, res) => {
   res.status(200).json(newAlbum);
 });
 
-const viewPlans = asyncHandler(async (req, res) => {
-  const plans = Plan.find({});
-
-  if (!plans) {
-    res.status(404).json({ message: "No plans found" });
-  }
-
-  res.status(200).json(plans);
-});
-
 const onSubscribePlan = asyncHandler(async (req, res) => {
   try {
     const userId = req.user.id;
@@ -233,6 +223,15 @@ const onUnsubscribePlan = asyncHandler(async (req, res) => {
   }
 });
 
+const getPlans = asyncHandler(async (req, res) => {
+  const plans = await Plan.find({});
+
+  if (!plans || plans.length === 0) {
+    res.status(404).json({ message: "No plans found" });
+  }
+
+  res.status(200).json(plans);
+});
 
 module.exports = {
   getUserDetails,
@@ -241,7 +240,7 @@ module.exports = {
   uploadImage,
   uploadSong,
   uploadAlbum,
-  viewPlans,
   onSubscribePlan,
   onUnsubscribePlan,
+  getPlans,
 };
