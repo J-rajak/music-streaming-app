@@ -1,7 +1,14 @@
 import { useGetPlansQuery } from "../features/Users/userApiSlice";
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const FreePremiumCard = () => {
   const { data: plans } = useGetPlansQuery();
+  const selectedTheme = useSelector((state) => state.theme);
+
+  const submitHandler = () => {};
+
+  const submitFreeHandler = () => {};
 
   return (
     <>
@@ -61,6 +68,27 @@ const FreePremiumCard = () => {
                   <b>{feature}</b>
                 </p>
               ))}
+            </div>
+            <div>
+              {plan.planType === "Premium" ? (
+                <Link to="/premium/upload/album">
+                  <button
+                    onClick={submitHandler}
+                    className={`bg-${selectedTheme} flex justify-center items-center mb-2 hover:bg-${selectedTheme}-50 active:bg-opacity-90 py-2 px-4 rounded-lg mt-8`}
+                  >
+                    <span>pay via khalti</span>
+                  </button>
+                </Link>
+              ) : (
+                <Link to="/premium/upload/album">
+                  <button
+                    onClick={submitFreeHandler}
+                    className={`bg-${selectedTheme} flex justify-center items-center mb-2 hover:bg-${selectedTheme}-50 active:bg-opacity-90 py-2 px-4 rounded-lg mt-8`}
+                  >
+                    <span>Free trial</span>
+                  </button>
+                </Link>
+              )}
             </div>
           </div>
         ))}

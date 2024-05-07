@@ -178,9 +178,9 @@ const uploadAlbum = asyncHandler(async (req, res) => {
 const onSubscribePlan = asyncHandler(async (req, res) => {
   try {
     const userId = req.user.id;
-    // const planId = req.params.id;
+    const planId = req.params.id;
 
-    // const selectedPlan = await Plan.findById(planId);
+    const selectedPlan = await Plan.findById(planId);
     const foundUser = await User.findById(userId);
 
     if (!foundUser) {
