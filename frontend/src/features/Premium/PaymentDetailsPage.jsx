@@ -14,7 +14,7 @@ const PaymentDetailsPage = () => {
 
   const submitHandler = async () => {
     const payload = {
-      return_url: "http://localhost:5173",
+      return_url: "http://localhost:5173/success",
       website_url: "http://localhost:5173",
       amount: 1300,
       purchase_order_id: "test12",
@@ -25,23 +25,30 @@ const PaymentDetailsPage = () => {
         phone: "9800000123",
       },
     };
-    const response = await axios.post(
-      `http://localhost:4000/khalti-checkout`,
-      payload
-    );
-    console.log(response);
 
-    if (response) {
-      window.location.href = `${response?.data?.data?.payment_url}`;
+    try {
+      const response = await axios.post(
+        `http://localhost:4000/api/users/khaltiCheckout`,
+        payload
+      );
+      console.log(response);
+
+      if (
+        response &&
+        response.data &&
+        response.data.data &&
+        response.data.data.payment_url
+      ) {
+        window.location.replace(response.data.data.payment_url);
+      } else {
+        console.log("No payment URL received in the response.");
+      }
+    } catch (error) {
+      console.error("Error during payment checkout:", error);
     }
-
-
-    
   };
 
   const { data: user, isLoading, error } = useGetUserDetailsQuery(userId);
-
-  console.log(user);
 
   return (
     <div>
@@ -54,7 +61,7 @@ const PaymentDetailsPage = () => {
             {error?.data?.message || error.error}
           </Message>
         ) : (
-          <Form onSubmit={submitHandler} className="w-full max-w-md">
+          <Form className="w-full max-w-md">
             <Form.Group className="my-2" controlId="name">
               <Form.Label className="block mb-1 text-white">Name</Form.Label>
               <Form.Control
@@ -94,16 +101,17 @@ const PaymentDetailsPage = () => {
                 className="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500 text-black"
               />
             </Form.Group>
-            <Button
-              onClick={submitHandler}
-              className={`bg-${selectedTheme} mt-10 flex text-white justify-center items-center hover:bg-${selectedTheme}-50 active:bg-opacity-90 py-2 px-4 rounded-full`}
-              type="submit"
-            >
-              pay via Khalti
-            </Button>
           </Form>
         )}
       </FormContainer>
+
+      <Button
+        onClick={submitHandler}
+        className={`bg-${selectedTheme} mt-10 flex text-white justify-center items-center hover:bg-${selectedTheme}-50 active:bg-opacity-90 py-2 px-4 rounded-full`}
+        type="submit"
+      >
+        pay via Khalti
+      </Button>
     </div>
   );
 };

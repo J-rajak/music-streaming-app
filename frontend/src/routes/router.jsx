@@ -14,6 +14,7 @@ const SearchResultsPage = lazy(() =>
   import("../features/Song/SearchResultsPage")
 );
 const UploadSongPage = lazy(() => import("../features/Premium/UploadSongPage"));
+const PaymentSuccessPage = lazy(() => import("../features/Premium/PaymentSuccessPage"));
 const UploadAlbumPage = lazy(() =>
   import("../features/Premium/UploadAlbumPage")
 );
@@ -60,6 +61,8 @@ const Router = () => {
         { path: "artistes", element: <ArtistesPage /> },
         { path: "artistes/:id", element: <ArtistePage /> },
         { path: "artistes/:id", element: <ArtistePage /> },
+        { path: "success", element: <PaymentSuccessPage /> },
+
         {
           path: "premium/upload/song",
           element: <PremiumRoute component={UploadSongPage} />,

@@ -53,7 +53,7 @@ app.post("/khalti-checkout", async (req, res) => {
     payload,
     {
       headers: {
-        Authorization: "key live_secret_key_68791341fdd94846a146f0457ff7b455",
+        Authorization: `key ${process.env.KHALTI_SECRET_KEY}`,
       },
     }
   );

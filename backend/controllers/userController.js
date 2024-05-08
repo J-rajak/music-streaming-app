@@ -1,6 +1,8 @@
+require("dotenv").config({ path: "./config/.env" });
 const User = require("../models/User");
 const Song = require("../models/Song");
 const Artiste = require("../models/Artiste");
+const axios = require("axios");
 const Album = require("../models/Album");
 const Plan = require("../models/Plan");
 const asyncHandler = require("express-async-handler");
@@ -233,6 +235,32 @@ const getPlans = asyncHandler(async (req, res) => {
   res.status(200).json(plans);
 });
 
+const khaltiPayment =asyncHandler(async(req, res) => {
+  const payload = req.body;
+  const khaltiResponse = await axios.post(
+    "https://a.khalti.com/api/v2/epayment/initiate/",
+    payload,
+    {
+      headers: {
+        Authorization: `key ${process.env.KHALTI_SECRET_KEY}`,
+      },
+    }
+  );
+
+  if (khaltiResponse) {
+    res.json({
+      success: true,
+      data: khaltiResponse?.data,
+    });
+  } else {
+    res.json({
+      success: false,
+      message: "something went wrong",
+    });
+  }
+  console.log(khaltiResponse);
+})
+
 module.exports = {
   getUserDetails,
   getCurrentUser,
@@ -243,4 +271,5 @@ module.exports = {
   onSubscribePlan,
   onUnsubscribePlan,
   getPlans,
+  khaltiPayment,
 };

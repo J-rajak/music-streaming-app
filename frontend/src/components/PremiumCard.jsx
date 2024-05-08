@@ -16,7 +16,7 @@ const FreePremiumCard = () => {
         plans.map((plan) => (
           <div
             key={plan._id}
-            className="flex flex-col items-center bg-gradient-to-br from-blue-100 via-gray-400 to-purple-100 p-8 rounded-lg shadow-lg relative border-8 border-gray-100 max-w-sm"
+            className="flex flex-col items-center bg-gradient-to-br from-blue-100 via-gray-400 to-purple-100 p-8 rounded-lg shadow-lg relative border-8 border-gray-100 max-w-sm mr-10"
           >
             {plan.planType === "Premium" && (
               <svg
@@ -24,7 +24,7 @@ const FreePremiumCard = () => {
                 viewBox="0 0 24 24"
                 fill="currentColor"
                 aria-hidden="true"
-                className="w-20 h-20 absolute -top-11 -left-11 fill-red-400"
+                className="w-20 h-20 absolute -top-11 -left-11 fill-gray-500"
               >
                 <path
                   fillRule="evenodd"
@@ -71,19 +71,19 @@ const FreePremiumCard = () => {
             </div>
             <div>
               {plan.planType === "Premium" ? (
-                <Link to="/premium/upload/album">
+                <Link to="/payment">
                   <button
                     onClick={submitHandler}
-                    className={`bg-${selectedTheme} flex justify-center items-center mb-2 hover:bg-${selectedTheme}-50 active:bg-opacity-90 py-2 px-4 rounded-lg mt-8`}
+                    className={`bg-gray-300 flex justify-center items-center mb-2 hover:bg-${selectedTheme}-50 active:bg-opacity-90 py-2 px-4 rounded-lg mt-8`}
                   >
                     <span>pay via khalti</span>
                   </button>
                 </Link>
               ) : (
-                <Link to="/premium/upload/album">
+                <Link to="/">
                   <button
                     onClick={submitFreeHandler}
-                    className={`bg-${selectedTheme} flex justify-center items-center mb-2 hover:bg-${selectedTheme}-50 active:bg-opacity-90 py-2 px-4 rounded-lg mt-8`}
+                    className={`bg-gray-300 flex justify-center items-center mb-2 hover:bg-${selectedTheme}-50 active:bg-opacity-90 py-2 px-4 rounded-lg mt-8`}
                   >
                     <span>Free trial</span>
                   </button>
