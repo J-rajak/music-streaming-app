@@ -80,7 +80,7 @@ const FreePremiumCard = () => {
                   </button>
                 </Link>
               ) : (
-                <Link to="/">
+                <Link to={`/subscription/${plan._id}`}>
                   <button
                     onClick={submitFreeHandler}
                     className={`bg-gray-300 flex justify-center items-center mb-2 hover:bg-${selectedTheme}-50 active:bg-opacity-90 py-2 px-4 rounded-lg mt-8`}

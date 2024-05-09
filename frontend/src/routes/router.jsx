@@ -14,7 +14,9 @@ const SearchResultsPage = lazy(() =>
   import("../features/Song/SearchResultsPage")
 );
 const UploadSongPage = lazy(() => import("../features/Premium/UploadSongPage"));
-const PaymentSuccessPage = lazy(() => import("../features/Premium/PaymentSuccessPage"));
+const PaymentSuccessPage = lazy(() =>
+  import("../features/Premium/PaymentSuccessPage")
+);
 const UploadAlbumPage = lazy(() =>
   import("../features/Premium/UploadAlbumPage")
 );
@@ -26,6 +28,9 @@ const ArtistesPage = lazy(() => import("../features/Artiste/ArtistesPage"));
 const ArtistePage = lazy(() => import("../features/Artiste/ArtistePage"));
 const UpgradeToPremiumPage = lazy(() =>
   import("../features/Premium/UpgradeToPremiumPage")
+);
+const FreeSubscriptionPage = lazy(() =>
+  import("../features/Premium/FreeSubscriptionPage")
 );
 const PaymentDetailsPage = lazy(() =>
   import("../features/Premium/PaymentDetailsPage")
@@ -56,6 +61,7 @@ const Router = () => {
         { path: "search/:keyword", element: <SearchResultsPage /> },
         { path: "playlists", element: <PlaylistsPage /> },
         { path: "playlists/:id", element: <PlaylistPage /> },
+        { path: "subscription/:id", element: <FreeSubscriptionPage /> },
         { path: "albums", element: <AlbumsPage /> },
         { path: "albums/:id", element: <AlbumPage /> },
         { path: "artistes", element: <ArtistesPage /> },

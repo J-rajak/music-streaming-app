@@ -62,6 +62,11 @@ const UserSchema = new mongoose.Schema(
     membershipStartDate: {
       type: Date,
     },
+    membershipTrial: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
     membershipEndDate: {
       type: Date,
     },

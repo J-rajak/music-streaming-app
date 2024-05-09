@@ -28,6 +28,13 @@ export const userApiSlice = apiSlice.injectEndpoints({
     getPlans: builder.query({
       query: () => `/api/users/plans`,
     }),
+    freeSubscription: builder.mutation({
+      query: (freePlanId) => ({
+        url: `api/users/subscribe/${freePlanId}`,
+        method: "PUT",
+      }),
+      invalidatesTags: ["User"],
+    }),
   }),
 });
 
@@ -37,4 +44,5 @@ export const {
   useEditUserDetailsMutation,
   useUploadImageMutation,
   useGetPlansQuery,
+  useFreeSubscriptionMutation,
 } = userApiSlice;

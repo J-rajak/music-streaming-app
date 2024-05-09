@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { BsSearch } from "react-icons/bs";
+import { FaCheck } from "react-icons/fa";
 import { Link, useParams, useNavigate } from "react-router-dom";
 
 const Search = () => {
   const selectedTheme = useSelector((state) => state.theme);
-  const { isAuthenticated } = useSelector((state) => state.auth);
+  const { isPremium } = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const { keyword: urlKeyword } = useParams();
   const [keyword, setKeyword] = useState(urlKeyword || "");
@@ -22,7 +23,6 @@ const Search = () => {
 
   return (
     <div className="mb-8 flex items-center justify-between">
-
       <div className="relative w-3/4">
         <div className="">
           <div className="relative">
@@ -44,7 +44,7 @@ const Search = () => {
       </div>
 
       {/* Button */}
-      {isAuthenticated && (
+      {!isPremium ? (
         <Link to="/premium">
           <button
             className={`bg-${selectedTheme} flex text-white justify-center items-center hover:bg-${selectedTheme}-50 active:bg-opacity-90 py-2 px-4 rounded-full`}
@@ -52,6 +52,13 @@ const Search = () => {
             Explore Premium
           </button>
         </Link>
+      ) : (
+        <div
+          className={`bg-${selectedTheme} flex text-white justify-center items-center hover:bg-${selectedTheme}-50 active:bg-opacity-90 py-2 px-4 rounded-full`}
+        >
+          <FaCheck className="mr-2" />
+          Premium User
+        </div>
       )}
     </div>
   );

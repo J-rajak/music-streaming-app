@@ -235,7 +235,7 @@ const getPlans = asyncHandler(async (req, res) => {
   res.status(200).json(plans);
 });
 
-const khaltiPayment =asyncHandler(async(req, res) => {
+const khaltiPayment = asyncHandler(async (req, res) => {
   const payload = req.body;
   const khaltiResponse = await axios.post(
     "https://a.khalti.com/api/v2/epayment/initiate/",
@@ -259,7 +259,43 @@ const khaltiPayment =asyncHandler(async(req, res) => {
     });
   }
   console.log(khaltiResponse);
-})
+});
+const onFreeSubscription = asyncHandler(async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const freePlanId = req.params.freePlanId;
+
+    const freePlan = await Plan.findById(freePlanId);
+
+    const foundUser = await User.findById(userId);
+
+    if (!foundUser) {
+      return res.status(404).json({ message: "No user found" });
+    }
+
+    // Check if the user's trial period is over
+    if (foundUser.membershipTrial === true) {
+      return res.status(400).json({ message: "User's trial period is over" });
+    }
+
+    // Update subscription details if the user is eligible
+    foundUser.membershipStartDate = new Date();
+    const expDate = new Date();
+    foundUser.membershipEndDate = expDate.setDate(expDate.getDate() + 30);
+    foundUser.membership = freePlan;
+    foundUser.membershipTrial = true; // Assuming the user's trial starts now
+    foundUser.isPremium = true; // Set isPremium to true
+
+    await foundUser.save();
+
+    res
+      .status(200)
+      .json({ message: "Free subscription activated successfully" });
+  } catch (error) {
+    console.error("Error in onFreeSubscription:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
 
 module.exports = {
   getUserDetails,
@@ -272,4 +308,5 @@ module.exports = {
   onUnsubscribePlan,
   getPlans,
   khaltiPayment,
+  onFreeSubscription,
 };
