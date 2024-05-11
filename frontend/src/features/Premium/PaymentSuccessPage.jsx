@@ -30,7 +30,7 @@ const PaymentSuccessPage = () => {
     }, []);
 return (
 
-    <div className="flex min-h-screen flex-col items-center p-24 space-y-4">
+    <div className="flex min-h-screen flex-col items-center p-24 space-y-4 text-white">
       {isSuccess ? (
         <h3>Thank You! Payment has been received.</h3>
       ) : (

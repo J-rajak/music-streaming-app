@@ -9,6 +9,10 @@ import { useGetUserDetailsQuery } from "../Users/userApiSlice";
 
 const PaymentDetailsPage = () => {
   const { userId } = useSelector((state) => state.auth);
+  const { data: user, isLoading, error } = useGetUserDetailsQuery(userId);
+
+  console.log(user);
+
   // const [paymentMethod, setPaymentMethod] = useState("");
   const selectedTheme = useSelector((state) => state.theme);
 
@@ -20,11 +24,13 @@ const PaymentDetailsPage = () => {
       purchase_order_id: "test12",
       purchase_order_name: "test",
       customer_info: {
-        name: "Khalti Bahadur",
-        email: "example@gmail.com",
-        phone: "9800000123",
+        name: user.username,
+        email: user.email,
+        phone: "9800000000",
       },
     };
+
+    console.log(payload);
 
     try {
       const response = await axios.post(
@@ -47,8 +53,6 @@ const PaymentDetailsPage = () => {
       console.error("Error during payment checkout:", error);
     }
   };
-
-  const { data: user, isLoading, error } = useGetUserDetailsQuery(userId);
 
   return (
     <div>

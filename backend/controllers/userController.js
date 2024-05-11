@@ -260,6 +260,7 @@ const khaltiPayment = asyncHandler(async (req, res) => {
   }
   console.log(khaltiResponse);
 });
+
 const onFreeSubscription = asyncHandler(async (req, res) => {
   try {
     const userId = req.user.id;
