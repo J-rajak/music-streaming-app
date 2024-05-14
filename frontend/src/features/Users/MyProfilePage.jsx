@@ -8,10 +8,14 @@ import { useLogoutUserMutation } from "../Auth/authApiSlice";
 import EditUserModal from "./EditUserModal";
 import ErrorMsg from "../../components/ErrorMsg";
 import Loading from "../../components/Loading";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import { format, differenceInDays } from "date-fns";
 
 const MyProfilePage = () => {
   const selectedTheme = useSelector((state) => state.theme);
+  const { isPremium } = useSelector((state) => state.auth);
+  // const [daysLeft, setDaysLeft] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const {
     data: user,
@@ -27,6 +31,8 @@ const MyProfilePage = () => {
   const handleImageInputClick = () => {
     imageRef.current.click();
   };
+
+  console.log(user);
 
   if (isCurrentUserLoading) {
     return <Loading />;
@@ -51,6 +57,18 @@ const MyProfilePage = () => {
       }
     }
   };
+
+  const calculateDaysLeft = () => {
+    const startDate = new Date(user.membershipStartDate);
+    const endDate = new Date(user.membershipEndDate);
+    const today = new Date();
+
+    console.log(startDate);
+
+    return differenceInDays(endDate, today);
+  };
+
+  const daysLeft = calculateDaysLeft();
 
   const handleLogOut = async () => {
     const { error } = await logOut().unwrap();
@@ -145,6 +163,32 @@ const MyProfilePage = () => {
             <span>{user.country}</span>
           </h2>
         </div>
+        {isPremium ? (
+          <div className="px-4 py-6 mt-4 rounded-md bg-secondary-100 shadow-sm shadow-gray-700">
+            <h2 className="flex gap-8 font-semibold">
+              <span className="text-gray-300">Membership: </span>
+              <span>{`${daysLeft} days left`}</span>
+            </h2>
+          </div>
+        ) : (
+          <div>
+            <Link to="/premium">
+              <button
+                className={`bg-${selectedTheme} mt-4 flex text-white justify-center items-center hover:bg-${selectedTheme}-50 active:bg-opacity-90 py-2 px-4 rounded-sm`}
+              >
+                Explore Premium
+              </button>
+            </Link>
+          </div>
+        )}
+        {user.isPremium && user.membershipStartDate && (
+          <div className="px-4 py-6 mt-3 rounded-lg bg-secondary-100 shadow-sm shadow-gray-700">
+            <h2 className="flex gap-8 font-semibold">
+              Membership started on{" "}
+              {format(new Date(user.membershipStartDate), "MMMM dd, yyyy")}
+            </h2>
+          </div>
+        )}
       </div>
     </section>
   );

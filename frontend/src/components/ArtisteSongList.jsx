@@ -1,19 +1,24 @@
-import { useState } from "react";
+// import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
-const ArtisteSongList = ({ songs }) => {
+const ArtisteSongList = ({ songs, handleSongCheckboxChange  }) => {
   const selectedTheme = useSelector((state) => state.theme);
 
-  const [checkedSongs, setCheckedSongs] = useState({});
+  // const [checkedSongs, setCheckedSongs] = useState({});
 
-  const handleCheckboxChange = (e, songId) => {
-    const isChecked = e.target.checked;
-    setCheckedSongs((prevCheckedSongs) => ({
-      ...prevCheckedSongs,
-      [songId]: isChecked,
-    }));
-  };
+  // const handleCheckboxChange = (event, songId) => {
+  //   onSongCheckboxChange(songId);
+  //   console.log(selectedSongs);
+  // };
+
+  // const handleCheckboxChange = (e, songId) => {
+  //   const isChecked = e.target.checked;
+  //   setCheckedSongs((prevCheckedSongs) => ({
+  //     ...prevCheckedSongs,
+  //     [songId]: isChecked,
+  //   }));
+  // };
 
   return (
     <ul>
@@ -46,12 +51,20 @@ const ArtisteSongList = ({ songs }) => {
                 htmlFor="toggleCheckbox"
                 className="inline-flex items-center cursor-pointer"
               >
-                <input
+                {/* <input
                   type="checkbox"
                   id={`toggleCheckbox-${song._id}`}
                   className="form-checkbox h-5 w-5 text-red-500"
                   checked={checkedSongs[song._id] || false}
                   onChange={(e) => handleCheckboxChange(e, song._id)}
+                /> */}
+
+                <input
+                  type="checkbox"
+                  id={song._id}
+                  // checked={selectedSongs.includes(song._id)}
+                  value={song.id}
+                  onChange={() => handleSongCheckboxChange(song._id)}
                 />
                 <span className="ml-2 text-sm text-black">add</span>
               </label>

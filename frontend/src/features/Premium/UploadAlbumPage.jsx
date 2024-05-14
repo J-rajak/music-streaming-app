@@ -22,6 +22,7 @@ const UploadAlbumPage = () => {
   const [uploadedImageFileName, setUploadedImageFileName] = useState();
   const [formData, setFormData] = useState({});
   const [selectedGenre, setSelectedGenre] = useState("");
+  const [selectedSongs, setSelectedSongs] = useState([]); // State to hold selected song IDs
 
   if (isLoading) {
     return <Loading />;
@@ -30,19 +31,41 @@ const UploadAlbumPage = () => {
     return <ErrorMsg error={error} />;
   }
 
-  console.log(data);
   const handleGenreChange = (event) => {
     setSelectedGenre(event.target.value);
+  };
+
+  const handleSongCheckboxChange = (songId) => {
+    // Check if the songId is already in the selectedSongs array
+    // console.log(songId);
+    const isSelected = selectedSongs.includes(songId);
+    if (isSelected) {
+      // If selected, remove it from the array
+      setSelectedSongs(selectedSongs.filter((id) => id !== songId));
+    } else {
+      // If not selected, add it to the array
+      setSelectedSongs([...selectedSongs, songId]);
+    }
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (imageURL) {
+    // const updatedFormData = {
+    //   ...formData,
+    //   genre: selectedGenre,
+    //   coverImage: imageURL,
+    //   songs: selectedSongs,
+    // };
+
+    // console.log(updatedFormData);
+
+    if (imageURL && selectedSongs ) {
       const updatedFormData = {
         ...formData,
         genre: selectedGenre,
         coverImage: imageURL,
+        songs: selectedSongs,
       };
 
       setFormData(updatedFormData); // Wait for setFormData to complete
@@ -66,7 +89,7 @@ const UploadAlbumPage = () => {
         console.error(err);
       }
     } else {
-      console.log("uploading.. on progress");
+      toast.error("Loading......");
     }
   };
 
@@ -136,12 +159,17 @@ const UploadAlbumPage = () => {
             )}
           </div>
           <section className="mt-8">
-            <h2 className="text-2xl font-semibold mb-4">Songs</h2>
-            {data && <ArtisteSongList songs={data.songs} />}
+            <h2 className="text-xl font-semibold mb-4">Songs</h2>
+            {data && (
+              <ArtisteSongList
+                songs={data.songs}
+                handleSongCheckboxChange={handleSongCheckboxChange}
+              />
+            )}
           </section>
           <button
             type="submit"
-            className={`bg-${selectedTheme} hover:bg-${selectedTheme} text-white font-bold py-2 px-4 rounded ${
+            className={`bg-${selectedTheme} hover:bg-${selectedTheme} text-white mt-2 font-bold py-2 px-4 rounded ${
               isLoading && "cursor-not-allowed"
             }`}
             disabled={isLoading}

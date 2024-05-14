@@ -33,7 +33,9 @@ const getUserDetails = asyncHandler(async (req, res) => {
 const getCurrentUser = asyncHandler(async (req, res) => {
   const userId = req.user.id;
   const user = await User.findById(userId)
-    .select("username bio country image isPremium playlist, favoriteArtistes")
+    .select(
+      "username bio country image membership membershipStartDate membershipEndDate membershipTrial isPremium playlist, favoriteArtistes"
+    )
     .populate({
       path: "playlist",
       select: "title coverImage",
@@ -160,11 +162,11 @@ const uploadAlbum = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: "Missing required fields" });
   }
 
-  const newAlbum = new Song({
+  const newAlbum = new Album({
     title,
     artiste: userId,
     releaseDate: Date.now(),
-    songs: "",
+    songs,
     genre,
     coverImage,
   });
