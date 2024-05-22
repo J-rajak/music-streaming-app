@@ -10,11 +10,20 @@ const {
   deleteUser,
   getUserById,
   getPlans,
+  getPlanById,
+  editPlan,
+  deletePlan,
 } = require("../controllers/userController");
 const { verifyToken, verifyIsAdmin } = require("../middleware/authMiddleware");
 const upload = require("../middleware/multer");
 
-router.get("/plans", getPlans)
+router.get("/plans", getPlans);
+router
+  .route("/plan/:id")
+  .delete(verifyToken, verifyIsAdmin, deletePlan)
+  .get(verifyToken, verifyIsAdmin, getPlanById)
+  .put(verifyToken, verifyIsAdmin, editPlan);
+  
 router.post("/create/plan", verifyToken, newPlan);
 router.post("/upload", verifyToken, upload.single("image"), uploadImage);
 router.route("/").get(verifyToken, verifyIsAdmin, getUsers);

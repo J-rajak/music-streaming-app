@@ -62,6 +62,23 @@ export const userApiSlice = apiSlice.injectEndpoints({
     getPlans: builder.query({
       query: () => `/admin/users/plans`,
     }),
+    getPlanById: builder.query({
+      query: (id) => ({ url: `/admin/users/plan/${id}` }),
+    }),
+    updatePlan: builder.mutation({
+      query: (data) => ({
+        url: `/admin/users/plan/${data.planId}`,
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ["Plan"],
+    }),
+    deletePlan: builder.mutation({
+      query: (planId) => ({
+        url: `/admin/users/plan/${planId}`,
+        method: "DELETE",
+      }),
+    }),
   }),
 });
 
@@ -75,4 +92,7 @@ export const {
   useUpdateUserMutation,
   usePostPlanMutation,
   useGetPlansQuery,
+  useGetPlanByIdQuery,
+  useUpdatePlanMutation,
+  useDeletePlanMutation,
 } = userApiSlice;

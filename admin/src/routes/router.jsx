@@ -5,6 +5,9 @@ import PrivateRoute from "./PrivateRoute";
 import { RouterProvider } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+const EditSubscriptionPage = lazy(() =>
+  import("../features/Premium/EditSubscriptionPage")
+);
 const ErrorPage = lazy(() => import("../components/ErrorPage"));
 const SongsPage = lazy(() => import("../features/Song/SongsPage"));
 const SongPage = lazy(() => import("../features/Song/SongPage"));
@@ -18,12 +21,13 @@ const UsersPage = lazy(() => import("../features/Users/UsersPage"));
 const LoginPage = lazy(() => import("../features/Auth/LoginPage"));
 const SignupPage = lazy(() => import("../features/Auth/SignupPage"));
 const PremiumUsers = lazy(() => import("../features/Premium/PremiumUsers"));
-const SubscriptionsPage = lazy(() => import("../features/Premium/SubscriptionsPage"));
+const SubscriptionsPage = lazy(() =>
+  import("../features/Premium/SubscriptionsPage")
+);
 const PremiumPlans = lazy(() => import("../features/Premium/PremiumPlans"));
 const MyProfilePage = lazy(() => import("../features/Users/MyProfilePage"));
 const EditUsersPage = lazy(() => import("../features/Home/EditUsersPage"));
 const AdminUsersPage = lazy(() => import("../features/Home/AdminUsersPage"));
-
 
 const Router = () => {
   const { isAuthenticated } = useSelector((state) => state.auth);
@@ -58,11 +62,15 @@ const Router = () => {
         },
         {
           path: "plans",
-          element: <PremiumPlans/>,
+          element: <PremiumPlans />,
         },
         {
           path: "users/subscriptions",
-          element: <SubscriptionsPage/>,
+          element: <SubscriptionsPage />,
+        },
+        {
+          path: "users/subscription/:id",
+          element: <EditSubscriptionPage />,
         },
         {
           path: "login",

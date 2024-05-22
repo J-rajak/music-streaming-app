@@ -1,7 +1,10 @@
 import { useGetPlansQuery } from "../features/Users/userApiSlice";
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const FreePremiumCard = () => {
   const { data: plans, refetch, isLoading, error } = useGetPlansQuery();
+  const selectedTheme = useSelector((state) => state.theme);
 
   return (
     <>
@@ -9,7 +12,7 @@ const FreePremiumCard = () => {
         plans.map((plan) => (
           <div
             key={plan._id}
-            className="flex flex-col items-center bg-gradient-to-br from-blue-100 via-gray-400 to-purple-100 p-8 rounded-lg shadow-lg relative border-8 border-gray-100 max-w-sm"
+            className="flex flex-col items-center bg-gradient-to-br from-blue-100 via-gray-400 to-purple-100 p-8 rounded-lg shadow-lg relative border-8 border-gray-100 max-w-sm mr-10"
           >
             {plan.planType === "Premium" && (
               <svg
@@ -27,7 +30,7 @@ const FreePremiumCard = () => {
               </svg>
             )}
             <p className="mono text-sm absolute -top-4 bg-red-400 text-zinc-100 py-0.5 px-2 font-bold tracking-wider rounded">
-              {plan.planType === "Premium" ? "Premium" : "Free"} Plan
+              {plan.planType === "Premium" ? "Premium" : ""} Plan
             </p>
             <div>
               <div className="flex gap-4 justify-center">
@@ -61,6 +64,15 @@ const FreePremiumCard = () => {
                   <b>{feature}</b>
                 </p>
               ))}
+            </div>
+            <div>
+              <Link to={`/users/subscription/${plan._id}`}>
+                <button
+                  className={`bg-gray-300 flex justify-center items-center mb-2 hover:bg-${selectedTheme}-50 active:bg-opacity-90 py-2 px-4 rounded-lg mt-8`}
+                >
+                  <span>Edit</span>
+                </button>
+              </Link>
             </div>
           </div>
         ))}

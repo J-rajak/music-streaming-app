@@ -30,9 +30,58 @@ const getPlans = asyncHandler(async (req, res) => {
 
   if (!plans || plans.length === 0) {
     res.status(404).json({ message: "No plans found" });
-  } 
+  }
 
   res.status(200).json(plans);
+});
+
+const getPlanById = asyncHandler(async (req, res) => {
+  const plan = await Plan.findById(req.params.id);
+
+  if (plan) {
+    res.json(plan);
+  } else {
+    res.status(404);
+    throw new Error("Plan not found");
+  }
+});
+
+const editPlan = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { title, planType, description, features, price } = req.body;
+
+  if (!title || !planType || !description || !features || !price) {
+    return res.status(400).json({ message: "Missing required fields" });
+  }
+
+  const plan = await Plan.findById(id);
+
+  if (!plan) {
+    return res.status(404).json({ message: "Plan not found" });
+  }
+
+  plan.title = title;
+  plan.planType = planType;
+  plan.description = description;
+  plan.features = features;
+  plan.price = price;
+
+  await plan.save();
+
+  res.status(200).json({ message: "Plan updated successfully", plan });
+});
+
+//delete
+const deletePlan = asyncHandler(async (req, res) => {
+  const plan = await Plan.findById(req.params.id);
+  
+  if (plan) {
+    await Plan.deleteOne({ _id: plan._id });
+    res.json({ message: "Plan removed" });
+  } else {
+    res.status(404);
+    throw new Error("Plan not found");
+  }
 });
 
 //get users
@@ -175,6 +224,9 @@ const deleteUser = asyncHandler(async (req, res) => {
 module.exports = {
   newPlan,
   getPlans,
+  getPlanById,
+  editPlan,
+  deletePlan,
   uploadImage,
   getUsers,
   getUserProfile,

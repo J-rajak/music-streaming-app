@@ -192,6 +192,7 @@ const onSubscribePlan = asyncHandler(async (req, res) => {
     }
 
     foundUser.membershipStartDate = new Date();
+    foundUser.isPremium = true;
     const expDate = new Date();
     foundUser.membershipEndDate = expDate.setDate(expDate.getDate() + 30);
 
@@ -215,6 +216,7 @@ const onUnsubscribePlan = asyncHandler(async (req, res) => {
     }
 
     foundUser.membership = null;
+    foundUser.isPremium = false;
     foundUser.membershipStartDate = null;
     foundUser.membershipEndDate = null;
 

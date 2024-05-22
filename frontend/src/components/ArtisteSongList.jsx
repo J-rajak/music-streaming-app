@@ -2,8 +2,10 @@
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
-const ArtisteSongList = ({ songs, handleSongCheckboxChange  }) => {
+const ArtisteSongList = ({ songs, handleSongCheckboxChange }) => {
   const selectedTheme = useSelector((state) => state.theme);
+
+  console.log(songs);
 
   // const [checkedSongs, setCheckedSongs] = useState({});
 

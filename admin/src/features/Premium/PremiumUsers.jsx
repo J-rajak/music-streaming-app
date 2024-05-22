@@ -13,18 +13,7 @@ const PremiumUsers = () => {
   const { isAuthenticated } = useSelector((state) => state.auth);
   const selectedTheme = useSelector((state) => state.theme);
 
-  const [deleteUser] = useDeleteUserMutation();
-
-  const deleteHandler = async (id) => {
-    if (window.confirm("Are you sure")) {
-      try {
-        await deleteUser(id);
-        refetch();
-      } catch (err) {
-        toast.error(err?.data?.message || err.error);
-      }
-    }
-  };
+  console.log(users);
 
   return isAuthenticated ? (
     <>
@@ -46,7 +35,8 @@ const PremiumUsers = () => {
                   <th className="px-4 py-2">Profile</th>
                   <th className="px-4 py-2">NAME</th>
                   <th className="px-4 py-2">EMAIL</th>
-                  <th className="px-4 py-2"></th>
+                  <th className="px-4 py-2">Membership Start Date</th>
+                  <th className="px-4 py-2">Membership End Date</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 text-white">
@@ -68,6 +58,16 @@ const PremiumUsers = () => {
                         </td>
                         <td className="px-4 py-2 text-center">
                           <a href={`mailto:${user.email}`}>{user.email}</a>
+                        </td>
+                        <td className="px-4 py-2 text-center">
+                          {new Date(
+                            user.membershipStartDate
+                          ).toLocaleDateString()}
+                        </td>
+                        <td className="px-4 py-2 text-center">
+                          {new Date(
+                            user.membershipEndDate
+                          ).toLocaleDateString()}
                         </td>
                       </tr>
                     )

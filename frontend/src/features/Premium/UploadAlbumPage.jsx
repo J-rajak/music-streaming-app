@@ -108,7 +108,7 @@ const UploadAlbumPage = () => {
             <input
               type="text"
               name="title"
-              placeholder="Enter song title"
+              placeholder="Enter album title"
               onChange={(e) =>
                 setFormData({ ...formData, title: e.target.value })
               }
