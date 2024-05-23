@@ -1,49 +1,43 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Icon } from "@iconify/react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
-import { useRegisterUserMutation } from "./authApiSlice";
+import { useNavigate, useParams } from "react-router-dom";
+import { useResetPasswordMutation } from "./authApiSlice";
 import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import { signUpSchema } from "../../utils/schema";
+import { toast } from "react-toastify";
 
-const SignupPage = () => {
+const PasswordResetPage = () => {
   const selectedTheme = useSelector((state) => state.theme);
-  const navigate = useNavigate();
-  const location = useLocation();
-  const [signUp, { isLoading, isError, error }] = useRegisterUserMutation();
-  const [formData, setFormData] = useState({
-    username: "",
-    email: "",
-    password: "",
-  });
-  const [validationErrors, setValidationErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+  const { userId, resetString } = useParams();
+  const [reset, { isLoading, isError, error }] = useResetPasswordMutation();
+  const [formData, setFormData] = useState({
+    password: "",
+    confirmPassword: "",
+    userId,
+    resetString,
+  });
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const { error } = signUpSchema.validate(formData, {
-      abortEarly: false,
-      allowUnknown: false,
-      stripUnknown: false,
-    });
-
-    if (error) {
-      const errors = {};
-      error.details.forEach(
-        (detail) => (errors[detail.path[0]] = detail.message)
-      );
-      setValidationErrors(errors);
+    if (formData.password !== formData.confirmPassword) {
+      toast.error("Passwords do not match!");
       return;
     }
 
     try {
-      const { error } = await signUp({ ...formData });
+      const { error } = await reset({
+        userId,
+        resetString,
+        newPassword: formData.password,
+      });
       if (error) {
         console.error(error);
       } else {
-        navigate("/signup");
+        navigate("/resetSuccess");
       }
     } catch (err) {
       console.error(err);
@@ -135,46 +129,10 @@ const SignupPage = () => {
           </div>
 
           <form className="w-full px-4 lg:px-0 mx-auto" onSubmit={handleSubmit}>
-            <div className="pb-2 pt-4">
-              <div>
+            <div className="pb-2 pt-1 ">
+              <div className="flex items-center bg-black rounded-lg">
                 <input
-                  className="block w-full p-4 text-lg rounded-sm bg-black"
-                  type="email"
-                  name="email"
-                  placeholder="Email*"
-                  onChange={(e) =>
-                    setFormData({ ...formData, email: e.target.value })
-                  }
-                  required
-                />
-                {validationErrors.email && (
-                  <span className="block text-sm mt-2 saturate-100 text-red-500">
-                    {validationErrors.email}
-                  </span>
-                )}
-              </div>
-            </div>
-            <div className="pb-2 pt-4">
-              <input
-                className="block w-full p-4 text-lg rounded-sm bg-black"
-                type="text"
-                name="username"
-                placeholder="Username*"
-                onChange={(e) =>
-                  setFormData({ ...formData, username: e.target.value })
-                }
-                required
-              />
-              {validationErrors.username && (
-                <span className="block text-sm mt-2 saturate-100 text-red-500">
-                  {validationErrors.username}
-                </span>
-              )}
-            </div>
-            <div className="pb-2 pt-4 ">
-              <div className="flex items-center bg-black">
-                <input
-                  className="block w-full p-4 text-lg rounded-sm bg-black"
+                  className="block w-full p-4 text-lg bg-black rounded-lg"
                   type={showPassword ? "text" : "password"}
                   placeholder="Password*"
                   onChange={(e) =>
@@ -194,14 +152,33 @@ const SignupPage = () => {
                   )}
                 </div>
               </div>
-              {validationErrors.password && (
-                <span className="block text-sm mt-2 saturate-100 text-red-500">
-                  {validationErrors.password}
-                </span>
-              )}
             </div>
-            <div className="text-right text-gray-400 hover:underline hover:text-gray-100">
-              <Link to="/forgottenPassword">Forgot your password?</Link>
+            <div className="pb-2 pt-1 ">
+              <div className="flex items-center bg-black rounded-lg">
+                <input
+                  className="block w-full p-4 text-lg bg-black rounded-lg"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Confirm Password*"
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      confirmPassword: e.target.value,
+                    })
+                  }
+                  required
+                  style={{ outline: "none" }}
+                />
+                <div
+                  className="flex items-center justify-center p-2"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? (
+                    <AiOutlineEye className="text-white" />
+                  ) : (
+                    <AiOutlineEyeInvisible className="text-white" />
+                  )}
+                </div>
+              </div>
             </div>
             <div className="text-right text-gray-400 hover:underline hover:text-gray-100"></div>
             <div className="px-4 pb-2 pt-4">
@@ -217,7 +194,7 @@ const SignupPage = () => {
                 {isLoading ? (
                   <AiOutlineLoading3Quarters className="animate-spin m-auto text-2xl text-gray-400" />
                 ) : (
-                  `Sign up`
+                  `Submit`
                 )}
               </button>
               {isError && (
@@ -227,18 +204,6 @@ const SignupPage = () => {
                 </span>
               )}
             </div>
-            <p className="text-gray-100 mt-4">Already have an account??</p>
-            <div className="px-4 pb-2 pt-4">
-              <Link
-                to={{
-                  pathname: `/login`,
-                  state: { from: location.pathname },
-                }}
-                className={`text-${selectedTheme}-50`}
-              >
-                Log in
-              </Link>
-            </div>
           </form>
         </div>
       </div>
@@ -246,4 +211,4 @@ const SignupPage = () => {
   );
 };
 
-export default SignupPage;
+export default PasswordResetPage;

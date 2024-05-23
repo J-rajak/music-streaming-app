@@ -248,8 +248,8 @@ const LoginPage = () => {
                   theme="dark"
                 />
               </div>
-              <div className="text-right text-gray-400 hover:underline hover:text-white">
-                <Link to="/">Forgot your password?</Link>
+              <div className="text-center text-gray-400 hover:underline hover:text-white">
+                <Link to="/forgottenPassword">Forgot your password?</Link>
               </div>
               <div className="text-right text-gray-400 hover:underline hover:text-white"></div>
               <div className="px-4 pb-2 pt-4">

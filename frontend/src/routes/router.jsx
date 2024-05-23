@@ -42,6 +42,16 @@ const MyPlaylistPage = lazy(() =>
   import("../features/Studio/MyPlaylists/MyPlaylistPage")
 );
 const UsersPage = lazy(() => import("../features/Users/UsersPage"));
+const ForgottenPasswordPage = lazy(() =>
+  import("../features/Auth/ForgottenPasswordPage")
+);
+const PasswordResetPage = lazy(() =>
+  import("../features/Auth/PasswordResetPage")
+);
+const EmailSentPage = lazy(() => import("../components/EmailSentPage"));
+const PasswordResetSuccessfulPage = lazy(() =>
+  import("../components/PasswordResetSuccessfulPage")
+);
 const LoginPage = lazy(() => import("../features/Auth/LoginPage"));
 const SignupPage = lazy(() => import("../features/Auth/SignupPage"));
 const MyProfilePage = lazy(() => import("../features/Users/MyProfilePage"));
@@ -57,6 +67,19 @@ const Router = () => {
         { index: true, element: <HomePage /> },
         { path: "explore", element: <SongsPage /> },
         { path: "songs", element: <SongsPage /> },
+        { path: "/forgottenPassword", element: <ForgottenPasswordPage /> },
+        {
+          path: "/resetPassword/:userId/:resetString",
+          element: <PasswordResetPage />,
+        },
+        {
+          path: "/emailSent",
+          element: <EmailSentPage />,
+        },
+        {
+          path: "/resetSuccess",
+          element: <PasswordResetSuccessfulPage />,
+        },
         { path: "songs/:id", element: <SongPage /> },
         { path: "search/:keyword", element: <SearchResultsPage /> },
         { path: "playlists", element: <PlaylistsPage /> },

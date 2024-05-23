@@ -1,5 +1,5 @@
 const express = require("express");
-const passport = require("passport")
+const passport = require("passport");
 const router = express.Router();
 
 const {
@@ -13,6 +13,8 @@ const {
   googleLogin,
   facebookLogin,
   twitterLogin,
+  passwordResetRequest,
+  resetPassword,
 } = require("../controllers/authController");
 const { loginLimiter } = require("../middleware/loginLimiter");
 const { verifyToken } = require("../middleware/authMiddleware");
@@ -70,8 +72,9 @@ router.get(
   twitterLogin
 );
 
-
 router.post("/register", schemaValidator("authRegister"), registerUser);
+router.post("/requestPasswordReset", passwordResetRequest);
+router.post("/resetPassword", resetPassword);
 router.get("/verify/:userId/:uniqueString", verifyEmail);
 router.get("/verified", verification);
 router.post("/login", schemaValidator("authLogin"), loginUser);

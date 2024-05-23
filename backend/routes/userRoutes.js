@@ -14,7 +14,7 @@ const {
   khaltiPayment,
   onFreeSubscription,
 } = require("../controllers/userController");
-const { verifyToken } = require("../middleware/authMiddleware");
+const { verifyToken, checkSubscriptionStatus } = require("../middleware/authMiddleware");
 const upload = require("../middleware/multer");
 
 //user routes
@@ -27,7 +27,7 @@ router.post("/khaltiCheckout", khaltiPayment);
 router.post("/upload/song", verifyToken, uploadSong);
 router.post("/upload/album", verifyToken, uploadAlbum);
 router.put("/subscribe", onSubscribePlan);
-router.put("/subscribe/:freePlanId", verifyToken, onFreeSubscription);
+router.put("/subscribe/:freePlanId", verifyToken, checkSubscriptionStatus, onFreeSubscription);
 router.put("/unSubscribe", onUnsubscribePlan);
 
 module.exports = router;

@@ -1,49 +1,29 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Icon } from "@iconify/react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
-import { useRegisterUserMutation } from "./authApiSlice";
-import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
+import { useNavigate } from "react-router-dom";
+import { useForgotPasswordRequestMutation } from "./authApiSlice";
+// import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import { signUpSchema } from "../../utils/schema";
 
-const SignupPage = () => {
+const ForgottenPasswordPage = () => {
   const selectedTheme = useSelector((state) => state.theme);
   const navigate = useNavigate();
-  const location = useLocation();
-  const [signUp, { isLoading, isError, error }] = useRegisterUserMutation();
+  const [request, { isLoading, isError, error }] = useForgotPasswordRequestMutation();
   const [formData, setFormData] = useState({
-    username: "",
     email: "",
-    password: "",
+    redirectURL: "http://localhost:5173/resetPassword"
   });
-  const [validationErrors, setValidationErrors] = useState({});
-  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const { error } = signUpSchema.validate(formData, {
-      abortEarly: false,
-      allowUnknown: false,
-      stripUnknown: false,
-    });
-
-    if (error) {
-      const errors = {};
-      error.details.forEach(
-        (detail) => (errors[detail.path[0]] = detail.message)
-      );
-      setValidationErrors(errors);
-      return;
-    }
-
     try {
-      const { error } = await signUp({ ...formData });
+      const { error } = await request({ ...formData });
       if (error) {
         console.error(error);
       } else {
-        navigate("/signup");
+        navigate("/emailSent");
       }
     } catch (err) {
       console.error(err);
@@ -147,61 +127,12 @@ const SignupPage = () => {
                   }
                   required
                 />
-                {validationErrors.email && (
+                {/* {validationErrors.email && (
                   <span className="block text-sm mt-2 saturate-100 text-red-500">
                     {validationErrors.email}
                   </span>
-                )}
+                )} */}
               </div>
-            </div>
-            <div className="pb-2 pt-4">
-              <input
-                className="block w-full p-4 text-lg rounded-sm bg-black"
-                type="text"
-                name="username"
-                placeholder="Username*"
-                onChange={(e) =>
-                  setFormData({ ...formData, username: e.target.value })
-                }
-                required
-              />
-              {validationErrors.username && (
-                <span className="block text-sm mt-2 saturate-100 text-red-500">
-                  {validationErrors.username}
-                </span>
-              )}
-            </div>
-            <div className="pb-2 pt-4 ">
-              <div className="flex items-center bg-black">
-                <input
-                  className="block w-full p-4 text-lg rounded-sm bg-black"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Password*"
-                  onChange={(e) =>
-                    setFormData({ ...formData, password: e.target.value })
-                  }
-                  required
-                  style={{ outline: "none" }}
-                />
-                <div
-                  className="flex items-center justify-center p-2"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? (
-                    <AiOutlineEye className="text-white" />
-                  ) : (
-                    <AiOutlineEyeInvisible className="text-white" />
-                  )}
-                </div>
-              </div>
-              {validationErrors.password && (
-                <span className="block text-sm mt-2 saturate-100 text-red-500">
-                  {validationErrors.password}
-                </span>
-              )}
-            </div>
-            <div className="text-right text-gray-400 hover:underline hover:text-gray-100">
-              <Link to="/forgottenPassword">Forgot your password?</Link>
             </div>
             <div className="text-right text-gray-400 hover:underline hover:text-gray-100"></div>
             <div className="px-4 pb-2 pt-4">
@@ -217,7 +148,7 @@ const SignupPage = () => {
                 {isLoading ? (
                   <AiOutlineLoading3Quarters className="animate-spin m-auto text-2xl text-gray-400" />
                 ) : (
-                  `Sign up`
+                  `Submit`
                 )}
               </button>
               {isError && (
@@ -227,18 +158,6 @@ const SignupPage = () => {
                 </span>
               )}
             </div>
-            <p className="text-gray-100 mt-4">Already have an account??</p>
-            <div className="px-4 pb-2 pt-4">
-              <Link
-                to={{
-                  pathname: `/login`,
-                  state: { from: location.pathname },
-                }}
-                className={`text-${selectedTheme}-50`}
-              >
-                Log in
-              </Link>
-            </div>
           </form>
         </div>
       </div>
@@ -246,4 +165,4 @@ const SignupPage = () => {
   );
 };
 
-export default SignupPage;
+export default ForgottenPasswordPage;

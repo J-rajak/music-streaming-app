@@ -47,18 +47,26 @@ const generateRefreshToken = ({ id, username, email, isPremium }) => {
   };
 };
 
-// const verifyIsAdmin = asyncHandler(async (req, res, next) => {
-//   // console.log(req.user);
-//   const admin = req.user.isAdmin;
-//   if (!admin) {
-//     return res.status(401).send("Unauthorized.. admin required");
-//   }
-//   // res.status(200).send({message: "admin found"})
-//   next();
-// });
+const checkSubscriptionStatus = asyncHandler(async (req, res, next) => {
+  const userId = req.user.id; 
+
+  const user = await User.findById(userId);
+
+  if (user) {
+    const currentDate = new Date();
+
+    if (user.membershipEndDate && currentDate > user.membershipEndDate) {
+      user.isPremium = false;
+      await user.save();
+    }
+  }
+
+  next();
+});
 
 module.exports = {
   generateAccessToken,
   generateRefreshToken,
   verifyToken,
+  checkSubscriptionStatus,
 };
