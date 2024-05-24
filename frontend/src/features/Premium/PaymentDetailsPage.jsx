@@ -6,12 +6,15 @@ import Message from "../../components/Message";
 import Loading from "../../components/Loading";
 import FormContainer from "../../components/FormContainer";
 import { useGetUserDetailsQuery } from "../Users/userApiSlice";
+import { useGetPlansQuery } from "../Users/userApiSlice";
 
 const PaymentDetailsPage = () => {
   const { userId } = useSelector((state) => state.auth);
   const { data: user, isLoading, error } = useGetUserDetailsQuery(userId);
+  const { data: plans } = useGetPlansQuery();
 
-  console.log(user);
+
+  console.log(plans);
 
   // const [paymentMethod, setPaymentMethod] = useState("");
   const selectedTheme = useSelector((state) => state.theme);
@@ -20,9 +23,9 @@ const PaymentDetailsPage = () => {
     const payload = {
       return_url: "http://localhost:5173/success",
       website_url: "http://localhost:5173",
-      amount: 1300,
-      purchase_order_id: "test12",
-      purchase_order_name: "test",
+      amount: plans[0].price * 100,
+      purchase_order_id: plans[0]._id,
+      purchase_order_name: plans[0].planType,
       customer_info: {
         name: user.username,
         email: user.email,

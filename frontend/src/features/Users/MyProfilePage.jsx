@@ -3,18 +3,24 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { FaUser } from "react-icons/fa";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import { useUploadImageMutation, useGetCurrentUserQuery } from "./userApiSlice";
+import {
+  useUploadImageMutation,
+  useGetCurrentUserQuery,
+  useCancelSubscriptionMutation,
+} from "./userApiSlice";
 import { useLogoutUserMutation } from "../Auth/authApiSlice";
 import EditUserModal from "./EditUserModal";
 import ErrorMsg from "../../components/ErrorMsg";
 import Loading from "../../components/Loading";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import { Button } from "react-bootstrap";
 import { format, differenceInDays } from "date-fns";
 
 const MyProfilePage = () => {
   const selectedTheme = useSelector((state) => state.theme);
   const { isPremium } = useSelector((state) => state.auth);
+  const [cancelSubscription] = useCancelSubscriptionMutation();
   // const [daysLeft, setDaysLeft] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const {
@@ -54,6 +60,26 @@ const MyProfilePage = () => {
       });
       if (isError) {
         console.error(error);
+      }
+    }
+  };
+
+  const cancelHandler = async () => {
+    if (window.confirm("Are you sure")) {
+      try {
+        const { error } = await toast.promise(cancelSubscription().unwrap(), {
+          pending: "On Progress...",
+          success: "You have cancelled subscription",
+          error: "An error occurred",
+        });
+        if (error) {
+          console.error(error);
+        } else {
+          navigate("/");
+          console.log("You have cancelled subscription");
+        }
+      } catch (err) {
+        console.error(err);
       }
     }
   };
@@ -187,6 +213,17 @@ const MyProfilePage = () => {
               Membership started on{" "}
               {format(new Date(user.membershipStartDate), "MMMM dd, yyyy")}
             </h2>
+          </div>
+        )}
+        {user.isPremium && (
+          <div className="flex justify-end mt-4">
+            <Button
+              onClick={() => cancelHandler()}
+              variant="danger"
+              className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+            >
+              Cancel Subscription
+            </Button>
           </div>
         )}
       </div>

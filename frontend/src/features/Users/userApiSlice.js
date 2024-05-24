@@ -35,6 +35,20 @@ export const userApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["User"],
     }),
+    paidSubscription: builder.mutation({
+      query: (paidPlanId) => ({
+        url: `api/users/subscribe/${paidPlanId}`,
+        method: "PUT",
+      }),
+      invalidatesTags: ["User"],
+    }),
+    cancelSubscription: builder.mutation({
+      query: () => ({
+        url: `api/users/unSubscribe`,
+        method: "PUT",
+      }),
+      invalidatesTags: ["User"],
+    }),
   }),
 });
 
@@ -45,4 +59,6 @@ export const {
   useUploadImageMutation,
   useGetPlansQuery,
   useFreeSubscriptionMutation,
+  usePaidSubscriptionMutation,
+  useCancelSubscriptionMutation,
 } = userApiSlice;

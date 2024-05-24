@@ -7,6 +7,28 @@ const Album = require("../models/Album");
 const Plan = require("../models/Plan");
 const asyncHandler = require("express-async-handler");
 const cloudinary = require("../config/cloudinary");
+const nodemailer = require("nodemailer");
+
+const transporter = nodemailer.createTransport({
+  // host: "smtp.ethereal.email",
+  // port: 587,
+  // secure: false,
+  service: "gmail",
+  auth: {
+    user: process.env.AUTH_EMAIL,
+    pass: process.env.AUTH_PASS,
+  },
+});
+
+// testing nodemailer success
+transporter.verify((error, success) => {
+  if (error) {
+    console.log(error);
+  } else {
+    // console.log("Ready for message in user");
+    console.log(success);
+  }
+});
 
 // Get specific user
 // api/users/:userId
@@ -182,25 +204,45 @@ const uploadAlbum = asyncHandler(async (req, res) => {
 const onSubscribePlan = asyncHandler(async (req, res) => {
   try {
     const userId = req.user.id;
-    const planId = req.params.id;
+    const paidPlanId = req.params.paidPlanId;
 
-    const selectedPlan = await Plan.findById(planId);
+    const paidPlan = await Plan.findById(paidPlanId);
     const foundUser = await User.findById(userId);
 
     if (!foundUser) {
       return res.status(404).json({ message: "No user found" });
     }
 
+    // Update subscription details if the user is eligible
     foundUser.membershipStartDate = new Date();
-    foundUser.isPremium = true;
     const expDate = new Date();
-    foundUser.membershipEndDate = expDate.setDate(expDate.getDate() + 30);
+    expDate.setDate(expDate.getDate() + 30);
+    foundUser.membershipEndDate = expDate;
+    foundUser.membership = paidPlan;
+    foundUser.isPremium = true; // Set isPremium to true
+
+    // Mail options
+    const mailOptions = {
+      from: process.env.AUTH_EMAIL,
+      to: foundUser.email,
+      subject: "Paid Subscription Activated",
+      html: `
+        <p>Dear ${foundUser.username},</p>
+        <p>Congratulations! You are now a premium member of EchoSync.</p>
+        <p>Your premium membership will expire on ${expDate.toDateString()}.</p>
+        <p>Thank you for choosing EchoSync!</p>
+        <p>Best regards,<br>The EchoSync Team</p>
+      `,
+    };
 
     await foundUser.save();
+    await transporter.sendMail(mailOptions);
 
-    res.status(200).json({ message: "Subscription successful" });
+    res
+      .status(200)
+      .json({ message: "Paid subscription activated successfully" });
   } catch (error) {
-    console.error("Error in onSubscribePlan:", error);
+    console.error("Error in onFreeSubscription:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 });
@@ -220,11 +262,26 @@ const onUnsubscribePlan = asyncHandler(async (req, res) => {
     foundUser.membershipStartDate = null;
     foundUser.membershipEndDate = null;
 
-    await foundUser.save();
+    // Mail options
+    const mailOptions = {
+      from: process.env.AUTH_EMAIL,
+      to: foundUser.email,
+      subject: "Cancellation of Subscription to EchoSync",
+      html: `
+        <p>Dear ${foundUser.username},</p>
+        <p>Sorry! You are have cancelled the subscription.</p>
+        <p>Best regards,<br>The EchoSync Team</p>
+      `,
+    };
 
-    res.status(200).json({ message: "Unsubscription successful" });
+    await foundUser.save();
+    await transporter.sendMail(mailOptions);
+
+    res
+      .status(200)
+      .json({ message: "Cancellation of subscription successful" });
   } catch (error) {
-    console.error("Error in onUnsubscribePlan:", error);
+    console.error("Error while cancelling  subscription:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 });
@@ -241,28 +298,56 @@ const getPlans = asyncHandler(async (req, res) => {
 
 const khaltiPayment = asyncHandler(async (req, res) => {
   const payload = req.body;
-  const khaltiResponse = await axios.post(
-    "https://a.khalti.com/api/v2/epayment/initiate/",
-    payload,
-    {
-      headers: {
-        Authorization: `key ${process.env.KHALTI_SECRET_KEY}`,
-      },
-    }
-  );
+  try {
+    const khaltiResponse = await axios.post(
+      "https://a.khalti.com/api/v2/epayment/initiate/",
+      payload,
+      {
+        headers: {
+          Authorization: `key ${process.env.KHALTI_SECRET_KEY}`,
+        },
+      }
+    );
 
-  if (khaltiResponse) {
-    res.json({
-      success: true,
-      data: khaltiResponse?.data,
-    });
-  } else {
-    res.json({
-      success: false,
-      message: "something went wrong",
-    });
+    if (khaltiResponse) {
+      // Sending email notification
+      const mailOptions = {
+        from: process.env.AUTH_EMAIL,
+        to: payload.customer_info.email,
+        subject: "Payment Initiated with Khalti",
+        html: `
+          <p>Dear ${payload.customer_info.name},</p>
+          <p>Your payment has been initiated successfully.</p>
+          <p>Transaction ID: ${khaltiResponse.data.pidx}</p>
+          <p>Thank you for choosing EchoSync!</p>
+          <p>Best regards,<br>The EchoSync Team</p>
+        `,
+      };
+
+      // Send email
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.error("Error sending email:", error);
+        } else {
+          console.log("Email sent:", info.response);
+        }
+      });
+
+      res.json({
+        success: true,
+        data: khaltiResponse?.data,
+      });
+    } else {
+      res.json({
+        success: false,
+        message: "Something went wrong",
+      });
+    }
+    // console.log(khaltiResponse);
+  } catch (error) {
+    console.error("Error in khaltiPayment:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
-  console.log(khaltiResponse);
 });
 
 const onFreeSubscription = asyncHandler(async (req, res) => {
@@ -271,7 +356,6 @@ const onFreeSubscription = asyncHandler(async (req, res) => {
     const freePlanId = req.params.freePlanId;
 
     const freePlan = await Plan.findById(freePlanId);
-
     const foundUser = await User.findById(userId);
 
     if (!foundUser) {
@@ -286,12 +370,28 @@ const onFreeSubscription = asyncHandler(async (req, res) => {
     // Update subscription details if the user is eligible
     foundUser.membershipStartDate = new Date();
     const expDate = new Date();
-    foundUser.membershipEndDate = expDate.setDate(expDate.getDate() + 30);
+    expDate.setDate(expDate.getDate() + 30);
+    foundUser.membershipEndDate = expDate;
     foundUser.membership = freePlan;
     foundUser.membershipTrial = true; // Assuming the user's trial starts now
     foundUser.isPremium = true; // Set isPremium to true
 
+    // Mail options
+    const mailOptions = {
+      from: process.env.AUTH_EMAIL,
+      to: foundUser.email,
+      subject: "Free Subscription to EchoSync Activated",
+      html: `
+        <p>Dear ${foundUser.username},</p>
+        <p>Congratulations! You are now a premium member of EchoSync.</p>
+        <p>Your premium membership will expire on ${expDate.toDateString()}.</p>
+        <p>Thank you for choosing EchoSync!</p>
+        <p>Best regards,<br>The EchoSync Team</p>
+      `,
+    };
+
     await foundUser.save();
+    await transporter.sendMail(mailOptions);
 
     res
       .status(200)
