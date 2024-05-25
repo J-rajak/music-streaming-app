@@ -1,6 +1,6 @@
 import { apiSlice } from "../../app/apiSlice";
 import { updateTheme } from "../../app/themeSlice";
-import { setUser, setIsAdmin, setIsPremium, logoutUser } from "./authSlice";
+import { setUser, setUserId, setIsPremium, logoutUser } from "./authSlice";
 
 export const authApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -13,10 +13,9 @@ export const authApiSlice = apiSlice.injectEndpoints({
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          console.log(data);
           dispatch(updateTheme("rock"));
+          dispatch(setUserId(data._id));
           dispatch(setUser(data.username));
-          dispatch(setIsAdmin(data.isAdmin));
           dispatch(setIsPremium(data.isPremium));
         } catch (err) {
           console.error(err);
@@ -34,8 +33,8 @@ export const authApiSlice = apiSlice.injectEndpoints({
           const { data } = await queryFulfilled;
           console.log(data);
           dispatch(updateTheme("rock"));
+          dispatch(setUserId(data._id));
           dispatch(setUser(data.username));
-          dispatch(setIsAdmin(data.isAdmin));
           dispatch(setIsPremium(data.isPremium));
         } catch (err) {
           console.error(err);
@@ -49,8 +48,8 @@ export const authApiSlice = apiSlice.injectEndpoints({
           const { data } = await queryFulfilled;
           console.log(data);
           dispatch(updateTheme("rock"));
+          dispatch(setUserId(data._id));
           dispatch(setUser(data.username));
-          dispatch(setIsAdmin(data.isAdmin));
           dispatch(setIsPremium(data.isPremium));
         } catch (err) {
           console.error(err);
@@ -73,6 +72,20 @@ export const authApiSlice = apiSlice.injectEndpoints({
         }
       },
     }),
+    forgotPasswordRequest: builder.mutation({
+      query: (data) => ({
+        url: "/auth/requestPasswordReset",
+        method: "POST",
+        body: data,
+      }),
+    }),
+    resetPassword: builder.mutation({
+      query: (data) => ({
+        url: "/auth/resetPassword",
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -81,4 +94,6 @@ export const {
   useLoginUserMutation,
   useLogoutUserMutation,
   useLoginSuccessQuery,
+  useForgotPasswordRequestMutation,
+  useResetPasswordMutation,
 } = authApiSlice;

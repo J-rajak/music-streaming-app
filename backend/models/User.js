@@ -37,11 +37,38 @@ const UserSchema = new mongoose.Schema(
         ref: "Playlist",
       },
     ],
-    isAdmin: { type: Boolean, required: false, default: false },
+    isAdmin: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
     isPremium: {
       type: Boolean,
       required: false,
       default: false,
+    },
+    isVerified: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+    phone: {
+      type: String,
+    },
+    membership: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Plan",
+    },
+    membershipStartDate: {
+      type: Date,
+    },
+    membershipTrial: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+    membershipEndDate: {
+      type: Date,
     },
   },
   {
@@ -72,4 +99,3 @@ UserSchema.methods.comparePassword = async function (candidatePassword) {
 };
 
 module.exports = mongoose.model("User", UserSchema);
-

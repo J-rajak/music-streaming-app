@@ -9,6 +9,7 @@ import { setQueue, setPlaying } from "../MusicPlayer/playerSlice";
 
 const HomeFeature = () => {
   const selectedTheme = useSelector((state) => state.theme);
+  const {isAuthenticated} = useSelector((state) => state.auth);
   const {
     data: song,
     isLoading,
@@ -79,6 +80,7 @@ const HomeFeature = () => {
                   onClick={handlePlay}
                   className="text-outline-gray hover:text-secondary-500"
                   title="Play"
+                  disabled={!isAuthenticated}
                 >
                   <FaPlay className="text-base md:text-2xl" />
                 </button>

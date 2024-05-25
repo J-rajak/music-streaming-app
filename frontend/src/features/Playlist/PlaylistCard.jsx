@@ -29,7 +29,7 @@ const PlaylistCard = ({ playlist, type }) => {
         >
           {playlist.title}
         </Link>
-        {!isUserPlaylist && (
+        {!isUserPlaylist && playlist.createdBy && (
           <Link
             to={`/users/${playlist.createdBy._id}`}
             className={`text-xs sm:text-sm lg:text-base text-gray-500 hover:underline hover:decoration-2 hover:underline-offset-4 hover:decoration-${selectedTheme} truncate ...`}

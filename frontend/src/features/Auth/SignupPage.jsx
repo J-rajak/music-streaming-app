@@ -6,7 +6,6 @@ import { useRegisterUserMutation } from "./authApiSlice";
 import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { signUpSchema } from "../../utils/schema";
-// import ReCAPTCHA from "react-google-recaptcha";
 
 const SignupPage = () => {
   const selectedTheme = useSelector((state) => state.theme);
@@ -44,7 +43,7 @@ const SignupPage = () => {
       if (error) {
         console.error(error);
       } else {
-        navigate("/");
+        navigate("/signup");
       }
     } catch (err) {
       console.error(err);
@@ -202,7 +201,7 @@ const SignupPage = () => {
               )}
             </div>
             <div className="text-right text-gray-400 hover:underline hover:text-gray-100">
-              <Link to="/">Forgot your password?</Link>
+              <Link to="/forgottenPassword">Forgot your password?</Link>
             </div>
             <div className="text-right text-gray-400 hover:underline hover:text-gray-100"></div>
             <div className="px-4 pb-2 pt-4">

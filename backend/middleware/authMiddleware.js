@@ -21,12 +21,12 @@ const verifyToken = asyncHandler((req, res, next) => {
   });
 });
 
-const generateAccessToken = ({ id, username, email, isAdmin, isPremium }) => {
+const generateAccessToken = ({ id, username, email, isPremium }) => {
   const accessToken = jwt.sign(
-    { id, username, email, isAdmin, isPremium },
+    { id, username, email, isPremium },
     process.env.JWT_SECRET,
     {
-      expiresIn: "15d",
+      expiresIn: "15m",
     }
   );
   return {
@@ -34,9 +34,9 @@ const generateAccessToken = ({ id, username, email, isAdmin, isPremium }) => {
   };
 };
 
-const generateRefreshToken = ({ id, username, email, isAdmin, isPremium }) => {
+const generateRefreshToken = ({ id, username, email, isPremium }) => {
   const refreshToken = jwt.sign(
-    { id, username, email, isAdmin, isPremium },
+    { id, username, email, isPremium },
     process.env.JWT_SECRET,
     {
       expiresIn: "30d",
@@ -47,13 +47,20 @@ const generateRefreshToken = ({ id, username, email, isAdmin, isPremium }) => {
   };
 };
 
-const verifyIsAdmin = asyncHandler(async (req, res, next) => {
-  // console.log(req.user);
-  const admin = req.user.isAdmin;
-  if (!admin) {
-    return res.status(401).send("Unauthorized.. admin required");
+const checkSubscriptionStatus = asyncHandler(async (req, res, next) => {
+  const userId = req.user.id; 
+
+  const user = await User.findById(userId);
+
+  if (user) {
+    const currentDate = new Date();
+
+    if (user.membershipEndDate && currentDate > user.membershipEndDate) {
+      user.isPremium = false;
+      await user.save();
+    }
   }
-  // res.status(200).send({message: "admin found"})
+
   next();
 });
 
@@ -61,5 +68,5 @@ module.exports = {
   generateAccessToken,
   generateRefreshToken,
   verifyToken,
-  verifyIsAdmin,
+  checkSubscriptionStatus,
 };

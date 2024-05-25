@@ -5,10 +5,6 @@ export const userApiSlice = apiSlice.injectEndpoints({
     getUserDetails: builder.query({
       query: (userId) => `/api/users/${userId}`,
     }),
-    getAllUsers: builder.query({
-      query: () => `api/users/admin/getUsers`,
-      providesTags: ["Users"],
-    }),
     getCurrentUser: builder.query({
       query: () => `/api/users/currentUser`,
       providesTags: ["User"],
@@ -29,13 +25,40 @@ export const userApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["User"],
     }),
+    getPlans: builder.query({
+      query: () => `/api/users/plans`,
+    }),
+    freeSubscription: builder.mutation({
+      query: (freePlanId) => ({
+        url: `api/users/subscribe/${freePlanId}`,
+        method: "PUT",
+      }),
+      invalidatesTags: ["User"],
+    }),
+    paidSubscription: builder.mutation({
+      query: (paidPlanId) => ({
+        url: `api/users/subscribe/${paidPlanId}`,
+        method: "PUT",
+      }),
+      invalidatesTags: ["User"],
+    }),
+    cancelSubscription: builder.mutation({
+      query: () => ({
+        url: `api/users/unSubscribe`,
+        method: "PUT",
+      }),
+      invalidatesTags: ["User"],
+    }),
   }),
 });
 
 export const {
   useGetUserDetailsQuery,
-  useGetAllUsersQuery,
   useGetCurrentUserQuery,
   useEditUserDetailsMutation,
   useUploadImageMutation,
+  useGetPlansQuery,
+  useFreeSubscriptionMutation,
+  usePaidSubscriptionMutation,
+  useCancelSubscriptionMutation,
 } = userApiSlice;

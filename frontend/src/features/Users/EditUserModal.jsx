@@ -12,6 +12,8 @@ const EditUserModal = ({ closeModal, isModalOpen, user, children }) => {
     country: user.country,
   });
 
+  console.log({ formData });
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 

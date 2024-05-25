@@ -15,6 +15,22 @@ export const songApiSlice = apiSlice.injectEndpoints({
     getTopSongs: builder.query({
       query: (limit) => `/api/songs/top?limit=${limit}`,
     }),
+    uploadSong: builder.mutation({
+      query: (body) => ({
+        url: "/api/users/upload/song",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["User"],
+    }),
+    uploadAlbum: builder.mutation({
+      query: (body) => ({
+        url: "/api/users/upload/album",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["User"],
+    }),
     likeSong: builder.mutation({
       query: ({ songId }) => ({
         url: `/api/songs/${songId}/like`,
@@ -49,6 +65,13 @@ export const songApiSlice = apiSlice.injectEndpoints({
         { type: "Song", id: arg.songId },
       ],
     }),
+    getSongs: builder.query({
+      query: ({ keyword, pageNumber }) => ({
+        url: "/api",
+        params: { keyword, pageNumber },
+      }),
+      keepUnusedDataFor: 5,
+    }),
   }),
 });
 
@@ -57,6 +80,9 @@ export const {
   useGetSongDetailsQuery,
   useGetAnySongQuery,
   useGetTopSongsQuery,
+  useUploadSongMutation,
+  useUploadAlbumMutation,
   useLikeSongMutation,
   useAddCommentMutation,
+  useGetSongsQuery,
 } = songApiSlice;

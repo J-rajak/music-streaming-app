@@ -1,7 +1,6 @@
 import { BiErrorCircle } from "react-icons/bi";
 
 const ErrorMsg = ({ error }) => {
-  console.error(error);
   return (
     <div className="text-gray-100 h-full flex flex-col gap-2 justify-center items-center">
       {error?.data?.message ? (

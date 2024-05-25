@@ -1,7 +1,8 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { Mutex } from "async-mutex";
+import { toast } from 'react-toastify';
 import { logoutUser } from "../features/Auth/authSlice";
-const baseURL = import.meta.env.ECHOSYNC_BACKEND;
+const baseURL = import.meta.env.VITE_ECHOSYNC_BACKEND;
 
 const mutex = new Mutex();
 const baseQuery = fetchBaseQuery({
@@ -37,6 +38,9 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
       await mutex.waitForUnlock();
       result = await baseQuery(args, api, extraOptions);
     }
+  } else if (result.error && result.error.status === 400) {
+    toast.error(result.error.message || 'Bad Request');
+    console.error("Bad request", result.error.message);
   }
   return result;
 };

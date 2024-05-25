@@ -1,14 +1,20 @@
 import { useEffect } from "react";
 import { useSearchParams, useLocation } from "react-router-dom";
 import { useGetAllSongsQuery } from "./songApiSlice";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import SongCard from "./SongCard";
 import Pagination from "../../components/Pagination";
+import { FaPlus } from "react-icons/fa";
 import Loading from "../../components/Loading";
 import ErrorMsg from "../../components/ErrorMsg";
 import { motion } from "framer-motion";
 
 const SongsPage = () => {
   const [searchParams] = useSearchParams({ page: 1 });
+  const selectedTheme = useSelector((state) => state.theme);
+  // const { isAuthenticated } = useSelector((state) => state.auth);
+  const { isPremium } = useSelector((state) => state.auth);
   const page = searchParams.get("page");
   const {
     data: { songs, total } = {},
@@ -46,6 +52,19 @@ const SongsPage = () => {
           <SongCard key={song._id} song={song} />
         ))}
       </motion.div>
+      <div className="absolute top-0 right-0 mt-8 mr-8">
+        {isPremium && (
+          <Link to={isPremium ? "/premium/upload/song" : "/premium"}>
+            <button
+               className={`bg-${selectedTheme} flex justify-center items-center mb-2 hover:bg-${selectedTheme}-50 active:bg-opacity-90 py-2 px-4 rounded-lg`}
+            >
+              <FaPlus className="text-xs mr-2" />
+              Upload song
+            </button>
+          </Link>
+        )}
+      </div>
+
       <div className="flex justify-end mt-8">
         <Pagination
           path={pathname}

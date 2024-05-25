@@ -1,16 +1,41 @@
+require("dotenv").config({ path: "./config/.env" });
 const User = require("../models/User");
 const Song = require("../models/Song");
 const Artiste = require("../models/Artiste");
+const axios = require("axios");
 const Album = require("../models/Album");
+const Plan = require("../models/Plan");
 const asyncHandler = require("express-async-handler");
 const cloudinary = require("../config/cloudinary");
+const nodemailer = require("nodemailer");
+
+const transporter = nodemailer.createTransport({
+  // host: "smtp.ethereal.email",
+  // port: 587,
+  // secure: false,
+  service: "gmail",
+  auth: {
+    user: process.env.AUTH_EMAIL,
+    pass: process.env.AUTH_PASS,
+  },
+});
+
+// testing nodemailer success
+transporter.verify((error, success) => {
+  if (error) {
+    console.log(error);
+  } else {
+    // console.log("Ready for message in user");
+    console.log(success);
+  }
+});
 
 // Get specific user
 // api/users/:userId
 const getUserDetails = asyncHandler(async (req, res) => {
   const userId = req.params.userId;
   const user = await User.findById(userId)
-    .select("username email bio country image playlist isAdmin isPremium")
+    .select("username email bio country image playlist isPremium")
     .populate({
       path: "playlist",
       select: "title coverImage",
@@ -31,7 +56,7 @@ const getCurrentUser = asyncHandler(async (req, res) => {
   const userId = req.user.id;
   const user = await User.findById(userId)
     .select(
-      "username bio country image isAdmin isPremium playlist, favoriteArtistes"
+      "username bio country image membership membershipStartDate membershipEndDate membershipTrial isPremium playlist, favoriteArtistes"
     )
     .populate({
       path: "playlist",
@@ -106,71 +131,40 @@ const uploadImage = asyncHandler(async (req, res) => {
   res.status(200).json({ message: "Profile image successfully uploaded" });
 });
 
-// admin functionality
-
-//get users
-const getUsers = asyncHandler(async (req, res) => {
-  const users = await User.find({}).select("-password");
-  res.status(200).json(users);
-});
-
-//update user
-const updateUser = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.params.id);
-
-  if (!user) {
-    return res.status(400).json({ message: "user not found" });
-  }
-
-  user.username = req.body.username || user.username;
-  user.email = req.body.email || user.email;
-  user.isAdmin = req.body.isAdmin;
-  user.isPremium = req.body.isPremium;
-
-  await user.save();
-  res.status(200).json(user);
-});
-
-// Delete user
-const deleteUser = asyncHandler(async (req, res) => {
-  const userId = req.params.id;
-  const deleteUser = await User.findByIdAndDelete(userId);
-  if (!deleteUser) {
-    return res.status(404).json({ message: "User not found" });
-  }
-  res.status(200).json({ message: "user deleted successfully" });
-});
+// premium user functionality
 
 //upload song
 const uploadSong = asyncHandler(async (req, res) => {
-  const { title, artiste, duration, genre, lyrics } = req.body;
-  const { coverImage, audioURL } = req.file;
+  const { title, duration, genre, lyrics, coverImage, audioURL } = req.body;
+  const userId = req.user.id;
 
-  const songUploadResponse = await cloudinary.uploader.upload(
-    audioURL[0].path,
-    {
-      folder: "echosync/songs",
-      resource_type: "mp3",
-    }
-  );
+  if (!title || !duration || !coverImage || !audioURL || !genre) {
+    return res.status(400).json({ message: "Missing required fields" });
+  }
 
-  const imageUploadResponse = await cloudinary.uploader.upload(
-    coverImage[0].path,
-    {
-      transformation: [{ quality: "auto", width: 200, height: 200 }],
-      folder: "echosync/songs/coverImage",
-    }
-  );
+  let artisteId;
+  // Check if artiste exists
+  const existingArtiste = await Artiste.findOne({ _id: userId });
+  if (!existingArtiste) {
+    // Create new artiste if not exists
+    const newArtiste = new Artiste({
+      _id: userId,
+      name: req.user.username,
+      bio: req.user.bio,
+      image: req.user.image,
+    });
+    await newArtiste.save();
+    existingArtiste = newArtiste; // Assign the newly created artiste
+  }
 
   const newSong = new Song({
     title,
-    artiste,
+    artiste: existingArtiste._id,
     duration,
-    releaseDate,
     genre,
     lyrics,
-    audioURL: songUploadResponse.secure_url,
-    coverImage: imageUploadResponse.secure_url,
+    audioURL,
+    coverImage,
   });
 
   await newSong.save();
@@ -181,63 +175,231 @@ const uploadSong = asyncHandler(async (req, res) => {
   res.status(200).json(newSong);
 });
 
-// post artiste
-const postArtiste = asyncHandler(async (req, res) => {
-  const { name, bio } = req.body;
+//upload album
+const uploadAlbum = asyncHandler(async (req, res) => {
+  const { title, genre, songs, coverImage } = req.body;
+  const userId = req.user.id;
 
-  const uploadImage = await cloudinary.uploader.upload(req.file.path, {
-    transformation: [{ quality: "auto", width: 200, height: 200 }],
-    folder: "echosync/artiste",
-  });
-
-  const newArtiste = new Artiste({
-    name,
-    bio,
-    image: uploadImage.secure_url,
-  });
-
-  await newArtiste.save();
-  if (!newArtiste) {
-    res.status(500).json({ message: "Failed to create artiste" });
+  if (!title || !coverImage || !genre) {
+    return res.status(400).json({ message: "Missing required fields" });
   }
-  res.status(201).json(newArtiste);
-});
-
-// upload album
-const postAlbum = asyncHandler(async (req, res) => {
-  const { title, artiste, releaseDate, genre, songs } = req.body;
-
-  const foundArtiste = await Artiste.findOne({ name: artiste });
-
-  if (!foundArtiste) {
-    res.status(404).json({ message: "User not found" });
-  }
-
-  const foundSongs = await Song.findOne({ title: songs });
-
-  if (!foundSongs) {
-    res.status(404).json({ message: "song not found" });
-  }
-
-  const uploadImage = await cloudinary.uploader.upload(req.file.path, {
-    transformation: [{ quality: "auto", height: 200, width: 200 }],
-    folder: "echosync/albums",
-  });
 
   const newAlbum = new Album({
     title,
-    releaseDate,
+    artiste: userId,
+    releaseDate: Date.now(),
+    songs,
     genre,
-    coverImage: uploadImage.secure_url,
-    artiste: foundArtiste._id,
-    songs: foundSongs._id,
+    coverImage,
   });
 
   await newAlbum.save();
   if (!newAlbum) {
-    res.status(404).json({ message: "album not appended" });
+    res.status(500).json({ message: "Failed to upload Album" });
   }
-  res.status(201).json(newAlbum);
+
+  res.status(200).json(newAlbum);
+});
+
+const onSubscribePlan = asyncHandler(async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const paidPlanId = req.params.paidPlanId;
+
+    const paidPlan = await Plan.findById(paidPlanId);
+    const foundUser = await User.findById(userId);
+
+    if (!foundUser) {
+      return res.status(404).json({ message: "No user found" });
+    }
+
+    // Update subscription details if the user is eligible
+    foundUser.membershipStartDate = new Date();
+    const expDate = new Date();
+    expDate.setDate(expDate.getDate() + 30);
+    foundUser.membershipEndDate = expDate;
+    foundUser.membership = paidPlan;
+    foundUser.isPremium = true; // Set isPremium to true
+
+    // Mail options
+    const mailOptions = {
+      from: process.env.AUTH_EMAIL,
+      to: foundUser.email,
+      subject: "Paid Subscription Activated",
+      html: `
+        <p>Dear ${foundUser.username},</p>
+        <p>Congratulations! You are now a premium member of EchoSync.</p>
+        <p>Your premium membership will expire on ${expDate.toDateString()}.</p>
+        <p>Thank you for choosing EchoSync!</p>
+        <p>Best regards,<br>The EchoSync Team</p>
+      `,
+    };
+
+    await foundUser.save();
+    await transporter.sendMail(mailOptions);
+
+    res
+      .status(200)
+      .json({ message: "Paid subscription activated successfully" });
+  } catch (error) {
+    console.error("Error in onFreeSubscription:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+const onUnsubscribePlan = asyncHandler(async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const foundUser = await User.findById(userId);
+
+    if (!foundUser) {
+      return res.status(404).json({ message: "No user found" });
+    }
+
+    foundUser.membership = null;
+    foundUser.isPremium = false;
+    foundUser.membershipStartDate = null;
+    foundUser.membershipEndDate = null;
+
+    // Mail options
+    const mailOptions = {
+      from: process.env.AUTH_EMAIL,
+      to: foundUser.email,
+      subject: "Cancellation of Subscription to EchoSync",
+      html: `
+        <p>Dear ${foundUser.username},</p>
+        <p>Sorry! You are have cancelled the subscription.</p>
+        <p>Best regards,<br>The EchoSync Team</p>
+      `,
+    };
+
+    await foundUser.save();
+    await transporter.sendMail(mailOptions);
+
+    res
+      .status(200)
+      .json({ message: "Cancellation of subscription successful" });
+  } catch (error) {
+    console.error("Error while cancelling  subscription:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+const getPlans = asyncHandler(async (req, res) => {
+  const plans = await Plan.find({});
+
+  if (!plans || plans.length === 0) {
+    res.status(404).json({ message: "No plans found" });
+  }
+
+  res.status(200).json(plans);
+});
+
+const khaltiPayment = asyncHandler(async (req, res) => {
+  const payload = req.body;
+  try {
+    const khaltiResponse = await axios.post(
+      "https://a.khalti.com/api/v2/epayment/initiate/",
+      payload,
+      {
+        headers: {
+          Authorization: `key ${process.env.KHALTI_SECRET_KEY}`,
+        },
+      }
+    );
+
+    if (khaltiResponse) {
+      // Sending email notification
+      const mailOptions = {
+        from: process.env.AUTH_EMAIL,
+        to: payload.customer_info.email,
+        subject: "Payment Initiated with Khalti",
+        html: `
+          <p>Dear ${payload.customer_info.name},</p>
+          <p>Your payment has been initiated successfully.</p>
+          <p>Transaction ID: ${khaltiResponse.data.pidx}</p>
+          <p>Thank you for choosing EchoSync!</p>
+          <p>Best regards,<br>The EchoSync Team</p>
+        `,
+      };
+
+      // Send email
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.error("Error sending email:", error);
+        } else {
+          console.log("Email sent:", info.response);
+        }
+      });
+
+      res.json({
+        success: true,
+        data: khaltiResponse?.data,
+      });
+    } else {
+      res.json({
+        success: false,
+        message: "Something went wrong",
+      });
+    }
+    // console.log(khaltiResponse);
+  } catch (error) {
+    console.error("Error in khaltiPayment:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+const onFreeSubscription = asyncHandler(async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const freePlanId = req.params.freePlanId;
+
+    const freePlan = await Plan.findById(freePlanId);
+    const foundUser = await User.findById(userId);
+
+    if (!foundUser) {
+      return res.status(404).json({ message: "No user found" });
+    }
+
+    // Check if the user's trial period is over
+    if (foundUser.membershipTrial === true) {
+      return res.status(400).json({ message: "User's trial period is over" });
+    }
+
+    // Update subscription details if the user is eligible
+    foundUser.membershipStartDate = new Date();
+    const expDate = new Date();
+    expDate.setDate(expDate.getDate() + 30);
+    foundUser.membershipEndDate = expDate;
+    foundUser.membership = freePlan;
+    foundUser.membershipTrial = true; // Assuming the user's trial starts now
+    foundUser.isPremium = true; // Set isPremium to true
+
+    // Mail options
+    const mailOptions = {
+      from: process.env.AUTH_EMAIL,
+      to: foundUser.email,
+      subject: "Free Subscription to EchoSync Activated",
+      html: `
+        <p>Dear ${foundUser.username},</p>
+        <p>Congratulations! You are now a premium member of EchoSync.</p>
+        <p>Your premium membership will expire on ${expDate.toDateString()}.</p>
+        <p>Thank you for choosing EchoSync!</p>
+        <p>Best regards,<br>The EchoSync Team</p>
+      `,
+    };
+
+    await foundUser.save();
+    await transporter.sendMail(mailOptions);
+
+    res
+      .status(200)
+      .json({ message: "Free subscription activated successfully" });
+  } catch (error) {
+    console.error("Error in onFreeSubscription:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
 });
 
 module.exports = {
@@ -245,10 +407,11 @@ module.exports = {
   getCurrentUser,
   editUserDetails,
   uploadImage,
-  getUsers,
-  updateUser,
-  deleteUser,
   uploadSong,
-  postArtiste,
-  postAlbum,
+  uploadAlbum,
+  onSubscribePlan,
+  onUnsubscribePlan,
+  getPlans,
+  khaltiPayment,
+  onFreeSubscription,
 };

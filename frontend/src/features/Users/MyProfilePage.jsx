@@ -3,15 +3,25 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { FaUser } from "react-icons/fa";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import { useUploadImageMutation, useGetCurrentUserQuery } from "./userApiSlice";
+import {
+  useUploadImageMutation,
+  useGetCurrentUserQuery,
+  useCancelSubscriptionMutation,
+} from "./userApiSlice";
 import { useLogoutUserMutation } from "../Auth/authApiSlice";
 import EditUserModal from "./EditUserModal";
 import ErrorMsg from "../../components/ErrorMsg";
 import Loading from "../../components/Loading";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import { Button } from "react-bootstrap";
+import { format, differenceInDays } from "date-fns";
 
 const MyProfilePage = () => {
   const selectedTheme = useSelector((state) => state.theme);
+  const { isPremium } = useSelector((state) => state.auth);
+  const [cancelSubscription] = useCancelSubscriptionMutation();
+  // const [daysLeft, setDaysLeft] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const {
     data: user,
@@ -27,6 +37,8 @@ const MyProfilePage = () => {
   const handleImageInputClick = () => {
     imageRef.current.click();
   };
+
+  console.log(user);
 
   if (isCurrentUserLoading) {
     return <Loading />;
@@ -51,6 +63,38 @@ const MyProfilePage = () => {
       }
     }
   };
+
+  const cancelHandler = async () => {
+    if (window.confirm("Are you sure")) {
+      try {
+        const { error } = await toast.promise(cancelSubscription().unwrap(), {
+          pending: "On Progress...",
+          success: "You have cancelled subscription",
+          error: "An error occurred",
+        });
+        if (error) {
+          console.error(error);
+        } else {
+          navigate("/");
+          console.log("You have cancelled subscription");
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  };
+
+  const calculateDaysLeft = () => {
+    const startDate = new Date(user.membershipStartDate);
+    const endDate = new Date(user.membershipEndDate);
+    const today = new Date();
+
+    console.log(startDate);
+
+    return differenceInDays(endDate, today);
+  };
+
+  const daysLeft = calculateDaysLeft();
 
   const handleLogOut = async () => {
     const { error } = await logOut().unwrap();
@@ -145,6 +189,43 @@ const MyProfilePage = () => {
             <span>{user.country}</span>
           </h2>
         </div>
+        {isPremium ? (
+          <div className="px-4 py-6 mt-4 rounded-md bg-secondary-100 shadow-sm shadow-gray-700">
+            <h2 className="flex gap-8 font-semibold">
+              <span className="text-gray-300">Membership: </span>
+              <span>{`${daysLeft} days left`}</span>
+            </h2>
+          </div>
+        ) : (
+          <div>
+            <Link to="/premium">
+              <button
+                className={`bg-${selectedTheme} mt-4 flex text-white justify-center items-center hover:bg-${selectedTheme}-50 active:bg-opacity-90 py-2 px-4 rounded-sm`}
+              >
+                Explore Premium
+              </button>
+            </Link>
+          </div>
+        )}
+        {user.isPremium && user.membershipStartDate && (
+          <div className="px-4 py-6 mt-3 rounded-lg bg-secondary-100 shadow-sm shadow-gray-700">
+            <h2 className="flex gap-8 font-semibold">
+              Membership started on{" "}
+              {format(new Date(user.membershipStartDate), "MMMM dd, yyyy")}
+            </h2>
+          </div>
+        )}
+        {user.isPremium && (
+          <div className="flex justify-end mt-4">
+            <Button
+              onClick={() => cancelHandler()}
+              variant="danger"
+              className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+            >
+              Cancel Subscription
+            </Button>
+          </div>
+        )}
       </div>
     </section>
   );

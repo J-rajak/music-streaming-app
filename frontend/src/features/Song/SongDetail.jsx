@@ -7,6 +7,7 @@ import { setPlaying, setQueue } from "../MusicPlayer/playerSlice";
 import { motion } from "framer-motion";
 
 const SongDetail = ({ song }) => {
+  const {isAuthenticated} = useSelector((state) => state.auth);
   const { title, coverImage, artiste, album, genre, likes } = song;
   const selectedTheme = useSelector((state) => state.theme);
   const dispatch = useDispatch();
@@ -70,6 +71,7 @@ const SongDetail = ({ song }) => {
             <button
               onClick={handlePlay}
               className={`inline-flex items-center bg-${selectedTheme}-50 bg-opacity-80 active:bg-opacity-100 active:translate-y-1 rounded-lg transition duration-300 ease-in-out py-1 px-2 md:px-4`}
+              disabled={!isAuthenticated}
             >
               <span className="mr-2 text-xl">Play</span>
             </button>
