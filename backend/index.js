@@ -27,7 +27,7 @@ app.use(cors(corsOptions));
 
 connectDB();
 
-require("./config/passport")(passport);
+// require("./config/passport")(passport);
 
 app.use(cookieParser());
 app.use(express.json());
