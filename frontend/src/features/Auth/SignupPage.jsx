@@ -17,6 +17,7 @@ const SignupPage = () => {
     email: "",
     password: "",
   });
+  
   const [validationErrors, setValidationErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
 
