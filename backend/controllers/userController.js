@@ -7,28 +7,28 @@ const Album = require("../models/Album");
 const Plan = require("../models/Plan");
 const asyncHandler = require("express-async-handler");
 const cloudinary = require("../config/cloudinary");
-const nodemailer = require("nodemailer");
+// const nodemailer = require("nodemailer");
 
-const transporter = nodemailer.createTransport({
-  // host: "smtp.ethereal.email",
-  // port: 587,
-  // secure: false,
-  service: "gmail",
-  auth: {
-    user: process.env.AUTH_EMAIL,
-    pass: process.env.AUTH_PASS,
-  },
-});
+// const transporter = nodemailer.createTransport({
+//   // host: "smtp.ethereal.email",
+//   // port: 587,
+//   // secure: false,
+//   service: "gmail",
+//   auth: {
+//     user: process.env.AUTH_EMAIL,
+//     pass: process.env.AUTH_PASS,
+//   },
+// });
 
 // testing nodemailer success
-transporter.verify((error, success) => {
-  if (error) {
-    console.log(error);
-  } else {
-    // console.log("Ready for message in user");
-    console.log(success);
-  }
-});
+// transporter.verify((error, success) => {
+//   if (error) {
+//     console.log(error);
+//   } else {
+//     // console.log("Ready for message in user");
+//     console.log(success);
+//   }
+// });
 
 // Get specific user
 // api/users/:userId

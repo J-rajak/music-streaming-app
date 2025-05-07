@@ -193,7 +193,7 @@ const MyProfilePage = () => {
           <div className="px-4 py-6 mt-4 rounded-md bg-secondary-100 shadow-sm shadow-gray-700">
             <h2 className="flex gap-8 font-semibold">
               <span className="text-gray-300">Membership: </span>
-              <span>{`${daysLeft} days left`}</span>
+              <span>{`${daysLeft < 0 ? 0 : daysLeft} days left`}</span>
             </h2>
           </div>
         ) : (

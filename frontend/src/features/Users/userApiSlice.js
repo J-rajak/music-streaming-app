@@ -1,4 +1,5 @@
 import { apiSlice } from "../../app/apiSlice";
+import { setIsPremium } from "../Auth/authSlice";
 
 export const userApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -34,6 +35,15 @@ export const userApiSlice = apiSlice.injectEndpoints({
         method: "PUT",
       }),
       invalidatesTags: ["User"],
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          console.log(data);
+          dispatch(setIsPremium(data.isPremium));
+        } catch (err) {
+          console.error(err);
+        }
+      },
     }),
     paidSubscription: builder.mutation({
       query: (paidPlanId) => ({
@@ -41,6 +51,15 @@ export const userApiSlice = apiSlice.injectEndpoints({
         method: "PUT",
       }),
       invalidatesTags: ["User"],
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          console.log(data);
+          dispatch(setIsPremium(data.isPremium));
+        } catch (err) {
+          console.error(err);
+        }
+      },
     }),
     cancelSubscription: builder.mutation({
       query: () => ({

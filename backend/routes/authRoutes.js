@@ -75,8 +75,8 @@ router.get(
 router.post("/register", schemaValidator("authRegister"), registerUser);
 router.post("/requestPasswordReset", passwordResetRequest);
 router.post("/resetPassword", resetPassword);
-router.get("/verify/:userId/:uniqueString", verifyEmail);
-router.get("/verified", verification);
+// router.get("/verify/:userId/:uniqueString", verifyEmail);
+// router.get("/verified", verification);
 router.post("/login", schemaValidator("authLogin"), loginUser);
 router.get("/loginSuccess", verifyToken, loginSuccess);
 

@@ -26,7 +26,7 @@ const FreeSubscriptionPage = () => {
       const { error } = await toast.promise(freeSubscription(id).unwrap(), {
         pending: "On Progress...",
         success: "You have successfully upgraded to premium",
-        error: "An error occurred",
+        error: "User's trial period is over",
       });
       if (error) {
         console.error(error);
