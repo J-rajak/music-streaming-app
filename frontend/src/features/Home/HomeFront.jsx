@@ -9,6 +9,7 @@ import ErrorMsg from "../../components/ErrorMsg";
 import LikeButton from "../../components/LikeButton";
 import { setQueue, setPlaying } from "../MusicPlayer/playerSlice";
 
+
 const HomeFront = () => {
   const {
     data: songs,
